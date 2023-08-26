@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  sqlserver:
+    container_name: sqlserver.db
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    ports:
+      - '1433:1433'
+    volumes:
+      - sqlserver-data:/var/lib/sqlserver/data
+    networks:
+      - dapper_example
+    restart: always
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Hung89hy1
+      
+  mysql:
+    container_name: mysql.db
+    image: mysql:8.0.29
+    environment:
+      MYSQL_ROOT_PASSWORD: "Hung89hy1"
+      ACCEPT_EULA: "Y"
+    restart: always
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+networks:
+  dapper_example:
+    driver: bridge
+volumes:
+  sqlserver-data:
+  mysql-data:
+  
