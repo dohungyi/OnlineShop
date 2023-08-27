@@ -2,13 +2,14 @@
 
 namespace OnlineShop.Domain.Entities.Base;
 
-public class UserGroup : EntityBase<Guid>
+public class GroupPermission : EntityBase<Guid>
 {
+    
     public Guid GroupId { get; set; }
-    public Guid UserId { get; set; }
-
-    #region [REFRENCE PROPERTIES]
-    public User User { get; set; }
+    public Guid PermId { get; set; }
+    
+    #region [REFERENCE PROPERTIES]
     public Group Group { get; set; }
+    public Permission Permission { get; set; }
     #endregion
 }
