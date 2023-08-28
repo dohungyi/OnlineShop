@@ -9,8 +9,8 @@ public class Product : EntityAuditBase<Guid>
     public string Description { get; set; }
     public string Content { get; set; }
     
-    public decimal OriginalPrice { set; get; }// giá gốc
-    public decimal Price { get; set; } // giá bán
+    public decimal OriginalPrice { set; get; }
+    public decimal Price { get; set; } 
     
     public double Discount { get; set; }
     public string Currency { get; set; }
@@ -23,6 +23,8 @@ public class Product : EntityAuditBase<Guid>
     
     public bool? HomeFlag { get; set; }
     public bool? HotFlag { get; set; }
+    public bool? IsBestSelling { get; set; }
+    public bool? IsNew { get; set; }
     public int? ViewCount { get; set; }
     public string Tags { set; get; }
     

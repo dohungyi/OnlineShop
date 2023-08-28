@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.StoreWebsite", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OnlineShop", "OnlineShop", "{482D551D-0356-4C1D-843E-6A6A67F62F1E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{F45C44CD-06F0-40BC-98CB-9F49A8DCD6D1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityProvider", "IdentityProvider", "{F45C44CD-06F0-40BC-98CB-9F49A8DCD6D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.Infrastructure", "src\Services\OnlineShop\OnlineShop.Infrastructure\OnlineShop.Infrastructure.csproj", "{E4B461B1-441B-449E-826C-A76E0916CCDF}"
 EndProject
@@ -35,6 +35,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.Api", "src\Services\OnlineShop\OnlineShop.Api\OnlineShop.Api.csproj", "{5E38C9E3-1784-44F4-87C8-85780ECBCCE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\BuildingBlocks\Shared\Shared.csproj", "{53050C91-B98B-4971-90D2-8E803EB4329D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caching", "src\BuildingBlocks\Caching\Caching.csproj", "{189A3599-4954-4CDC-8AF4-2DE2FF4A5ECD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBroker", "src\BuildingBlocks\MessageBroker\MessageBroker.csproj", "{F3F64155-C286-44B7-94D9-9A0B5BDB4625}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +57,8 @@ Global
 		{F00779B6-C48D-4000-A6F9-ADA9EC60FFF7} = {482D551D-0356-4C1D-843E-6A6A67F62F1E}
 		{5E38C9E3-1784-44F4-87C8-85780ECBCCE8} = {482D551D-0356-4C1D-843E-6A6A67F62F1E}
 		{53050C91-B98B-4971-90D2-8E803EB4329D} = {7E134BEE-7253-466B-96B9-F249A996A037}
+		{189A3599-4954-4CDC-8AF4-2DE2FF4A5ECD} = {7E134BEE-7253-466B-96B9-F249A996A037}
+		{F3F64155-C286-44B7-94D9-9A0B5BDB4625} = {7E134BEE-7253-466B-96B9-F249A996A037}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1340566D-74F7-4836-83B1-6135C46137FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -79,5 +85,13 @@ Global
 		{53050C91-B98B-4971-90D2-8E803EB4329D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53050C91-B98B-4971-90D2-8E803EB4329D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53050C91-B98B-4971-90D2-8E803EB4329D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{189A3599-4954-4CDC-8AF4-2DE2FF4A5ECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{189A3599-4954-4CDC-8AF4-2DE2FF4A5ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{189A3599-4954-4CDC-8AF4-2DE2FF4A5ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{189A3599-4954-4CDC-8AF4-2DE2FF4A5ECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3F64155-C286-44B7-94D9-9A0B5BDB4625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3F64155-C286-44B7-94D9-9A0B5BDB4625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3F64155-C286-44B7-94D9-9A0B5BDB4625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3F64155-C286-44B7-94D9-9A0B5BDB4625}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
