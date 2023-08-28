@@ -1,6 +1,3 @@
-﻿namespace Caching;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class AssemblyInfo
-{
-    
-}
+[assembly: ExcludeFromCodeCoverage]

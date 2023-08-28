@@ -1,5 +1,5 @@
 ﻿using OnlineShop.Domain.Common.Audits;
-using OnlineShop.Domain.Entities.Base;
+using OnlineShop.Domain.Entities.Bases;
 
 namespace OnlineShop.Domain.Entities;
 

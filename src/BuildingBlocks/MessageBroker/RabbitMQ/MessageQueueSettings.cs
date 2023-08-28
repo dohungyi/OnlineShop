@@ -2,7 +2,7 @@
 
 public class MessageQueueSettings
 {
-    public const string SectionName = "Rabbitmq";
+    public const string SectionName = "RabbitMQ";
     
     public string Host { get; set; }
     public ushort Port { get; set; }

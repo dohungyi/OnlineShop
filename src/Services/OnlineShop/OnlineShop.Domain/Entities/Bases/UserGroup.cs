@@ -1,6 +1,6 @@
 ﻿using OnlineShop.Domain.Common.Audits;
 
-namespace OnlineShop.Domain.Entities.Base;
+namespace OnlineShop.Domain.Entities.Bases;
 
 public class UserGroup : EntityBase<Guid>
 {
