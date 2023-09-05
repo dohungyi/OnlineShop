@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caching", "src\BuildingBloc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBroker", "src\BuildingBlocks\MessageBroker\MessageBroker.csproj", "{F3F64155-C286-44B7-94D9-9A0B5BDB4625}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "src\BuildingBlocks\SharedKernel\SharedKernel.csproj", "{69715261-EF39-479B-93B8-30F6E1A4D590}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,7 @@ Global
 		{53050C91-B98B-4971-90D2-8E803EB4329D} = {7E134BEE-7253-466B-96B9-F249A996A037}
 		{189A3599-4954-4CDC-8AF4-2DE2FF4A5ECD} = {7E134BEE-7253-466B-96B9-F249A996A037}
 		{F3F64155-C286-44B7-94D9-9A0B5BDB4625} = {7E134BEE-7253-466B-96B9-F249A996A037}
+		{69715261-EF39-479B-93B8-30F6E1A4D590} = {7E134BEE-7253-466B-96B9-F249A996A037}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1340566D-74F7-4836-83B1-6135C46137FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -93,5 +96,9 @@ Global
 		{F3F64155-C286-44B7-94D9-9A0B5BDB4625}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3F64155-C286-44B7-94D9-9A0B5BDB4625}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3F64155-C286-44B7-94D9-9A0B5BDB4625}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69715261-EF39-479B-93B8-30F6E1A4D590}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69715261-EF39-479B-93B8-30F6E1A4D590}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69715261-EF39-479B-93B8-30F6E1A4D590}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69715261-EF39-479B-93B8-30F6E1A4D590}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
