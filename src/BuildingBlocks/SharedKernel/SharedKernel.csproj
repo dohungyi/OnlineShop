@@ -111,13 +111,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Domain\Entities\Audit\" />
-        <Folder Include="Domain\Entities\Auth\" />
-        <Folder Include="Domain\Entities\Base\" />
         <Folder Include="Domain\Entities\CentralizedEvents\" />
-        <Folder Include="Domain\Events\" />
-        <Folder Include="Domain\IntergrationEvents\" />
-        <Folder Include="Domain\Models\" />
+        <Folder Include="Domain\Entities\CentralizedNotifications\" />
+        <Folder Include="Domain\Entities\CentralizedRequests\" />
+        <Folder Include="Domain\Entities\Ip\" />
+        <Folder Include="Domain\Entities\Location\" />
+        <Folder Include="Domain\Entities\Tracker\" />
     </ItemGroup>
 
 </Project>
