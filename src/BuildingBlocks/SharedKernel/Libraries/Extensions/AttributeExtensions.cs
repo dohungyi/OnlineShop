@@ -7,9 +7,10 @@ public static class AttributeExtensions
 {
     public static string GetDescription(this PropertyInfo property)
     {
-        if (property == null)
+        if (property is null)
             return "";
-
+        
+        // kiểm tra xem property có được đánh dấu bởi Attribute "DescriptionAttribute"
         if (!Attribute.IsDefined(property, typeof(DescriptionAttribute)))
             return "";
 
