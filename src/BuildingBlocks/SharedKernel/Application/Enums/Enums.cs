@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace SharedKernel.Application.Enums;
+namespace SharedKernel.Application;
 
 public static class Enum
 {

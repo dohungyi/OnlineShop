@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Libraries.Helpers;
+﻿namespace SharedKernel.Libraries;
 
 public static class DateHelper
 {

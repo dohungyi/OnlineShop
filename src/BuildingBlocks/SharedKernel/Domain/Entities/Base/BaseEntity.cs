@@ -15,7 +15,7 @@ public abstract class BaseEntity<TKey> : CoreEntity, IBaseEntity<TKey>
 
     public long TenantId { get; set; }
 
-    public DateTime CreatedDate { get; set; } = SharedKernel.Libraries.Helpers.DateHelper.Now;
+    public DateTime CreatedDate { get; set; } = SharedKernel.Libraries.DateHelper.Now;
 
     public string CreatedBy { get; set; }
 
@@ -30,7 +30,7 @@ public abstract class BaseEntity<TKey> : CoreEntity, IBaseEntity<TKey>
     #region Domain events
     private List<DomainEvent> _domainEvents;
 
-    [NotMapped, Libraries.Attributes.Ignore]
+    [NotMapped, Libraries.Ignore]
     public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
 
     public void AddDomainEvent(DomainEvent @event)
