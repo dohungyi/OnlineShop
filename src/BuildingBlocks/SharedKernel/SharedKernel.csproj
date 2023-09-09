@@ -119,7 +119,6 @@
         <Folder Include="Domain\Entities\Ip\" />
         <Folder Include="Domain\Entities\Location\" />
         <Folder Include="Domain\Entities\Tracker\" />
-        <Folder Include="Libraries\QueryBuilder\" />
         <Folder Include="Libraries\Security\" />
         <Folder Include="Libraries\Utility\" />
     </ItemGroup>
