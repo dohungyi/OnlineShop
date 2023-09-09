@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Domain.Events.BaseEvents;
+﻿namespace SharedKernel.Domain;
 
 public class AuditEvent
 {

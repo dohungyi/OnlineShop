@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 using SharedKernel.Domain.Entities.Base.Interfaces;
-using SharedKernel.Domain.Events.BaseEvents;
 
 namespace SharedKernel.Domain.Entities.Base;
 

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SharedKernel.Auth;
 
-namespace SharedKernel.Domain.Events.BaseEvents;
+namespace SharedKernel.Domain;
 
 public class DomainEvent : INotification
 {
@@ -10,13 +10,13 @@ public class DomainEvent : INotification
     public string EventType => GetNameWithoutGenericArity(GetType());
     public object Body { get; protected set; }
     public string EventQueue { get; protected set; }
-    public IToken Token { get; protected set; }
+    public ICurrentUser CurrentUser { get; protected set; }
     
-    public DomainEvent(Guid eventId, object body, IToken token)
+    public DomainEvent(Guid eventId, object body, ICurrentUser currentUser)
     {
         EventId = eventId;
         Body = body;
-        Token = token;
+        CurrentUser = currentUser;
     }
 
     public void SetBody(object body)

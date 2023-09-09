@@ -1,6 +1,4 @@
-﻿using SharedKernel.Domain.Events.BaseEvents;
-
-namespace SharedKernel.Domain.Entities.Base.Interfaces;
+﻿namespace SharedKernel.Domain.Entities.Base.Interfaces;
 
 public interface IBaseEntity<TKey> : ICoreEntity, IAuditable, ICloneable
 {
