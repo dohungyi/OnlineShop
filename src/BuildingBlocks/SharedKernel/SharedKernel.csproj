@@ -113,8 +113,6 @@
     <ItemGroup>
         <Folder Include="Application\CQRS\" />
         <Folder Include="Application\Models\" />
-        <Folder Include="Libraries\Security\" />
-        <Folder Include="Libraries\Utility\" />
     </ItemGroup>
 
 </Project>
