@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using SharedKernel.Domain.Entities.Base.Interfaces;
+using SharedKernel.Libraries;
 
-namespace SharedKernel.Domain.Entities.Base;
+namespace SharedKernel.Domain;
 
 public class CoreEntity : ICoreEntity
 {
@@ -11,8 +11,7 @@ public class CoreEntity : ICoreEntity
         {
             return ((TableAttribute)GetType().GetCustomAttributes(typeof(TableAttribute), false).First()).Name;
         }
-        // return GetType().Name.ToSnakeCaseLower();
-        return "";
+        return GetType().Name.ToSnakeCaseLower();
     }
 
     public object this[string propertyName]

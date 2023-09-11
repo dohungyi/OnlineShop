@@ -1,6 +1,6 @@
-﻿namespace SharedKernel.Domain.Entities.Base;
+namespace SharedKernel.Domain;
 
-public class PersonalizedEntity
+public abstract class PersonalizedEntity : BaseEntity, IPersonalizeEntity
 {
-    
+    public Guid OwnerId { get; set; }
 }

@@ -1,4 +1,4 @@
-using static SharedKernel.Application.Enum;
+using SharedKernel.Application;
 
 namespace SharedKernel.Libraries;
 

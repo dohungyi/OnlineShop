@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Domain.Entities.Base.Interfaces;
+﻿namespace SharedKernel.Domain;
 
 public interface IBaseEntity<TKey> : ICoreEntity, IAuditable, ICloneable
 {

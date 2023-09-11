@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
-using SharedKernel.Domain.Entities.Base.Interfaces;
 
-namespace SharedKernel.Domain.Entities.Base;
+namespace SharedKernel.Domain;
 
 public abstract class BaseEntity<TKey> : CoreEntity, IBaseEntity<TKey>
 {
@@ -11,8 +10,6 @@ public abstract class BaseEntity<TKey> : CoreEntity, IBaseEntity<TKey>
 
     [JsonIgnore]
     public bool IsDeleted { get; set; }
-
-    public long TenantId { get; set; }
 
     public DateTime CreatedDate { get; set; } = SharedKernel.Libraries.DateHelper.Now;
 
@@ -58,7 +55,7 @@ public abstract class BaseEntity<TKey> : CoreEntity, IBaseEntity<TKey>
 }
 
 /// <summary>
-/// By default, TKey is long
+/// By default, TKey is Guid
 /// </summary>
 public class BaseEntity : BaseEntity<Guid>, IBaseEntity
 {

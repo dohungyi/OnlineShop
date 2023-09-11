@@ -113,12 +113,6 @@
     <ItemGroup>
         <Folder Include="Application\CQRS\" />
         <Folder Include="Application\Models\" />
-        <Folder Include="Domain\Entities\CentralizedEvents\" />
-        <Folder Include="Domain\Entities\CentralizedNotifications\" />
-        <Folder Include="Domain\Entities\CentralizedRequests\" />
-        <Folder Include="Domain\Entities\Ip\" />
-        <Folder Include="Domain\Entities\Location\" />
-        <Folder Include="Domain\Entities\Tracker\" />
         <Folder Include="Libraries\Security\" />
         <Folder Include="Libraries\Utility\" />
     </ItemGroup>
