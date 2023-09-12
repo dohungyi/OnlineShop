@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace SharedKernel.CoreSettings;
+namespace SharedKernel.Core;
 
 public class DefaultEmailConfig
 {

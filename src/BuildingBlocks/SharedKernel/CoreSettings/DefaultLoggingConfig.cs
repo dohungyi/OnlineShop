@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
-namespace SharedKernel.CoreSettings;
+namespace SharedKernel.Core;
 
 public class DefaultLoggingConfig
 {

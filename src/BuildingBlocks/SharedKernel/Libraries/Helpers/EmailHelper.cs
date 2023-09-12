@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using SharedKernel.CoreSettings;
+using SharedKernel.Core;
 using SharedKernel.Libraries.Helpers.Models;
 
 namespace SharedKernel.Libraries;

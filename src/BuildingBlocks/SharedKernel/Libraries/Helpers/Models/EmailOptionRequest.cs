@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Web;
-using SharedKernel.CoreSettings;
+using SharedKernel.Core;
 
 namespace SharedKernel.Libraries.Helpers.Models;
 
