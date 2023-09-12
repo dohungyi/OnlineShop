@@ -1,4 +1,4 @@
-namespace SharedKernel.Domain.Entities.Location;
+namespace SharedKernel.Domain;
 
 public class BaseLocation : BaseEntity
 {
