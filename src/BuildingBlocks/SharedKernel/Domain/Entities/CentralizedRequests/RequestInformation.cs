@@ -4,7 +4,7 @@ using SharedKernel.Libraries;
 namespace SharedKernel.Domain;
 
 [Table("requests")]
-public class RequestInformation : CoreEntity
+public class RequestInformation 
 {
     public long Id { get; set; }
 

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using SharedKernel.Libraries;
 
-namespace SharedKernel.Domain.Entities.CentralizedNotifications;
+namespace SharedKernel.Domain;
 
 [Table("notifications")]
 public class Notification : PersonalizedEntity

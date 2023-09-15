@@ -4,7 +4,7 @@ using SharedKernel.Libraries;
 namespace SharedKernel.Domain;
 
 [Table("auth_ip_info")]
-public class IpInformation : CoreEntity
+public class IpInformation 
 {
     public long Id { get; set; }
 

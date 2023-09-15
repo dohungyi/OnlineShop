@@ -3,7 +3,7 @@
 namespace SharedKernel.Domain;
 
 [Table("events")]
-public class Event : CoreEntity
+public class Event 
 {
     public long Id { get; set; }
 

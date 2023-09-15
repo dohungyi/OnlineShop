@@ -3,7 +3,7 @@
 namespace SharedKernel.Domain.Entities.Audit;
 
 [Table("common_audit")]
-public class AuditEntity : CoreEntity
+public class AuditEntity 
 {
     public long Id { get; set; }
 

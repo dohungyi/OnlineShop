@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SharedKernel.Domain;
 
 [Table("tracking")]
-public class Tracking : CoreEntity
+public class Tracking 
 {
     [Key]
     public Guid Id { get; set; }
