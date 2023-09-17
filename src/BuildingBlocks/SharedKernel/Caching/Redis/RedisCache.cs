@@ -1,19 +1,18 @@
-﻿using System.Text;
-using Caching.Abstractions;
+using System.Text;
 using Newtonsoft.Json;
 using Polly.Retry;
 using StackExchange.Redis;
 
-namespace Caching.Redis;
+namespace SharedKernel.Caching;
 
-public class RedisCacheService : ICacheService
+public class RedisCache : IRedisCache
 {
     private readonly IDatabase _cache;
     private readonly string _instance;
     private readonly AsyncRetryPolicy _retryPolicy;
     private readonly IServer _server;
 
-    public RedisCacheService(string connectionString, string prefix, int database = 0,
+    public RedisCache(string connectionString, string prefix, int database = 0,
         AsyncRetryPolicy? asyncRetryPolicy = null)
     {
         var connection = ConnectionMultiplexer.Connect(connectionString);
@@ -23,6 +22,8 @@ public class RedisCacheService : ICacheService
         _retryPolicy = asyncRetryPolicy;
     }
     
+    public TimeSpan DefaultAbsoluteExpireTime => TimeSpan.FromHours(2);
+    
     public async Task<bool> ExistsAsync(string key)
     {
         if (string.IsNullOrWhiteSpace(key))
@@ -30,7 +31,7 @@ public class RedisCacheService : ICacheService
             throw new ArgumentNullException(nameof(key));
         }
 
-        return await RunWithPolicyAsync(async () => await _cache.KeyExistsAsync(GetKeyForRedis(key)));
+        return await RunWithPolicyAsync(async () => await _cache.KeyExistsAsync(key));
     }
 
     public async Task<bool> SetAsync<T>(string key, T value, TimeSpan? expiry = null, bool keepTtl = false)
@@ -57,7 +58,7 @@ public class RedisCacheService : ICacheService
         }
         
         return await RunWithPolicyAsync(async () =>
-            await _cache.StringSetAsync(GetKeyForRedis(key), Encoding.UTF8.GetBytes(value), expiry, keepTtl));
+            await _cache.StringSetAsync(key, Encoding.UTF8.GetBytes(value), expiry, keepTtl));
     }
 
     public async Task<bool> DeleteAsync(string key)
@@ -67,7 +68,7 @@ public class RedisCacheService : ICacheService
             throw new ArgumentNullException(nameof(key));
         }
 
-        return await RunWithPolicyAsync(async () => await _cache.KeyDeleteAsync(GetKeyForRedis(key)));
+        return await RunWithPolicyAsync(async () => await _cache.KeyDeleteAsync(key));
     }
 
     public async Task<bool> DeleteByPatternAsync(string pattern)
@@ -77,7 +78,7 @@ public class RedisCacheService : ICacheService
             return false;
         }; 
         
-        var keys = _server.Keys(pattern: GetKeyForRedis(pattern)).ToArray();
+        var keys = _server.Keys(pattern: pattern).ToArray();
 
         await RunWithPolicyAsync(async () =>
         {
@@ -87,7 +88,7 @@ public class RedisCacheService : ICacheService
         return true;
     }
 
-    public async Task<T> GetAsync<T>(string key) where T : class
+    public async Task<T> GetAsync<T>(string key)
     {
         if (string.IsNullOrWhiteSpace(key))
         {
@@ -116,7 +117,7 @@ public class RedisCacheService : ICacheService
 
         return await RunWithPolicyAsync(async () =>
         {
-            var value = await _cache.StringGetAsync(GetKeyForRedis(key));
+            var value = await _cache.StringGetAsync(key);
 
             if (!value.HasValue)
             {
@@ -173,9 +174,5 @@ public class RedisCacheService : ICacheService
                 await action();
             }).ConfigureAwait(false);
     }
-
-
-    private string GetKeyForRedis(string key) => $"{_instance}-{key}";
-
     #endregion
 }

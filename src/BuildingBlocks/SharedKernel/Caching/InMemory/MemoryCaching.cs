@@ -1,19 +1,20 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Reflection;
-using Caching.Abstractions;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 
-namespace Caching.InMemory;
+namespace SharedKernel.Caching;
 
-public class MemoryCacheService : ICacheService
+public class MemoryCaching : IMemoryCaching
 {
-    private readonly IMemoryCache _cache;
+    private readonly IMemoryCache _caching;
     
-    public MemoryCacheService(IMemoryCache cache)
+    public MemoryCaching(IMemoryCache caching)
     {
-        _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+        _caching = caching ?? throw new ArgumentNullException(nameof(caching));
     }
+    
+    public TimeSpan DefaultAbsoluteExpireTime => TimeSpan.FromHours(2);
     
     public async Task<bool> ExistsAsync(string key)
     {
@@ -22,7 +23,7 @@ public class MemoryCacheService : ICacheService
             throw new ArgumentNullException(nameof(key));
         }
         
-        return await Task.FromResult(_cache.TryGetValue(key, out _));
+        return await Task.FromResult(_caching.TryGetValue(key, out _));
     }
 
     public async Task<bool> SetAsync<T>(string key, T value, TimeSpan? expiry = null, bool keepTtl = false)
@@ -36,8 +37,10 @@ public class MemoryCacheService : ICacheService
         {
             throw new ArgumentNullException(nameof(value));
         }
-
-        await SetStringAsync(key, JsonConvert.SerializeObject(value), expiry, keepTtl);
+        
+        var absoluteExpireTime = expiry ?? DefaultAbsoluteExpireTime;
+        
+        await SetStringAsync(key, JsonConvert.SerializeObject(value), absoluteExpireTime, keepTtl);
 
         return await ExistsAsync(key);
     }
@@ -54,13 +57,13 @@ public class MemoryCacheService : ICacheService
             throw new ArgumentNullException(nameof(value));
         }
 
-        if (expiry.HasValue)
+        if (!expiry.HasValue)
         {
-            _cache.Set(key, value);
+            _caching.Set(key, value, DefaultAbsoluteExpireTime);
         }
         else
         {
-            _cache.Set(key, value, expiry.Value);
+            _caching.Set(key, value, expiry.Value);
         }
 
         return await ExistsAsync(key);
@@ -73,7 +76,7 @@ public class MemoryCacheService : ICacheService
             throw new ArgumentNullException(nameof(key));
         }
         
-        _cache.Remove(key);
+        _caching.Remove(key);
 
         return !(await ExistsAsync(key));
     }
@@ -93,7 +96,7 @@ public class MemoryCacheService : ICacheService
         return true;
     }
 
-    public async Task<T> GetAsync<T>(string key) where T : class
+    public async Task<T> GetAsync<T>(string key)
     {
         if (string.IsNullOrWhiteSpace(key))
         {
@@ -116,7 +119,7 @@ public class MemoryCacheService : ICacheService
             throw new ArgumentNullException(nameof(key));
         }
 
-        if (_cache.Get(key) is not string result)
+        if (_caching.Get(key) is not string result)
         {
             return default!;
         }
@@ -151,9 +154,9 @@ public class MemoryCacheService : ICacheService
         const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
         // var entries = _cache.GetType()?.GetField("_entries", flags)?.GetValue(_cache);
         // var cacheItems = entries as IDictionary;
-        var typeOfCache = _cache.GetType();
+        var typeOfCache = _caching.GetType();
         var fieldEntries = typeOfCache?.GetField("_entries", flags);
-        var entriesValue = fieldEntries?.GetValue(_cache);
+        var entriesValue = fieldEntries?.GetValue(_caching);
         var cacheItems = entriesValue as IDictionary;
 
         if (cacheItems is null || cacheItems.Count <= 0)

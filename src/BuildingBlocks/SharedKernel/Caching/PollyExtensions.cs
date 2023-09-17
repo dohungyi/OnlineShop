@@ -1,7 +1,7 @@
-﻿using Polly;
+using Polly;
 using Polly.Retry;
 
-namespace Caching;
+namespace SharedKernel.Caching;
 
 public static class PollyExtensions
 {

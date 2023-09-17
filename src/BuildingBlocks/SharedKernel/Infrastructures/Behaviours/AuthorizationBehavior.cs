@@ -14,8 +14,8 @@ public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
 
         public AuthorizationBehavior(ICurrentUser currentUser, IAuthService authService)
         {
-            _currentUser = currentUser;
-            _authService = authService;
+            _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+            _authService = authService ?? throw new ArgumentNullException(nameof(authService));
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -23,7 +23,7 @@ public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
             if (request is BaseQuery<TResponse> || request is BaseCommand<TResponse> || request is BaseCommand)
             {
                 var attribute = (AuthorizationRequestAttribute)request.GetType().GetCustomAttributes(typeof(AuthorizationRequestAttribute), false).FirstOrDefault();
-                if (attribute != null)
+                if (attribute is not null)
                 {
                     var allowAnonymous = attribute.Exponents.Contains(ActionExponent.AllowAnonymous);
                     if (!allowAnonymous)
