@@ -1,6 +1,6 @@
-﻿namespace MessageBroker.RabbitMQ;
+namespace SharedKernel.MessageBroker;
 
-public class MessageQueueSettings
+public class RabbitMqSetting
 {
     public const string SectionName = "RabbitMQ";
     

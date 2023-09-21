@@ -30,7 +30,7 @@ public class SequenceCaching : ISequenceCaching
                 return result;
             case CachingType.Memory:
                 return await _memCaching.GetAsync<object>(key);
-            case CachingType.Distributed:
+            case CachingType.Redis:
                 return await _redisCaching.GetAsync<object>(key);
         }
         throw new Exception("The caching type is invalid. Please re-check!!!");
@@ -53,7 +53,7 @@ public class SequenceCaching : ISequenceCaching
                 return result;
             case CachingType.Memory:
                 return await _memCaching.GetAsync<T>(key);
-            case CachingType.Distributed:
+            case CachingType.Redis:
                 return await _redisCaching.GetAsync<T>(key);
         }
         throw new Exception("The caching type is invalid. Please re-check!!!");
@@ -76,7 +76,7 @@ public class SequenceCaching : ISequenceCaching
                 return result;
             case CachingType.Memory:
                 return await _memCaching.GetStringAsync(key);
-            case CachingType.Distributed:
+            case CachingType.Redis:
                 return await _redisCaching.GetStringAsync(key);
         }
         throw new Exception("The caching type is invalid. Please re-check!!!");
@@ -93,7 +93,7 @@ public class SequenceCaching : ISequenceCaching
             case CachingType.Memory:
                 await _memCaching.SetAsync(key, value, absoluteExpireTime, keepTtl);
                 return;
-            case CachingType.Distributed:
+            case CachingType.Redis:
                 await _redisCaching.SetAsync(key, value, absoluteExpireTime, keepTtl);
                 return;
         }
@@ -111,7 +111,7 @@ public class SequenceCaching : ISequenceCaching
             case CachingType.Memory:
                 await _memCaching.DeleteAsync(key);
                 return;
-            case CachingType.Distributed:
+            case CachingType.Redis:
                 await _redisCaching.DeleteAsync(key);
                 return;
         }

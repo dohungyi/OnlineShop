@@ -7,8 +7,8 @@ using SharedKernel.Domain;
 
 namespace SharedKernel.Infrastructures.Repositories;
 
-public class BaseReadOnlyRepository<TEntity, TKey, TDbContext> : IBaseReadOnlyRepository<TEntity, TDbContext> 
-    where TEntity :  BaseEntity
+public class BaseReadOnlyRepository<TEntity, TKey, TDbContext> : IBaseReadOnlyRepository<TEntity, TKey, TDbContext>
+    where TEntity :  BaseEntity<TKey>
     where TDbContext : DbContext
 {
     protected readonly TDbContext _dbContext;
@@ -19,69 +19,41 @@ public class BaseReadOnlyRepository<TEntity, TKey, TDbContext> : IBaseReadOnlyRe
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _dbSet = dbContext.Set<TEntity>();
     }
-    
-    public IQueryable<TEntity> FindAll(
-        Expression<Func<TEntity, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-        bool disableTracking = true)
-        => Query(predicate, orderBy, include, disableTracking);
 
-    public IPagedList<TEntity> PagingAll(
-        Expression<Func<TEntity, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-        bool disableTracking = true,
-        int pageIndex = 1,
-        int pageSize = 10, 
-        int indexFrom = 1)
-        => Query(predicate, orderBy, include, disableTracking).ToPagedList(pageIndex, pageSize, indexFrom);
-    
-    public async Task<IPagedList<TEntity>> PagingAllAsync(Expression<Func<TEntity, bool>> predicate = null, 
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, 
-        bool disableTracking = true,
-        int pageIndex = 1, 
-        int pageSize = 10, 
-        int indexFrom = 1, 
-        CancellationToken cancellationToken = default)
-        => await Query(predicate, orderBy, include, disableTracking).ToPagedListAsync(pageIndex, pageSize, indexFrom, cancellationToken);
-
-    public TEntity Get(Expression<Func<TEntity, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-        bool disableTracking = true)
-        => Query(predicate, orderBy, include, disableTracking).FirstOrDefault();
-    
-    public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-        bool disableTracking = true,
-        CancellationToken cancellationToken = default)
-        => await Query(predicate, orderBy, include, disableTracking).FirstOrDefaultAsync(cancellationToken);
-    
-    #region [Private Methods]
-    private IQueryable<TEntity> Query(
-        Expression<Func<TEntity, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-        bool disableTracking = true)
+    public IQueryable<TEntity> FindAll(bool trackChanges = false)
     {
-        IQueryable<TEntity> query = _dbSet;
-
-        if (disableTracking)
-            query = query.AsNoTracking();
-
-        if (include != null)
-            query = include(query);
-
-        if (predicate != null)
-            query = query.Where(predicate);
-
-        if (orderBy != null)
-            query = orderBy(query);
-
-        return query;
+        return !trackChanges ? _dbSet.AsNoTracking() : _dbSet;
     }
-    #endregion
+
+    public IQueryable<TEntity> FindAll(bool trackChanges = false, params Expression<Func<TEntity, object>>[] includeProperties)
+    {
+        var items = FindAll(trackChanges);
+        items = includeProperties.Aggregate(items, (current, includeProperty) => current.Include(includeProperty));
+        return items;
+    }
+
+    public IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> expression, bool trackChanges = false)
+    {
+        return !trackChanges ? _dbSet.Where(expression).AsNoTracking() : _dbSet.Where(expression);
+    }
+        
+
+    public IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> expression, bool trackChanges = false, params Expression<Func<TEntity, object>>[] includeProperties)
+    {
+        var items = FindByCondition(expression, trackChanges);
+        items = includeProperties.Aggregate(items, (current, includeProperty) => current.Include(includeProperty));
+        return items;
+    }
+
+    public async Task<TEntity?> GetByIdAsync(TKey id)
+    {
+        return await FindByCondition(x => x.Id.Equals(id))
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<TEntity?> GetByIdAsync(TKey id, params Expression<Func<TEntity, object>>[] includeProperties)
+    {
+         return await FindByCondition(x => x.Id.Equals(id), trackChanges:false, includeProperties)
+            .FirstOrDefaultAsync();
+    }
 }

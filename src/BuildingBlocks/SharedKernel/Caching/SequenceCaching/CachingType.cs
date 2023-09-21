@@ -4,5 +4,5 @@ public enum CachingType
 {
     Couple = 0,
     Memory = 1,
-    Distributed = 2,
+    Redis = 2,
 }

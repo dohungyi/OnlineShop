@@ -1,7 +1,6 @@
-﻿using MassTransit;
-using MessageBroker.Abstractions;
+using MassTransit;
 
-namespace MessageBroker.RabbitMQ;
+namespace SharedKernel.MessageBroker;
 
 public class MasstransitMessagePublisher : IMessagePublisher
 {
@@ -12,9 +11,12 @@ public class MasstransitMessagePublisher : IMessagePublisher
         _publish = publish ?? throw new ArgumentNullException(nameof(publish));
     }
     
-    public async Task Publish<T>(T message, Dictionary<string, string>? metaData = null, CancellationToken cancellationToken = default) where T : class
+    /// <summary>
+    /// Đẩy một message lên message queue và metaData nếu có
+    /// </summary>
+    public async Task PublishAsync<T>(T @event, Dictionary<string, string>? metaData = null, CancellationToken cancellationToken = default) where T : class
     {
-        await _publish.Publish(message, ctx =>
+        await _publish.Publish(@event, ctx =>
         {
             if (metaData?.Any() ?? false)
             {
