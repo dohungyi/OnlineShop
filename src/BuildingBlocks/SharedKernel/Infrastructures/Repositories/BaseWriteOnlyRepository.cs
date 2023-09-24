@@ -1,10 +1,16 @@
+using EFCore.BulkExtensions;
 using MassTransit.Internals;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SharedKernel.Application;
+using SharedKernel.Application.Consts;
 using SharedKernel.Auth;
+using SharedKernel.Caching;
 using SharedKernel.Domain;
 using SharedKernel.Libraries;
 using SharedKernel.Libraries.Utility;
+using Resources = SharedKernel.Properties.Resources;
+
 
 namespace SharedKernel.Infrastructures.Repositories;
 
@@ -14,93 +20,183 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
 {
     protected readonly TDbContext _dbContext;
     protected readonly DbSet<TEntity> _dbSet;
+    protected readonly string _tableName;
+    protected readonly ISequenceCaching _sequenceCaching;
     protected readonly ICurrentUser _currentUser;
-    private List<DomainEvent> DomainEvents { get; set; } = new();
-
-    public BaseWriteOnlyRepository(TDbContext dbContext, ICurrentUser currentUser)
+    protected readonly IStringLocalizer<Resources> _localizer;
+    
+    public BaseWriteOnlyRepository(TDbContext dbContext, ISequenceCaching sequenceCaching, ICurrentUser currentUser, IStringLocalizer<Resources> localizer)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        _dbSet = dbContext.Set<TEntity>();
+        _sequenceCaching = sequenceCaching ?? throw new ArgumentNullException(nameof(sequenceCaching));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+        _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
+        
+        _dbSet = dbContext.Set<TEntity>();
+        _tableName = nameof(TEntity);
     }
+
+    #region [EVENT]
+    
+    private List<DomainEvent> DomainEvents { get; set; } = new();
+    
+    public async Task PublishEvents(IEventBus eventBus, CancellationToken cancellationToken)
+    {
+        await Task.Yield();
+        if (DomainEvents is not null && DomainEvents.Any())
+        {
+            var events = DomainEvents.Select(x => x).ToList();
+            _ = eventBus.PublishEvent(events, cancellationToken);
+
+            DomainEvents.Clear();
+        }
+    }
+    
+    #endregion
+
+    #region [INSERT]
     
     public void Insert(TEntity entity)
     {
-        throw new NotImplementedException();
+        _dbContext.Add(entity);
     }
 
     public void Insert(IList<TEntity> entities)
     {
-        throw new NotImplementedException();
+        _dbContext.AddRange(entities);
     }
 
-    public void BulkInsert<TEntity>(IList<TEntity> listEntities)
+    public void BulkInsert(IList<TEntity> listEntities)
     {
-        throw new NotImplementedException();
+        _dbContext.BulkInsert(listEntities);
     }
 
-    public Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public async Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _dbSet.AddAsync(entity, cancellationToken);
     }
 
-    public Task InsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
+    public async Task InsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _dbSet.AddRangeAsync(entities, cancellationToken);
     }
 
-    public Task BulkInsertAsync<TEntity>(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
+    public async Task BulkInsertAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _dbContext.BulkInsertAsync(listEntities, cancellationToken: cancellationToken);
     }
+    
+    #endregion
 
+    #region [UPDATE]
+    
     public void Update(TEntity entity)
     {
-        throw new NotImplementedException();
+        _dbContext.Update(entity);
     }
 
     public void Update(IList<TEntity> entities)
     {
-        throw new NotImplementedException();
+        _dbContext.UpdateRange(entities);
     }
 
-    public void BulkUpdate<TEntity>(IList<TEntity> listEntities) where TEntity : class
+    public void BulkUpdate(IList<TEntity> listEntities)
     {
-        throw new NotImplementedException();
+        _dbContext.BulkUpdate(listEntities);
     }
 
-    public Task BulkUpdateAsync<TEntity>(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
+    public async Task BulkUpdateAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _dbContext.BulkUpdateAsync(listEntities, cancellationToken: cancellationToken);
     }
+    
+    #endregion
+
+    #region [DELETE]
 
     public void Delete(TEntity entity)
     {
-        throw new NotImplementedException();
+        _dbContext.Remove(entity);
     }
 
     public void Delete(IList<TEntity> entities)
     {
-        throw new NotImplementedException();
+        _dbContext.RemoveRange(entities);
     }
 
-    public void BulkDelete<TEntity>(IList<TEntity> listEntities) where TEntity : class
+    public void BulkDelete(IList<TEntity> listEntities)
     {
-        throw new NotImplementedException();
+        _dbContext.BulkDelete(listEntities);
     }
 
-    public Task BulkDeleteAsync<TEntity>(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
+    public async Task BulkDeleteAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if (listEntities is null && listEntities.Any())
+        {
+            BeforeDelete(listEntities);
+            await _dbContext.BulkDeleteAsync(listEntities, cancellationToken: cancellationToken);
+        }
     }
 
-    public bool SaveChanges()
+    #endregion
+
+    #region [PROTECTED]
+    protected virtual void BeforeInsert(IEnumerable<TEntity> entities)
     {
-        throw new NotImplementedException();
+        var batches = entities.ChunkList(1000);
+        batches.ToList().ForEach(async entities =>
+        {
+            entities.ForEach(entity =>
+            {
+                var clone = (TEntity)entity.Clone();
+                clone.ClearDomainEvents();
+
+                entity.AddDomainEvent(new InsertAuditEvent<TEntity>(new List<TEntity> { clone }, _currentUser));
+            });
+
+            if (batches.Count() > 1)
+            {
+                await Task.Delay(69);
+            }
+        });
+        
     }
 
-    public Task<bool> SaveChangesAsync(CancellationToken cancellationToken)
+    protected virtual void BeforeUpdate(TEntity entity, TEntity oldValue)
     {
-        throw new NotImplementedException();
+       
+        var newValue = (TEntity)entity.Clone();
+        newValue.ClearDomainEvents();
+        oldValue.ClearDomainEvents();
+
+        entity.AddDomainEvent(new UpdateAuditEvent<TEntity>(new List<UpdateAuditModel<TEntity>> { new UpdateAuditModel<TEntity>(newValue, oldValue) }, _currentUser));
     }
+
+    protected virtual void BeforeDelete(IEnumerable<TEntity> entities)
+    {
+        foreach (var entity in entities)
+        {
+            var clone = (TEntity)entity.Clone();
+            clone.ClearDomainEvents();
+            entity.AddDomainEvent(new DeleteAuditEvent<TEntity>(new List<TEntity> { clone }, _currentUser));
+        }
+    }
+    protected virtual async Task ClearCacheWhenChangesAsync(List<Guid> ids,
+        CancellationToken cancellationToken = default)
+    {
+        var tasks = new List<Task>();
+        var fullRecordKey = BaseCacheKeys.GetSystemFullRecordsKey(nameof(TEntity));
+        tasks.Add(_sequenceCaching.RemoveAsync(fullRecordKey, cancellationToken: cancellationToken));
+
+        if (ids is not null && ids.Any())
+        {
+            foreach (var id in ids)
+            {
+                var recordByIdKey = BaseCacheKeys.GetSystemRecordByIdKey(_tableName, id);
+                tasks.Add(_sequenceCaching.RemoveAsync(recordByIdKey, cancellationToken: cancellationToken));
+            }
+        }
+    }
+    #endregion
+    
 }

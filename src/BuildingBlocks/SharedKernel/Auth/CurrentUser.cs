@@ -62,11 +62,16 @@ public class CurrentUser : ICurrentUser
         var handler = new JwtSecurityTokenHandler();
         var jwtSecurityToken = handler.ReadJwtToken(accessToken);
         var claims = jwtSecurityToken.Claims;
+
+        if (claims is null)
+        {
+            return new ExecutionContext { HttpContext = httpContext };
+        }
         
         return new ExecutionContext
         {
             AccessToken = accessToken,
-            OwnerId = Convert.ToInt64(claims.First(c => c.Type == ClaimConstant.USER_ID).Value),
+            UserId = claims.First(c => c.Type == ClaimConstant.USER_ID).Value,
             Username = claims.First(c => c.Type == ClaimConstant.USERNAME).Value,
             Permission = claims.First(c => c.Type == ClaimConstant.PERMISSION).Value,
             Roles = claims.First(c => c.Type == ClaimConstant.ROLES).Value,
