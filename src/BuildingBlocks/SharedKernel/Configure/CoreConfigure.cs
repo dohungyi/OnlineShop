@@ -1,6 +1,6 @@
 ﻿namespace SharedKernel.Configure;
 
-public class CoreConfigure
+public static class CoreConfigure
 {
     
 }

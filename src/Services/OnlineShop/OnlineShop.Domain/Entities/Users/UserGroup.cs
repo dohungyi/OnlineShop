@@ -1,6 +1,6 @@
 ﻿using OnlineShop.Domain.Common.Audits;
 
-namespace OnlineShop.Domain.Entities.Bases;
+namespace OnlineShop.Domain.Entities;
 
 public class UserGroup : EntityBase<Guid>
 {
@@ -9,6 +9,6 @@ public class UserGroup : EntityBase<Guid>
 
     #region [REFRENCE PROPERTIES]
     public User User { get; set; }
-    public Group Group { get; set; }
+    public Role Role { get; set; }
     #endregion
 }

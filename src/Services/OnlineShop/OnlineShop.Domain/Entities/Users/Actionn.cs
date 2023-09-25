@@ -1,8 +1,8 @@
 ﻿using OnlineShop.Domain.Common.Audits;
 
-namespace OnlineShop.Domain.Entities.Bases;
+namespace OnlineShop.Domain.Entities;
 
-public class Permission : EntityBase<Guid>
+public class Actionn : EntityBase<Guid>
 {
     public string Title { get; set; }
     public string Module { get; set; }

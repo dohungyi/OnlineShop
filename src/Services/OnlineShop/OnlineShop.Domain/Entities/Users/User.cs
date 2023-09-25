@@ -1,6 +1,6 @@
 ﻿using OnlineShop.Domain.Common.Audits;
 
-namespace OnlineShop.Domain.Entities.Bases;
+namespace OnlineShop.Domain.Entities;
 
 public class User : EntityBase<Guid>
 {

@@ -1,15 +1,15 @@
 ﻿using OnlineShop.Domain.Common.Audits;
 
-namespace OnlineShop.Domain.Entities.Bases;
+namespace OnlineShop.Domain.Entities;
 
-public class GroupPermission : EntityBase<Guid>
+public class RoleAction : EntityBase<Guid>
 {
     
     public Guid GroupId { get; set; }
     public Guid PermId { get; set; }
     
     #region [REFERENCE PROPERTIES]
-    public Group Group { get; set; }
-    public Permission Permission { get; set; }
+    public Role Role { get; set; }
+    public Actionn Actionn { get; set; }
     #endregion
 }

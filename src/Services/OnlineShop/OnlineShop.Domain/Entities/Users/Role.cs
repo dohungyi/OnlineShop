@@ -1,8 +1,8 @@
 ﻿using OnlineShop.Domain.Common.Audits;
 
-namespace OnlineShop.Domain.Entities.Bases;
+namespace OnlineShop.Domain.Entities;
 
-public class Group : EntityBase<Guid>
+public class Role : EntityBase<Guid>
 {
     public string Title { get; set; }
     public string ProfileType { get; set; }

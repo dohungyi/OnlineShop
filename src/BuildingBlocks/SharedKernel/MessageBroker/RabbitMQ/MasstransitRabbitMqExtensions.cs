@@ -6,7 +6,7 @@ namespace SharedKernel.MessageBroker;
 
 public static class MasstransitRabbitMqExtensions
 {
-    public static IServiceCollection ConfigureMasstransitRabbitMq(
+    public static IServiceCollection AddCoreMasstransitRabbitMq(
         this IServiceCollection services,
         IConfiguration configuration,
         Action<IBusRegistrationConfigurator, RabbitMqSetting> registerConsumer = null,
