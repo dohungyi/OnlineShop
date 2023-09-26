@@ -17,7 +17,7 @@ public static class AuthUtility
     /// <summary>
     /// Kiểm tra endpoint có cần authorize không?
     /// </summary>
-    private static bool EndpointRequiresAuthorize(ResourceExecutingContext context)
+    public static bool EndpointRequiresAuthorize(ResourceExecutingContext context)
     {
         var endpointMetadata = context.ActionDescriptor.EndpointMetadata;
         var allowAnonymous = endpointMetadata.FirstOrDefault(x => x.GetType() == typeof(Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute));

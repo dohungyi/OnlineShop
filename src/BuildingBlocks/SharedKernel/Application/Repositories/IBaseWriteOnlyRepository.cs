@@ -9,25 +9,19 @@ public interface IBaseWriteOnlyRepository<TEntity, TDbContext>
 {
     Task PublishEvents(IEventBus eventBus, CancellationToken cancellationToken);
     
-    void Insert(TEntity entity);
+    TEntity Insert(TEntity entity);
         
-    void Insert(IList<TEntity> entities);
+    IList<TEntity> Insert(IList<TEntity> entities);
 
-    void BulkInsert(IList<TEntity> listEntities);
+    IList<TEntity> BulkInsert(IList<TEntity> listEntities);
         
-    Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
+    Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
         
-    Task InsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default);
+    Task<IList<TEntity>> InsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default);
 
-    Task BulkInsertAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default);
+    Task<IList<TEntity>> BulkInsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default);
         
     void Update(TEntity entity);
-        
-    void Update(IList<TEntity> entities);
-
-    void BulkUpdate(IList<TEntity> listEntities);
-
-    Task BulkUpdateAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default);
 
     void Delete(TEntity entity);
 

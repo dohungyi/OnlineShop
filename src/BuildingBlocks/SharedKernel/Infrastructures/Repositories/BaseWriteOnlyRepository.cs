@@ -56,34 +56,58 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
 
     #region [INSERT]
     
-    public void Insert(TEntity entity)
+    public TEntity Insert(TEntity entity)
     {
+        BeforeInsert(new List<TEntity>() { entity });
+        
         _dbContext.Add(entity);
+
+        return entity;
     }
 
-    public void Insert(IList<TEntity> entities)
+    public IList<TEntity> Insert(IList<TEntity> entities)
     {
+        BeforeInsert(entities);
+        
         _dbContext.AddRange(entities);
+
+        return entities;
     }
 
-    public void BulkInsert(IList<TEntity> listEntities)
+    public IList<TEntity> BulkInsert(IList<TEntity> entities)
     {
-        _dbContext.BulkInsert(listEntities);
+        BeforeInsert(entities);
+        
+        _dbContext.BulkInsert(entities);
+
+        return entities;
     }
 
-    public async Task InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
+        BeforeInsert(new List<TEntity>(){ entity });
+        
         await _dbSet.AddAsync(entity, cancellationToken);
+        
+        return entity;
     }
 
-    public async Task InsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
+    public async Task<IList<TEntity>> InsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
     {
+        BeforeInsert(entities);
+        
         await _dbSet.AddRangeAsync(entities, cancellationToken);
+        
+        return entities;
     }
 
-    public async Task BulkInsertAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
+    public async Task<IList<TEntity>> BulkInsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        await _dbContext.BulkInsertAsync(listEntities, cancellationToken: cancellationToken);
+        BeforeInsert(entities);
+        
+        await _dbContext.BulkInsertAsync(entities, cancellationToken: cancellationToken);
+        
+        return entities;
     }
     
     #endregion
@@ -92,22 +116,11 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
     
     public void Update(TEntity entity)
     {
-        _dbContext.Update(entity);
-    }
-
-    public void Update(IList<TEntity> entities)
-    {
-        _dbContext.UpdateRange(entities);
-    }
-
-    public void BulkUpdate(IList<TEntity> listEntities)
-    {
-        _dbContext.BulkUpdate(listEntities);
-    }
-
-    public async Task BulkUpdateAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
-    {
-        await _dbContext.BulkUpdateAsync(listEntities, cancellationToken: cancellationToken);
+        var currentEntity = _dbSet.Find(entity.Id);
+        
+        BeforeUpdate(entity, currentEntity);
+        
+        _dbContext.Entry(entity).State = EntityState.Modified;
     }
     
     #endregion
@@ -116,26 +129,30 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
 
     public void Delete(TEntity entity)
     {
+        BeforeDelete(new List<TEntity>() { entity });
+        
         _dbContext.Remove(entity);
     }
 
     public void Delete(IList<TEntity> entities)
     {
+        BeforeDelete(entities);
+        
         _dbContext.RemoveRange(entities);
     }
 
-    public void BulkDelete(IList<TEntity> listEntities)
+    public void BulkDelete(IList<TEntity> entities)
     {
-        _dbContext.BulkDelete(listEntities);
+        BeforeDelete(entities);
+        
+        _dbContext.BulkDelete(entities);
     }
 
-    public async Task BulkDeleteAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default)
+    public async Task BulkDeleteAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
     {
-        if (listEntities is null && listEntities.Any())
-        {
-            BeforeDelete(listEntities);
-            await _dbContext.BulkDeleteAsync(listEntities, cancellationToken: cancellationToken);
-        }
+        BeforeDelete(entities);
+        
+        await _dbContext.BulkDeleteAsync(entities, cancellationToken: cancellationToken);
     }
 
     #endregion
@@ -148,6 +165,14 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
         {
             entities.ForEach(entity =>
             {
+                entity.Id = Guid.NewGuid();
+                entity.CreatedBy = _currentUser.Context.Username;
+                entity.CreatedDate = DateHelper.Now;
+                entity.LastModifiedDate = null;
+                entity.LastModifiedBy = null;
+                entity.DeletedDate = null;
+                entity.DeletedBy = null;
+                
                 var clone = (TEntity)entity.Clone();
                 clone.ClearDomainEvents();
 
@@ -164,7 +189,11 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
 
     protected virtual void BeforeUpdate(TEntity entity, TEntity oldValue)
     {
-       
+        entity.LastModifiedDate = DateHelper.Now;
+        entity.LastModifiedBy = _currentUser.Context.Username;
+        entity.DeletedDate = null;
+        entity.DeletedBy = null;
+        
         var newValue = (TEntity)entity.Clone();
         newValue.ClearDomainEvents();
         oldValue.ClearDomainEvents();
@@ -176,13 +205,16 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
     {
         foreach (var entity in entities)
         {
+            entity.DeletedDate = DateHelper.Now;
+            entity.DeletedBy = _currentUser.Context.Username;
+            
             var clone = (TEntity)entity.Clone();
             clone.ClearDomainEvents();
+            
             entity.AddDomainEvent(new DeleteAuditEvent<TEntity>(new List<TEntity> { clone }, _currentUser));
         }
     }
-    protected virtual async Task ClearCacheWhenChangesAsync(List<Guid> ids,
-        CancellationToken cancellationToken = default)
+    protected virtual async Task ClearCacheWhenChangesAsync(List<Guid> ids, CancellationToken cancellationToken = default)
     {
         var tasks = new List<Task>();
         var fullRecordKey = BaseCacheKeys.GetSystemFullRecordsKey(nameof(TEntity));
