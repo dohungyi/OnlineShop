@@ -3,31 +3,17 @@ using SharedKernel.Domain;
 
 namespace SharedKernel.Application;
 
-public interface IBaseWriteOnlyRepository<TEntity, TDbContext> 
+public interface IBaseWriteOnlyRepository<TEntity,TDbContext> 
     where TEntity : BaseEntity
     where TDbContext : DbContext
 {
-    Task PublishEvents(IEventBus eventBus, CancellationToken cancellationToken);
-    
-    TEntity Insert(TEntity entity);
-        
-    IList<TEntity> Insert(IList<TEntity> entities);
+    IUnitOfWork UnitOfWork { get; }
 
-    IList<TEntity> BulkInsert(IList<TEntity> listEntities);
-        
     Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
-        
     Task<IList<TEntity>> InsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default);
-
     Task<IList<TEntity>> BulkInsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default);
-        
-    void Update(TEntity entity);
-
-    void Delete(TEntity entity);
-
-    void Delete(IList<TEntity> entities);
-
-    void BulkDelete(IList<TEntity> listEntities);
-
-    Task BulkDeleteAsync(IList<TEntity> listEntities, CancellationToken cancellationToken = default);
+    Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+    Task DeleteAsync(TEntity entity, CancellationToken cancellationToken);
+    Task DeleteAsync(IList<TEntity> entities, CancellationToken cancellationToken);
+    Task BulkDeleteAsync(IList<TEntity> entities, CancellationToken cancellationToken = default);
 }

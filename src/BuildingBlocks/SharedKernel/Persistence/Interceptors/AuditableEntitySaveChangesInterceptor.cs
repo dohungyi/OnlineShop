@@ -38,22 +38,8 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
         foreach (var entry in context.ChangeTracker.Entries<IAuditable>())
         {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreatedBy = _currentUser.Context.Username;
-                entry.Entity.CreatedDate = DateHelper.Now;
-            } 
-
-            if (entry.State == EntityState.Modified)
-            {
-                entry.Entity.LastModifiedBy = _currentUser.Context.Username;
-                entry.Entity.LastModifiedDate = DateHelper.Now;
-            }
-            
             if (entry.State == EntityState.Deleted)
             {
-                entry.Entity.DeletedBy = _currentUser.Context.Username;
-                entry.Entity.DeletedDate = DateHelper.Now;
                 entry.State = EntityState.Modified;
             }
         }

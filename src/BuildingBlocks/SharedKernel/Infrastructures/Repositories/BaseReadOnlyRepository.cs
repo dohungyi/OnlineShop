@@ -10,8 +10,8 @@ using SharedKernel.Domain;
 
 namespace SharedKernel.Infrastructures.Repositories;
 
-public class BaseReadOnlyRepository<TEntity, TKey, TDbContext> : IBaseReadOnlyRepository<TEntity, TKey, TDbContext>
-    where TEntity :  BaseEntity<TKey>
+public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyRepository<TEntity, TDbContext>
+    where TEntity :  BaseEntity
     where TDbContext : DbContext
 {
     protected readonly TDbContext _dbContext;
@@ -21,7 +21,11 @@ public class BaseReadOnlyRepository<TEntity, TKey, TDbContext> : IBaseReadOnlyRe
     protected readonly string _tableName;
     private readonly DbSet<TEntity> _dbSet;
 
-    public BaseReadOnlyRepository(TDbContext dbContext, ICurrentUser currentUser, ISequenceCaching sequenceCaching, IServiceProvider provider)
+    public BaseReadOnlyRepository(
+        TDbContext dbContext, 
+        ICurrentUser currentUser, 
+        ISequenceCaching sequenceCaching, 
+        IServiceProvider provider)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
@@ -77,7 +81,7 @@ public class BaseReadOnlyRepository<TEntity, TKey, TDbContext> : IBaseReadOnlyRe
         return queryable;
     }
 
-    public async Task<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default)
+    public async Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken = default)
     {
         var cacheResult = await GetByIdCacheAsync(id, cancellationToken);
         if (cacheResult is not null)
@@ -89,7 +93,7 @@ public class BaseReadOnlyRepository<TEntity, TKey, TDbContext> : IBaseReadOnlyRe
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<TEntity?> GetByIdAsync(TKey id,  CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties)
+    public async Task<TEntity?> GetByIdAsync(object id,  CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties)
     {
          return await FindByCondition(x => x.Id.Equals(id), trackChanges: false, includeProperties)
             .FirstOrDefaultAsync(cancellationToken);

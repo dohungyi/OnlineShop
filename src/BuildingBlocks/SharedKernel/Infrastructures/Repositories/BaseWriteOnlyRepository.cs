@@ -1,93 +1,46 @@
 using EFCore.BulkExtensions;
-using MassTransit.Internals;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using SharedKernel.Application;
 using SharedKernel.Application.Consts;
 using SharedKernel.Auth;
 using SharedKernel.Caching;
 using SharedKernel.Domain;
 using SharedKernel.Libraries;
-using SharedKernel.Libraries.Utility;
-using Resources = SharedKernel.Properties.Resources;
-
 
 namespace SharedKernel.Infrastructures.Repositories;
 
-public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyRepository<TEntity, TDbContext>
-    where TEntity :  BaseEntity
-    where TDbContext : DbContext
+public class BaseWriteOnlyRepository<TEntity,TDbContext> : IBaseWriteOnlyRepository<TEntity, TDbContext>
+    where TEntity : BaseEntity
+    where TDbContext : Persistence.ApplicationDbContext
 {
     protected readonly TDbContext _dbContext;
     protected readonly DbSet<TEntity> _dbSet;
     protected readonly string _tableName;
     protected readonly ISequenceCaching _sequenceCaching;
     protected readonly ICurrentUser _currentUser;
-    protected readonly IStringLocalizer<Resources> _localizer;
     
-    public BaseWriteOnlyRepository(TDbContext dbContext, ISequenceCaching sequenceCaching, ICurrentUser currentUser, IStringLocalizer<Resources> localizer)
+    public BaseWriteOnlyRepository(
+        TDbContext dbContext, 
+        ICurrentUser currentUser,
+        ISequenceCaching sequenceCaching)
     {
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _sequenceCaching = sequenceCaching ?? throw new ArgumentNullException(nameof(sequenceCaching));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
         
         _dbSet = dbContext.Set<TEntity>();
         _tableName = nameof(TEntity);
     }
 
-    #region [EVENT]
+    public IUnitOfWork UnitOfWork => _dbContext;
+
+    #region [INSERTS]
     
-    private List<DomainEvent> DomainEvents { get; set; } = new();
-    
-    public async Task PublishEvents(IEventBus eventBus, CancellationToken cancellationToken)
-    {
-        await Task.Yield();
-        if (DomainEvents is not null && DomainEvents.Any())
-        {
-            var events = DomainEvents.Select(x => x).ToList();
-            _ = eventBus.PublishEvent(events, cancellationToken);
-
-            DomainEvents.Clear();
-        }
-    }
-    
-    #endregion
-
-    #region [INSERT]
-    
-    public TEntity Insert(TEntity entity)
-    {
-        BeforeInsert(new List<TEntity>() { entity });
-        
-        _dbContext.Add(entity);
-
-        return entity;
-    }
-
-    public IList<TEntity> Insert(IList<TEntity> entities)
-    {
-        BeforeInsert(entities);
-        
-        _dbContext.AddRange(entities);
-
-        return entities;
-    }
-
-    public IList<TEntity> BulkInsert(IList<TEntity> entities)
-    {
-        BeforeInsert(entities);
-        
-        _dbContext.BulkInsert(entities);
-
-        return entities;
-    }
-
     public async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        BeforeInsert(new List<TEntity>(){ entity });
+        BeforeInsert(new List<TEntity>() {entity});
         
-        await _dbSet.AddAsync(entity, cancellationToken);
+        await _dbContext.AddAsync<TEntity>(entity, cancellationToken);
         
         return entity;
     }
@@ -96,7 +49,7 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
     {
         BeforeInsert(entities);
         
-        await _dbSet.AddRangeAsync(entities, cancellationToken);
+        await _dbContext.AddRangeAsync(entities, cancellationToken);
         
         return entities;
     }
@@ -109,54 +62,56 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
         
         return entities;
     }
-    
+
     #endregion
 
     #region [UPDATE]
     
-    public void Update(TEntity entity)
+    public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
-        var currentEntity = _dbSet.Find(entity.Id);
+        var currentEntity = await _dbSet.FindAsync(entity.Id);
         
         BeforeUpdate(entity, currentEntity);
         
-        _dbContext.Entry(entity).State = EntityState.Modified;
+        _dbContext.Update(entity);
+        
+        await ClearCacheWhenChangesAsync(new List<object>() { entity.Id }, cancellationToken);
+        
+        return entity;
     }
     
     #endregion
 
     #region [DELETE]
 
-    public void Delete(TEntity entity)
+    public async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         BeforeDelete(new List<TEntity>() { entity });
         
         _dbContext.Remove(entity);
+        
+        await ClearCacheWhenChangesAsync(new List<object>() { entity.Id }, cancellationToken);
     }
-
-    public void Delete(IList<TEntity> entities)
+    
+    public async Task DeleteAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
     {
         BeforeDelete(entities);
         
         _dbContext.RemoveRange(entities);
-    }
 
-    public void BulkDelete(IList<TEntity> entities)
-    {
-        BeforeDelete(entities);
-        
-        _dbContext.BulkDelete(entities);
+        await ClearCacheWhenChangesAsync(entities.Select(x => (object)x.Id).ToList(), cancellationToken);
     }
-
     public async Task BulkDeleteAsync(IList<TEntity> entities, CancellationToken cancellationToken = default)
     {
         BeforeDelete(entities);
         
-        await _dbContext.BulkDeleteAsync(entities, cancellationToken: cancellationToken);
+        await _dbContext.BulkDeleteEntitiesAsync(entities, cancellationToken);
+
+        await ClearCacheWhenChangesAsync(entities.Select(x => (object)x.Id).ToList(), cancellationToken);
     }
 
     #endregion
-
+    
     #region [PROTECTED]
     protected virtual void BeforeInsert(IEnumerable<TEntity> entities)
     {
@@ -214,7 +169,7 @@ public class BaseWriteOnlyRepository<TEntity, TDbContext> : IBaseWriteOnlyReposi
             entity.AddDomainEvent(new DeleteAuditEvent<TEntity>(new List<TEntity> { clone }, _currentUser));
         }
     }
-    protected virtual async Task ClearCacheWhenChangesAsync(List<Guid> ids, CancellationToken cancellationToken = default)
+    protected virtual async Task ClearCacheWhenChangesAsync(List<object> ids, CancellationToken cancellationToken = default)
     {
         var tasks = new List<Task>();
         var fullRecordKey = BaseCacheKeys.GetSystemFullRecordsKey(nameof(TEntity));

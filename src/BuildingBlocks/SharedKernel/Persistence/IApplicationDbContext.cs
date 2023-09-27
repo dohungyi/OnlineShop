@@ -1,10 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using SharedKernel.Domain;
-using SharedKernel.UnitOfWork;
+using SharedKernel.Application;
 
 namespace SharedKernel.Persistence;
 
-public interface IApplicationDbContext 
+public interface IApplicationDbContext : IUnitOfWork
 {
     
 }
