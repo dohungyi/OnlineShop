@@ -1,4 +1,3 @@
-using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Application;
 using SharedKernel.Application.Consts;
@@ -6,18 +5,19 @@ using SharedKernel.Auth;
 using SharedKernel.Caching;
 using SharedKernel.Domain;
 using SharedKernel.Libraries;
+using SharedKernel.Persistence;
 
 namespace SharedKernel.Infrastructures.Repositories;
 
 public class BaseWriteOnlyRepository<TEntity,TDbContext> : IBaseWriteOnlyRepository<TEntity, TDbContext>
     where TEntity : BaseEntity
-    where TDbContext : Persistence.ApplicationDbContext
+    where TDbContext : AppDbContext
 {
-    protected readonly TDbContext _dbContext;
-    protected readonly DbSet<TEntity> _dbSet;
-    protected readonly string _tableName;
-    protected readonly ISequenceCaching _sequenceCaching;
-    protected readonly ICurrentUser _currentUser;
+    private readonly TDbContext _dbContext;
+    private readonly DbSet<TEntity> _dbSet;
+    private readonly string _tableName;
+    private readonly ISequenceCaching _sequenceCaching;
+    private readonly ICurrentUser _currentUser;
     
     public BaseWriteOnlyRepository(
         TDbContext dbContext, 
@@ -58,7 +58,7 @@ public class BaseWriteOnlyRepository<TEntity,TDbContext> : IBaseWriteOnlyReposit
     {
         BeforeInsert(entities);
         
-        await _dbContext.BulkInsertAsync(entities, cancellationToken: cancellationToken);
+        await _dbContext.BulkInsertEntitiesAsync(entities, cancellationToken: cancellationToken);
         
         return entities;
     }

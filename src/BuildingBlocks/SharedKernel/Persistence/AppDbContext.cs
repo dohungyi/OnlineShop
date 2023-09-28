@@ -1,12 +1,14 @@
 ﻿using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SharedKernel.Application;
 using SharedKernel.Domain;
 
 namespace SharedKernel.Persistence;
 
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+public class AppDbContext : DbContext, IAppDbContext<DbContext>
 {
+    
     #region [EVENTS]
     
     private List<DomainEvent> DomainEvents { get; set; } = new();
@@ -40,7 +42,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         
         return base.AddAsync(entity, cancellationToken);
     }
-    
     public override Task AddRangeAsync(IEnumerable<object> entities, CancellationToken cancellationToken = new CancellationToken())
     {
         if (entities is not null && typeof(IBaseEntity).IsAssignableFrom(entities.First()?.GetType()))
@@ -56,7 +57,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         }
         return base.AddRangeAsync(entities, cancellationToken);
     }
-
     public override EntityEntry<TEntity> Update<TEntity>(TEntity entity)
     {
         if (typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
@@ -70,7 +70,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         
         return base.Update(entity);
     }
-
     public override EntityEntry<TEntity> Remove<TEntity>(TEntity entity)
     {
         if (typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
@@ -84,7 +83,6 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         
         return base.Remove(entity);
     }
-
     public override void RemoveRange(IEnumerable<object> entities)
     {
         
@@ -102,7 +100,10 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         
         base.RemoveRange(entities);
     }
+    
+    #endregion
 
+    #region [METHOD]
     public async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
     {
         if (entities is not null && typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
@@ -127,9 +128,39 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         }
     }
     
+    public async Task BulkInsertEntitiesAsync<TEntity>(IList<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
+    {
+        if (entities is not null && typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
+        {
+            foreach (var entity in entities)
+            {
+                var @base = (IBaseEntity)entity;
+                if (@base.DomainEvents is not null && @base.DomainEvents.Any())
+                {
+                    DomainEvents.AddRange(@base.DomainEvents);
+                }
+            }
+        }
+        
+        await this.BulkInsertAsync(entities, cancellationToken: cancellationToken);
+       
+    }
+
+    public async Task BulkCommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
+    {
+        await this.BulkSaveChangesAsync(cancellationToken: cancellationToken);
+        
+        if (!dispatchEvent)
+        {
+            DomainEvents.Clear();
+        }
+    }
+        
     #endregion
+
+    #region [IMPLEMENT IUNITOFWORK]
     
-    public async Task SaveChangesAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
+    public async Task CommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
     {
         await SaveChangesAsync(cancellationToken);
         
@@ -138,5 +169,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             DomainEvents.Clear();
         }
     }
+    
+    #endregion
     
 }

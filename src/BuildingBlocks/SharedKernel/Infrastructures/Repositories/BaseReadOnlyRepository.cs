@@ -1,24 +1,23 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using SharedKernel.Application;
 using SharedKernel.Application.Consts;
-using SharedKernel.Application.Responses;
 using SharedKernel.Auth;
 using SharedKernel.Caching;
 using SharedKernel.Domain;
+using SharedKernel.Persistence;
 
 namespace SharedKernel.Infrastructures.Repositories;
 
 public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyRepository<TEntity, TDbContext>
     where TEntity :  BaseEntity
-    where TDbContext : DbContext
+    where TDbContext : AppDbContext
 {
-    protected readonly TDbContext _dbContext;
-    protected readonly ICurrentUser _currentUser;
-    protected readonly ISequenceCaching _sequenceCaching;
-    protected readonly IServiceProvider _provider;
-    protected readonly string _tableName;
+    private readonly TDbContext _dbContext;
+    private readonly ICurrentUser _currentUser;
+    private readonly ISequenceCaching _sequenceCaching;
+    private readonly IServiceProvider _provider;
+    private readonly string _tableName;
     private readonly DbSet<TEntity> _dbSet;
 
     public BaseReadOnlyRepository(
@@ -72,15 +71,14 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
     {
         return !trackChanges ? _dbSet.Where(expression).AsNoTracking() : _dbSet.Where(expression);
     }
-        
-
+    
     public IQueryable<TEntity> FindByCondition(Expression<Func<TEntity, bool>> expression, bool trackChanges = false, params Expression<Func<TEntity, object>>[] includeProperties)
     {
         var queryable = FindByCondition(expression, trackChanges);
         queryable = includeProperties.Aggregate(queryable, (current, includeProperty) => current.Include(includeProperty));
         return queryable;
     }
-
+    
     public async Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken = default)
     {
         var cacheResult = await GetByIdCacheAsync(id, cancellationToken);
