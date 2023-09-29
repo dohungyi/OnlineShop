@@ -6,7 +6,7 @@ using SharedKernel.Domain;
 
 namespace SharedKernel.Persistence;
 
-public class AppDbContext : DbContext, IAppDbContext<DbContext>
+public class AppDbContext : DbContext, IAppDbContext
 {
     
     #region [EVENTS]

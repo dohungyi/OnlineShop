@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Application.Responses;
 
-namespace SharedKernel.Application.Responses;
+namespace SharedKernel.Libraries;
 
 public static class PagedListExtensions
 {
@@ -35,7 +36,7 @@ public static class PagedListExtensions
         }
 
         int totalCount = await source.CountAsync(cancellationToken).ConfigureAwait(false);
-        var items = await source.Skip((pageIndex - indexFrom) * pageSize).Take(pageSize).ToListAsync(cancellationToken).ConfigureAwait(false);
+        var items = await source.Skip((pageIndex - indexFrom) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
         return new PagedList<TEntity>(pageIndex, pageSize, indexFrom, totalCount, totalPages, items);

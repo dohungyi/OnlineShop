@@ -1,6 +1,6 @@
 namespace SharedKernel.Libraries;
 
-public static class IEnumerableExtensions
+public static class EnumerableExtensions
 {
     public static IEnumerable<List<TSource>> ChunkList<TSource>(this IEnumerable<TSource> source, int size)
     {

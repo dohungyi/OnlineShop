@@ -10,6 +10,8 @@ public static class HttpContextExtensions
     /// Convert object to dictionary
     /// CreatedBy: Đỗ Chí Hùng (07/09/2023)
     /// </summary>
+    /// https://stackoverflow.com/questions/1466804/is-it-possible-to-copy-clone-httpcontext-of-a-web-request
+
     public static HttpContext Clone(this HttpContext httpContext, bool copyBody = true)
     {
         var existingRequestFeature = httpContext.Features.GetRequiredFeature<IHttpRequestFeature>();

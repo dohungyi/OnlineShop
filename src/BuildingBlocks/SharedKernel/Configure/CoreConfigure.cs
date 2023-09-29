@@ -1,38 +1,195 @@
 ﻿using System.Globalization;
 using System.Net;
+using System.Text;
 using AspNetCoreRateLimit;
 using HealthChecks.UI.Client;
+using MassTransit;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Localization.Routing;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using SharedKernel.Application.Responses;
+using SharedKernel.Auth;
+using SharedKernel.Caching;
 using SharedKernel.Core;
+using SharedKernel.Domain;
 using SharedKernel.Filters;
-using SharedKernel.Libraries.Security;
-using SharedKernel.Log;
+using SharedKernel.Infrastructures;
+using SharedKernel.MessageBroker;
 using SharedKernel.Middlewares;
+using SharedKernel.Persistence.ExceptionHandler;
 using SharedKernel.Properties;
-using SharedKernel.Runtime.Exceptions;
 using SharedKernel.SignalR;
+using StackExchange.Redis;
 
 namespace SharedKernel.Configure;
 
 public static class CoreConfigure
 {
     #region [DEPENDENCY INJECTION]
-
     
+    public static IServiceCollection AddCoreLocalization(this IServiceCollection services)
+    {
+        var supportedCultures = new List<CultureInfo> { new CultureInfo("en-US"), new CultureInfo("vi-VN") };
+        services.AddLocalization();
+        services.Configure<RequestLocalizationOptions>(options =>
+        {
+            options.DefaultRequestCulture = new RequestCulture(culture: "en-US");
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+            options.RequestCultureProviders = new[] { new RouteDataRequestCultureProvider() };
+        });
+
+        return services;
+    }
+    
+    public static IServiceCollection AddCoreRabbitMq(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        Action<IBusRegistrationConfigurator, RabbitMqSetting> registerConsumer = null,
+        Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator, RabbitMqSetting> configConsumer = null)
+    {
+        var messageQueueSettings = configuration.GetSection(RabbitMqSetting.SectionName)
+            .Get<RabbitMqSetting>();
+
+        if (messageQueueSettings is null)
+        {
+            throw new ArgumentNullException(nameof(RabbitMqSetting));
+        }
+
+        services.AddMassTransit(configurator =>
+        {
+            registerConsumer?.Invoke(configurator, messageQueueSettings);
+
+            configurator.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(messageQueueSettings.Host, messageQueueSettings.Port, messageQueueSettings.VirtualHost, h =>
+                {
+                    h.Username(messageQueueSettings.UserName);
+                    h.Password(messageQueueSettings.Password);
+                });
+
+                configConsumer?.Invoke(context, cfg, messageQueueSettings);
+            });
+        });
+
+        services.AddTransient<IMessagePublisher, MasstransitMessagePublisher>();
+
+        return services;
+    }
+        
+
+    public static IServiceCollection AddCoreAuthentication(this IServiceCollection services, IConfiguration Configuration)
+    {
+        services.AddAuthentication(authOptions =>
+        {
+            authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            authOptions.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        }).AddJwtBearer(jwtOptions =>
+        {
+            jwtOptions.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidAudience = Configuration["Auth:JwtSettings:Issuer"],
+                ValidateIssuer = true,
+                ValidIssuer = Configuration["Auth:JwtSettings:Issuer"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:JwtSettings:Key"])),
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+            };
+
+            jwtOptions.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/socket-message"))
+                    {
+                        context.Token = accessToken;
+                    }
+                    return Task.CompletedTask;
+                }
+            };
+        });
+        return services;
+    }
+    
+    public static IServiceCollection AddCoreCaching(this IServiceCollection services, IConfiguration configuration)
+    {
+        var redisCacheSettings = configuration.GetSection(RedisCacheSettings.SectionName).Get<RedisCacheSettings>();
+        if (redisCacheSettings is null)
+        {
+            throw new ArgumentNullException(nameof(redisCacheSettings));
+        }
+        
+        var asyncPolicy = PollyExtensions.CreateDefaultPolicy(cfg =>
+        {
+            cfg.Or<RedisServerException>()
+                .Or<RedisConnectionException>();
+        });
+        
+        services.AddSingleton<IBaseCaching>(s => new RedisCache(
+            redisCacheSettings.ConnectionString,
+            redisCacheSettings.InstanceName, 
+            redisCacheSettings.DatabaseIndex,
+            asyncPolicy));
+
+
+        services.AddMemoryCache();
+        services.AddSingleton<IBaseCaching>(s =>
+            new MemoryCaching(s.GetRequiredService<IMemoryCache>()));
+        
+        services.AddSingleton<ISequenceCaching, SequenceCaching>();
+        
+        return services;
+    }
+    
+    public static IServiceCollection AddCurrentUser(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrentUser, CurrentUser>();
+        return services;
+    }
+    
+    public static IServiceCollection AddBus(this IServiceCollection services)
+    {
+        services.AddScoped<IEventBus, IEventBus>();
+        return services;
+    }
+    
+    public static IServiceCollection AddExceptionHandler(this IServiceCollection services)
+    {
+        services.AddSingleton<IExceptionHandler, ExceptionHandler>();
+        return services;
+    }
+    
+    public static IServiceCollection AddCoreBehaviors(this IServiceCollection services)
+    {
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(EventsBehavior<,>));
+        return services;
+    }
 
     #endregion [DEPENDENCY INJECTION]
 

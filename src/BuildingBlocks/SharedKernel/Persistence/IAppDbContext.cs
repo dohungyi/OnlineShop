@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Application;
+using SharedKernel.Domain;
 
 namespace SharedKernel.Persistence;
 
-public interface IAppDbContext<TDbContext> : IUnitOfWork<TDbContext> where TDbContext : DbContext
+public interface IAppDbContext : IUnitOfWork
 {
-    
+    Task PublishEvents(IEventBus eventBus, CancellationToken cancellationToken);
 }
