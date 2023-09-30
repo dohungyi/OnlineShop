@@ -1,8 +1,6 @@
-﻿using OnlineShop.Domain.Common.Audits;
+﻿namespace OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Domain.Entities;
-
-public class Image : EntityAuditBase<Guid>
+public class Image : BaseEntity
 {
     public string? OriginLinkImage { get; set; }
     public string LocalLinkImage { get; set; }

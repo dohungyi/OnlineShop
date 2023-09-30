@@ -1,8 +1,6 @@
-﻿using OnlineShop.Domain.Common.Audits;
+﻿namespace OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Domain.Entities;
-
-public class Product : EntityAuditBase<Guid>
+public class Product : BaseEntity
 {
     public string Name { get; set; }
     public string Alias { get; set; }
@@ -37,6 +35,6 @@ public class Product : EntityAuditBase<Guid>
     public ICollection<ProductTag> ProductTags { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; }
     public ICollection<Image> Images { get; set; }
-    public ICollection<Ratting> Rattings { get; set; }
+    public ICollection<Rating> Rattings { get; set; }
     #endregion
 }

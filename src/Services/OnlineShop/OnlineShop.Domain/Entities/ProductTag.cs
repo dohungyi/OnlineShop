@@ -1,8 +1,6 @@
-﻿using OnlineShop.Domain.Common.Audits;
+﻿namespace OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Domain.Entities;
-
-public class ProductTag : EntityBase<Guid>
+public class ProductTag : BaseEntity
 {
     public int ProductId { set; get; }
     

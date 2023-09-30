@@ -1,8 +1,6 @@
-﻿using OnlineShop.Domain.Common.Audits;
+﻿namespace OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Domain.Entities;
-
-public class Category : EntityAuditBase<Guid>
+public class Category : BaseEntity
 {
     public string Name { get; set; }
     public string Code { get; set; }

@@ -1,8 +1,6 @@
-﻿using OnlineShop.Domain.Common.Audits;
+﻿namespace OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Domain.Entities;
-
-public class SlideGroup : EntityBase<Guid>
+public class SlideGroup : BaseEntity
 {
     public string Name { set; get; }
 

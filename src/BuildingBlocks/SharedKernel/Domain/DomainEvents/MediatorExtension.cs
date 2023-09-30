@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace SharedKernel.Domain.DomainEvents;
+namespace SharedKernel.Domain;
 
 public static class MediatorExtension
 {

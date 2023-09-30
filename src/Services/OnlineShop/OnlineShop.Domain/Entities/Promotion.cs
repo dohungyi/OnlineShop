@@ -1,8 +1,6 @@
-﻿using OnlineShop.Domain.Common.Audits;
+﻿namespace OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Domain.Entities;
-
-public class Promotion : EntityAuditBase<Guid>
+public class Promotion : BaseEntity
 {
     public string Code { get; set; }
     public double DiscountPercent { get; set; }

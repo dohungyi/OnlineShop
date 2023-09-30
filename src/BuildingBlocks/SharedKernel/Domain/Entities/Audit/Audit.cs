@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SharedKernel.Domain.Entities.Audit;
+namespace SharedKernel.Domain;
 
 [Table("common_audit")]
 public class AuditEntity 

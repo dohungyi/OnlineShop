@@ -1,15 +1,15 @@
-﻿using OnlineShop.Domain.Common.Audits;
+﻿namespace OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Domain.Entities;
-
-public class RoleAction : EntityBase<Guid>
+[Table("common_role_action")]
+public class RoleAction : BaseEntity
 {
+    public int RoleId { get; set; }
+    public long ActionId { get; set; }
     
-    public Guid GroupId { get; set; }
-    public Guid PermId { get; set; }
+    #region [REFRENCE PROPERTIES]
     
-    #region [REFERENCE PROPERTIES]
     public Role Role { get; set; }
-    public Actionn Actionn { get; set; }
+    public Action Action { get; set; }
+    
     #endregion
 }

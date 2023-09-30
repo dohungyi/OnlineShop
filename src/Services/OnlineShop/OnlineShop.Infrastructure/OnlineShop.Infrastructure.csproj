@@ -7,8 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Persistence\Configurations\" />
-      <Folder Include="Persistence\Interceptors\" />
+      <ProjectReference Include="..\..\..\BuildingBlocks\SharedKernel\SharedKernel.csproj" />
+      <ProjectReference Include="..\OnlineShop.Application\OnlineShop.Application.csproj" />
+      <ProjectReference Include="..\OnlineShop.Domain\OnlineShop.Domain.csproj" />
     </ItemGroup>
 
 </Project>

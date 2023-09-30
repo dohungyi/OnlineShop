@@ -1,3 +1,2 @@
-﻿global using OnlineShop.Domain.Common;
-global using OnlineShop.Domain.Entities;
-global using OnlineShop.Domain.Enums;
+﻿global using System.ComponentModel.DataAnnotations.Schema;
+global using SharedKernel.Domain;

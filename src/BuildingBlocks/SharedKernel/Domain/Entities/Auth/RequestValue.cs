@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Domain.Entities.Auth;
+﻿namespace SharedKernel.Domain;
 
 public class RequestValue
 {

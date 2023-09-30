@@ -1,6 +1,8 @@
-﻿namespace OnlineShop.Infrastructure.Persistence;
+﻿using SharedKernel.Persistence;
 
-public class ApplicationDbContext
+namespace OnlineShop.Infrastructure.Persistence;
+
+public class ApplicationDbContext : AppDbContext
 {
     
 }
