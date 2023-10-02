@@ -1,4 +1,6 @@
-﻿namespace OnlineShop.Domain.Entities;
+﻿using OnlineShop.Domain.Entities.Users;
+
+namespace OnlineShop.Domain.Entities;
 
 public class Order : BaseEntity
 {
@@ -12,9 +14,13 @@ public class Order : BaseEntity
     
     public Guid PaymentId { get; set; } 
     public Guid StatusId { get; set; }
+    public Guid UserId { get; set; }
+    public Guid? PromotionId { get; set; }
     
     #region [REFRENCE PROPERTIES]
+    public virtual ApplicationUser User { get; set; }
     public virtual Payment Payment { get; set; }
+    public virtual Promotion Promotion { get; set; }
     public virtual OrderStatus OrderStatus { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; }
     #endregion

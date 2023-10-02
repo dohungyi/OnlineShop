@@ -9,4 +9,10 @@ public class Action : BaseEntity
     public string Description { get; set; }
 
     public int Exponent { get; set; }
+    
+    #region [REFRENCE PROPERTIES]
+    
+    public ICollection<RoleAction> RoleActions { get; set; }
+    
+    #endregion
 }

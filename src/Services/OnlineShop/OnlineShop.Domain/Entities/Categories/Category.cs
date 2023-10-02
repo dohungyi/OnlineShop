@@ -4,8 +4,7 @@ public class Category : BaseEntity
 {
     public string Name { get; set; }
     public string Code { get; set; }
-    public string? OriginLinkImage { get; set; }
-    public string LocalLinkImage { get; set; }
+    public string? ImageFileName { get; set; }
     public string Description { get; set; }
 
     #region [REFRENCE PROPERTIES]

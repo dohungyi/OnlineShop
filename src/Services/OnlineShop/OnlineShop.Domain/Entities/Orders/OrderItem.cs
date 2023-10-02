@@ -11,7 +11,6 @@ public class OrderItem : BaseEntity
     
     #region [REFRENCE PROPERTIES]
     public virtual Product Product { get; set; }
-    public virtual Promotion Promotion { get; set; }
     public virtual Order Order { get; set; }
     #endregion
 }

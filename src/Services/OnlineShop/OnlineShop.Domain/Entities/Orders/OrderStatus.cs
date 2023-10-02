@@ -7,7 +7,7 @@ public class OrderStatus : BaseEntity
     public string Code { get; set; }
     
     #region [REFRENCE PROPERTIES]
-    public ICollection<Order> Orders { get; set; }
-    public ICollection<Payment> Payments { get; set; }
+    public Order Order { get; set; }
+    public Payment Payment { get; set; }
     #endregion
 }

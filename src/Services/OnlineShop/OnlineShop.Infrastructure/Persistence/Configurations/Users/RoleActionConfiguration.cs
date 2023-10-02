@@ -1,6 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OnlineShop.Domain.Constants;
+using OnlineShop.Domain.Entities;
+
 namespace OnlineShop.Infrastructure.Persistence.Configurations.Users;
 
-public class RoleActionConfiguration
+public class RoleActionConfiguration : IEntityTypeConfiguration<RoleAction>
 {
-    
+    public void Configure(EntityTypeBuilder<RoleAction> builder)
+    {
+        builder.ToTable(TableName.RoleAction);
+        
+        builder.HasKey(ur => new { ur.Action, ur.RoleId });
+            
+        builder.HasOne(ur => ur.Role)
+            .WithMany(u => u.RoleActions)
+            .HasForeignKey(ur => ur.RoleId);
+
+        builder.HasOne(ur => ur.Action)
+            .WithMany(r => r.RoleActions)
+            .HasForeignKey(ur => ur.ActionId);
+    }
 }

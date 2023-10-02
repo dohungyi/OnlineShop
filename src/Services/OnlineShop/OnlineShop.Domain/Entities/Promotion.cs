@@ -6,6 +6,6 @@ public class Promotion : BaseEntity
     public double DiscountPercent { get; set; }
     
     #region [REFRENCE PROPERTIES]
-    public ICollection<OrderItem> OrderItems;
+    public ICollection<Order> Orders;
     #endregion
 }

@@ -9,6 +9,11 @@ namespace SharedKernel.Persistence;
 public class AppDbContext : DbContext, IAppDbContext
 {
     
+    #region [CONSTRUCTOR]
+    
+
+    #endregion [CONSTRUCTOR]
+    
     #region [EVENTS]
     
     private List<DomainEvent> DomainEvents { get; set; } = new();

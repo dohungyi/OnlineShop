@@ -6,8 +6,8 @@ public class UserRole : BaseEntity
     public Guid UserId { get; set; }
 
     #region [REFRENCE PROPERTIES]
-    public User User { get; set; }
-    public Role Role { get; set; }
+    public virtual ApplicationUser User { get; set; }
+    public virtual Role Role { get; set; }
     #endregion
 }
 

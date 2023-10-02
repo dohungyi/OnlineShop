@@ -13,6 +13,6 @@ public class Payment : BaseEntity
     
     #region [REFRENCE PROPERTIES]
     public virtual OrderStatus OrderStatus { get; set; }
-    public ICollection<Order> Orders { get; set; }
+    public virtual Order Order { get; set; }
     #endregion
 }

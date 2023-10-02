@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Persistence;
 
 namespace SharedKernel.Application;
 
 public interface IBaseWriteOnlyRepository<TEntity,TDbContext> 
     where TEntity : BaseEntity
-    where TDbContext : DbContext
+    where TDbContext : IAppDbContext
 {
     IUnitOfWork UnitOfWork { get; }
 

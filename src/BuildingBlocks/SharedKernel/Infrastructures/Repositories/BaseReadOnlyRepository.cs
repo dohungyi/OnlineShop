@@ -13,12 +13,12 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
     where TEntity :  BaseEntity
     where TDbContext : AppDbContext
 {
-    private readonly TDbContext _dbContext;
-    private readonly ICurrentUser _currentUser;
-    private readonly ISequenceCaching _sequenceCaching;
-    private readonly IServiceProvider _provider;
-    private readonly string _tableName;
-    private readonly DbSet<TEntity> _dbSet;
+    protected readonly TDbContext _dbContext;
+    protected readonly ICurrentUser _currentUser;
+    protected readonly ISequenceCaching _sequenceCaching;
+    protected readonly IServiceProvider _provider;
+    protected readonly string _tableName;
+    protected readonly DbSet<TEntity> _dbSet;
 
     public BaseReadOnlyRepository(
         TDbContext dbContext, 

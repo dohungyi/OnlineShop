@@ -1,12 +1,13 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.Domain;
+using SharedKernel.Persistence;
 
 namespace SharedKernel.Application;
 
 public interface IBaseReadOnlyRepository<TEntity, TDbContext> 
     where TEntity : BaseEntity
-    where TDbContext : DbContext
+    where TDbContext : IAppDbContext
 {
     
     #region [CACHE]

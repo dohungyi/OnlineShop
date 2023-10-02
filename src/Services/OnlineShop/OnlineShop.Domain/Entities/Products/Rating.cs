@@ -1,4 +1,6 @@
-﻿namespace OnlineShop.Domain.Entities;
+﻿using OnlineShop.Domain.Entities.Users;
+
+namespace OnlineShop.Domain.Entities;
 
 public class Rating : BaseEntity
 {
@@ -8,7 +10,7 @@ public class Rating : BaseEntity
     public Guid ProductId { get; set; }
     
     #region [REFRENCE PROPERTIES]
-    public virtual User User { get; set; }
+    public virtual ApplicationUser User { get; set; }
     public virtual Product Product { get; set; }
     #endregion
 }
