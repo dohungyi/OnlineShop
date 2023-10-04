@@ -27,14 +27,6 @@ public class User : BaseEntity
     public DateTime DateOfBirth { get; set; }
 
     public GenderType Gender { get; set; }
-    
-    public string? ImageFileName { get; set; }
-    
     public Guid UserConfigId { get; set; }
     
-    #region [REFRENCE PROPERTIES]
-
-    public virtual UserConfig UserConfig { get; set; }
-
-    #endregion
 }

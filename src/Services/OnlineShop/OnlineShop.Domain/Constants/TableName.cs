@@ -9,6 +9,7 @@ public static class TableName
     public const string User = "user";
     public const string UserAddress = "user_address";
     public const string UserConfig = "user_config";
+    public const string Avatar = "avatar";
     public const string UserPayment = "user_payment";
     public const string UserRole = "user_role";
     

@@ -12,7 +12,7 @@ public class RoleActionConfiguration : IEntityTypeConfiguration<RoleAction>
         builder.ToTable(TableName.RoleAction);
         
         builder.HasKey(ur => new { ur.Action, ur.RoleId });
-            
+
         builder.HasOne(ur => ur.Role)
             .WithMany(u => u.RoleActions)
             .HasForeignKey(ur => ur.RoleId);

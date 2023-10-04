@@ -15,9 +15,10 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
         // Key
         builder.HasKey(u => u.Id);
 
-        // Index
+        // Non - Index Clustered   
         builder.HasIndex(u => u.Id);
         
+        // Index Clustered 
         builder.HasIndex(u => u.Username).IsUnique().IsClustered();
 
         // Property
@@ -38,23 +39,43 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
         builder.Property(u => u.Address).HasMaxLength(255);
 
         builder.Property(u => u.Gender).IsRequired();
-
-        builder.Property(u => u.ImageFileName).HasMaxLength(255);
         
         // Reference Property
+        builder.HasOne(u => u.Avatar)
+            .WithOne(a => a.User)
+            .HasForeignKey<ApplicationUser>(u => u.AvatarId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
+        
         builder.HasOne(u => u.UserConfig)
-            .WithOne(uc => (ApplicationUser)uc.User)
-            .HasForeignKey<User>(u => u.UserConfigId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithOne(uc => uc.User)
+            .HasForeignKey<ApplicationUser>(u => u.UserConfigId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
+
+        builder.HasMany(u => u.UserAddresses)
+            .WithOne(ur => ur.User)
+            .HasForeignKey(ur => ur.UserId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
+        
+        builder.HasMany(u => u.UserPayments)
+            .WithOne(ur => ur.User)
+            .HasForeignKey(ur => ur.UserId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
         
         builder.HasMany(u => u.Ratings)
             .WithOne(r => r.User)
             .HasForeignKey(r => r.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
         
         builder.HasMany(u => u.Orders)
             .WithOne(o => o.User)
             .HasForeignKey(o => o.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
+        
     }
 }

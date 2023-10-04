@@ -5,10 +5,4 @@ public class UserConfig : PersonalizedEntity
     public string Json { get; set; }
     
     public Guid UserId { get; set; }
-    
-    #region [REFRENCE PROPERTIES]
-
-    public virtual User User { get; set; }
-
-    #endregion
 }

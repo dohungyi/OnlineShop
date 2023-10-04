@@ -10,5 +10,7 @@ public class UserAddressConfiguration : IEntityTypeConfiguration<ApplicationUser
     public void Configure(EntityTypeBuilder<ApplicationUserAddress> builder)
     {
         builder.ToTable(TableName.UserAddress);
+        
+        builder.HasKey(ua => ua.Id);
     }
 }

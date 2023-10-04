@@ -9,7 +9,7 @@ public interface IUserReadOnlyRepository : IBaseReadOnlyRepository<ApplicationUs
 {
     Task<string> CheckDuplicateAsync(string username, string email, string phone, CancellationToken cancellationToken = default);
 
-    Task<object> GetAvatarAsync(CancellationToken cancellationToken);
+    Task<Avatar> GetAvatarAsync(CancellationToken cancellationToken);
 
     Task<User> GetUserInformationAsync(CancellationToken cancellationToken);
 }
