@@ -9,7 +9,6 @@ public interface IBaseWriteOnlyRepository<TEntity,TDbContext>
     where TDbContext : IAppDbContext
 {
     IUnitOfWork UnitOfWork { get; }
-
     Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task<IList<TEntity>> InsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default);
     Task<IList<TEntity>> BulkInsertAsync(IList<TEntity> entities, CancellationToken cancellationToken = default);
