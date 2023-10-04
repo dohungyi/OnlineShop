@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using OnlineShop.Domain.Entities;
+using OnlineShop.Application.Infrastructure.Persistence;
 using OnlineShop.Domain.Entities;
 using SharedKernel.Persistence;
 using Action = OnlineShop.Domain.Entities.Action;
 
 namespace OnlineShop.Infrastructure.Persistence;
 
-public class ApplicationDbContext : AppDbContext
+public class ApplicationDbContext : AppDbContext, IApplicationDbContext
 {
     #region [CONSTRUCTOR]
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base()
@@ -20,6 +20,7 @@ public class ApplicationDbContext : AppDbContext
 
     #region [USERS]
 
+    public DbSet<RequestInformation> RequestInformations { get; set; }
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     public DbSet<Avatar> Avatars { get; set; }
     public DbSet<ApplicationUserConfig> ApplicationUserConfigs { get; set; }

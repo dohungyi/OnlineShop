@@ -10,7 +10,16 @@ public class AppDbContext : DbContext, IAppDbContext
 {
     
     #region [CONSTRUCTOR]
+
+    public AppDbContext() : base()
+    {
+        
+    }
     
+    public AppDbContext(string connectionString) : base(new DbContextOptionsBuilder<AppDbContext>().UseSqlServer(connectionString).Options)
+    {
+        // Các cài đặt khác nếu cần
+    }
 
     #endregion [CONSTRUCTOR]
     

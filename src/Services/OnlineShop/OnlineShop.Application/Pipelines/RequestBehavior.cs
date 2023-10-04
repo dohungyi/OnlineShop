@@ -1,49 +1,56 @@
-using System.Data.Common;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
+using OnlineShop.Application.Infrastructure.Persistence;
 using SharedKernel.Application;
 using SharedKernel.Domain;
 using SharedKernel.Libraries.Utility;
 using SharedKernel.Log;
 using UAParser;
 
-namespace SharedKernel.Infrastructures;
+
+namespace OnlineShop.Application.Pipelines;
 
 public class RequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly IHttpContextAccessor _context;
+    private readonly IHttpContextAccessor _accessor;
+    private readonly IApplicationDbContext _context;
 
-    public RequestBehavior(IHttpContextAccessor accessor)
+    public RequestBehavior(IHttpContextAccessor accessor, IApplicationDbContext context)
     {
-        _context = accessor;
+        _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
-
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
-        RequestHandlerDelegate<TResponse> next)
+    
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var requestId = Guid.NewGuid().ToString();
-        var httpRequest = _context.HttpContext.Request;
+        var httpRequest = _accessor.HttpContext.Request;
         var openRequest = new OpenHttpRequest(httpRequest.Method, httpRequest.Scheme, httpRequest.Host,
             httpRequest.Path, httpRequest.QueryString, httpRequest.Headers, AuthUtility.TryGetIP(httpRequest));
 
         httpRequest.Headers.Add(HeaderNamesExtension.RequestId, requestId);
+        
         _ = Task.Run(async () =>
         {
             try
             {
-
+                var requestInformation = GetParameter(openRequest, requestId);
+                await _context.RequestInformations.AddAsync(requestInformation, cancellationToken);
+                await _context.CommitAsync(false ,cancellationToken);
             }
             catch (Exception ex)
             {
                 Logging.Error(ex);
             }
-        });
+            
+        }, cancellationToken);
+        
         return await next();
     }
 
-    private (string, RequestInformation) GetParameter(OpenHttpRequest request, string requestId)
+    private RequestInformation GetParameter(OpenHttpRequest request, string requestId)
     {
         var ua = request.Headers[HeaderNames.UserAgent].ToString();
         var c = Parser.GetDefault().Parse(ua);
@@ -56,6 +63,7 @@ public class RequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         var os = c.OS.Family + (!string.IsNullOrEmpty(c.OS.Major) ? $" {c.OS.Major}" : "") +
                  (!string.IsNullOrEmpty(c.OS.Minor) ? $".{c.OS.Minor}" : "");
 
-        return (default, default);
+        return new RequestInformation(requestId, ip, method, apiUrl, browser, os, device, ua, origin);
     }
+    
 }

@@ -185,7 +185,6 @@ public static class CoreConfigure
     public static IServiceCollection AddCoreBehaviors(this IServiceCollection services)
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(EventsBehavior<,>));
         return services;
