@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.Extensions.Caching.Memory;
@@ -23,17 +24,20 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
+using SharedKernel.Application;
 using SharedKernel.Application.Responses;
 using SharedKernel.Auth;
 using SharedKernel.Caching;
 using SharedKernel.Core;
 using SharedKernel.Domain;
+using SharedKernel.Domain.DomainEvents.Dispatcher;
 using SharedKernel.Filters;
 using SharedKernel.Infrastructures;
 using SharedKernel.MessageBroker;
 using SharedKernel.Middlewares;
 using SharedKernel.Persistence.ExceptionHandler;
 using SharedKernel.Properties;
+using SharedKernel.Providers.Storage.S3;
 using SharedKernel.SignalR;
 using StackExchange.Redis;
 
@@ -102,46 +106,42 @@ public static class CoreConfigure
             authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             authOptions.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 
-        }).AddJwtBearer(jwtOptions =>
-        {
-            jwtOptions.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = true,
-                ValidAudience = Configuration["Auth:JwtSettings:Issuer"],
-                ValidateIssuer = true,
-                ValidIssuer = Configuration["Auth:JwtSettings:Issuer"],
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:JwtSettings:Key"])),
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero,
-            };
-
-            jwtOptions.Events = new JwtBearerEvents
-            {
-                OnMessageReceived = context =>
-                {
-                    var accessToken = context.Request.Query["access_token"];
-
-                    var path = context.HttpContext.Request.Path;
-                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/socket-message"))
-                    {
-                        context.Token = accessToken;
-                    }
-                    return Task.CompletedTask;
-                }
-            };
         });
+        //     .AddJwtBearer(jwtOptions =>
+        // {
+        //     jwtOptions.TokenValidationParameters = new TokenValidationParameters
+        //     {
+        //         ValidateAudience = true,
+        //         ValidAudience = Configuration["Auth:JwtSettings:Issuer"],
+        //         ValidateIssuer = true,
+        //         ValidIssuer = Configuration["Auth:JwtSettings:Issuer"],
+        //         ValidateIssuerSigningKey = true,
+        //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:JwtSettings:Key"])),
+        //         ValidateLifetime = true,
+        //         ClockSkew = TimeSpan.Zero,
+        //     };
+        //
+        //     jwtOptions.Events = new JwtBearerEvents
+        //     {
+        //         OnMessageReceived = context =>
+        //         {
+        //             var accessToken = context.Request.Query["access_token"];
+        //
+        //             var path = context.HttpContext.Request.Path;
+        //             if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/socket-message"))
+        //             {
+        //                 context.Token = accessToken;
+        //             }
+        //             return Task.CompletedTask;
+        //         }
+        //     };
+        // });
         return services;
     }
     
     public static IServiceCollection AddCoreCaching(this IServiceCollection services, IConfiguration configuration)
     {
         var redisCacheSettings = configuration.GetSection(RedisCacheSettings.SectionName).Get<RedisCacheSettings>();
-        if (redisCacheSettings is null)
-        {
-            throw new ArgumentNullException(nameof(redisCacheSettings));
-        }
-        
         var asyncPolicy = PollyExtensions.CreateDefaultPolicy(cfg =>
         {
             cfg.Or<RedisServerException>()
@@ -164,6 +164,12 @@ public static class CoreConfigure
         return services;
     }
     
+    public static IServiceCollection AddCoreProviders(this IServiceCollection services)
+    {
+        services.AddScoped<IS3StorageProvider, S3StorageProvider>();
+        return services;
+    }
+    
     public static IServiceCollection AddCurrentUser(this IServiceCollection services)
     {
         services.AddScoped<ICurrentUser, CurrentUser>();
@@ -172,7 +178,7 @@ public static class CoreConfigure
     
     public static IServiceCollection AddBus(this IServiceCollection services)
     {
-        services.AddScoped<IEventBus, IEventBus>();
+        services.AddScoped<IEventBus, EventBus>();
         return services;
     }
     
@@ -182,11 +188,39 @@ public static class CoreConfigure
         return services;
     }
     
+    public static IServiceCollection AddCoreRateLimit(this IServiceCollection services)
+    {
+        services.Configure<IpRateLimitOptions>(options =>
+        {
+            options.EnableEndpointRateLimiting = true;
+            options.StackBlockedRequests = false;
+            options.RealIpHeader = HeaderNamesExtension.RealIpHeader;
+            options.ClientIdHeader = HeaderNamesExtension.ClientIdHeader;
+            options.GeneralRules = new List<RateLimitRule>
+            {
+                new RateLimitRule
+                {
+                    Endpoint = "*",
+                    Period = "1s",
+                    Limit = 8,
+                }
+            };
+        });
+
+        services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+        services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+        services.AddInMemoryRateLimiting();
+
+        return services;
+    }
+    
     public static IServiceCollection AddCoreBehaviors(this IServiceCollection services)
     {
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(EventsBehavior<,>));
+        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(EventsBehavior<,>));
         return services;
     }
 
@@ -265,6 +299,45 @@ public static class CoreConfigure
             var localizer = context.RequestServices.GetRequiredService<IStringLocalizer<Resources>>();
 
             // Handle Exception
+            // Catchable
+            // if (exception is CatchableException)
+            // {
+            //     responseContent.Error = new Error(500, exception.Message);
+            //     Logging.Error(exception);
+            // }
+            // // For bi đần
+            // else if (exception is ForbiddenException)
+            // {
+            //     responseContent.Error = new Error(403, localizer["not_permission"].Value);
+            // }
+            // // Sql Injection
+            // else if (exception is SqlInjectionException)
+            // {
+            //     responseContent.Error = new Error(400, Secure.MsgDetectedSqlInjection);
+            //     Logging.Error(exception);
+            // }
+            // // Bad request
+            // else if (exception is BadRequestException)
+            // {
+            //     if ((exception as BadRequestException).Body != null)
+            //     {
+            //         responseContent = new SimpleDataResult
+            //         {
+            //             Data = (exception as BadRequestException).Body,
+            //             Error = new Error(400, exception.Message, (exception as BadRequestException).Type)
+            //         };
+            //     }
+            //     else
+            //     {
+            //         responseContent.Error = new Error(400, exception.Message, (exception as BadRequestException).Type);
+            //     }
+            // }
+            // // Unknown exception
+            // else
+            // {
+            //     responseContent.Error = new Error(500, localizer["system_error_occurred"].Value);
+            //     Logging.Error(exception);
+            // }
 
             context.Response.StatusCode = (int)HttpStatusCode.OK;
             context.Response.ContentType = "application/json";
@@ -323,7 +396,7 @@ public static class CoreConfigure
     public static IWebHostBuilder UseCoreSerilog(this IWebHostBuilder builder) =>
     builder.UseSerilog((context, loggerConfiguration) =>
     {
-        CoreSettings.SetDefaultElasticSearchConfig(context.Configuration);
+        // CoreSettings.SetDefaultElasticSearchConfig(context.Configuration);
         loggerConfiguration
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()

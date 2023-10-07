@@ -13,10 +13,10 @@ public static class CoreSettings
     
     public static void SetConfig(IConfiguration configuration, ILogger logger)
     {
-        SetConnectionStrings(configuration);
-        SetLoggingConfig(configuration, logger);
-        SetEmailConfig(configuration);
-        SetDefaultElasticSearchConfig(configuration);
+        // SetConnectionStrings(configuration);
+        // SetLoggingConfig(configuration, logger);
+        // SetEmailConfig(configuration);
+        // SetDefaultElasticSearchConfig(configuration);
     }
     
     public static void SetConnectionStrings(IConfiguration configuration)
@@ -26,16 +26,21 @@ public static class CoreSettings
     
     public static void SetEmailConfig(IConfiguration configuration)
     {
-        DefaultEmailConfig.SetDefaultEmailConfig(configuration);
+        // DefaultEmailConfig.SetDefaultEmailConfig(configuration);
     }
 
     public static void SetLoggingConfig(IConfiguration configuration, ILogger logger)
     {
-        DefaultLoggingConfig.SetDefaultLoggingConfig(configuration, logger);
+        // DefaultLoggingConfig.SetDefaultLoggingConfig(configuration, logger);
     }
     
     public static void SetDefaultElasticSearchConfig(IConfiguration configuration)
     {
-        DefaultElasticSearchConfig.SetDefaultElasticSearchConfig(configuration);
+        // DefaultElasticSearchConfig.SetDefaultElasticSearchConfig(configuration);
+    }
+
+    public static void SetS3AmazonConfig(IConfiguration configuration)
+    {
+        // DefaultS3Config.SetS3Config(configuration);
     }
 }

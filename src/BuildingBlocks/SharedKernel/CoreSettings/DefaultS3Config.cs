@@ -10,7 +10,7 @@ public class DefaultS3Config
     public static string Root { get; private set; }
     public static List<string> AcceptExtensions { get; private set; }
 
-    public static void SetConfig(IConfiguration configuration)
+    public static void SetS3Config(IConfiguration configuration)
     {
         AccessKey = configuration.GetRequiredSection("S3:AccessKey").Value;
         SecretKey = configuration.GetRequiredSection("S3:SecretKey").Value;

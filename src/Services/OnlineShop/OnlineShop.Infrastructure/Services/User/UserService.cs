@@ -1,10 +1,11 @@
-using OnlineShop.Application.Constants;
-using OnlineShop.Application.Services.Interfaces.Users;
+﻿
+using OnlineShop.Application.Services;
+using OnlineShop.Infrastructure.Constants;
 using OnlineShop.Infrastructure.Repositories;
 using SharedKernel.Caching;
 using SharedKernel.Providers.Storage.S3;
 
-namespace OnlineShop.Application.Services.Implements.Users;
+namespace OnlineShop.Infrastructure.Services;
 
 public class UserService : IUserService
 {

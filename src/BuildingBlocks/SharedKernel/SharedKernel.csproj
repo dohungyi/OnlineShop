@@ -34,8 +34,8 @@
         <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
 
         <!-- MediatR-->
-        <PackageReference Include="MediatR" Version="10.0.1" />
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+        <PackageReference Include="MediatR" Version="12.0.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
         
         <!-- EF Core -->
         <!-- EF Core -->
@@ -109,6 +109,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="ZymLabs.NSwag.FluentValidation" Version="0.6.2" />
 
 
 

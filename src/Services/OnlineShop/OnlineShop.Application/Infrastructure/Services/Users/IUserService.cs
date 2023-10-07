@@ -1,4 +1,4 @@
-namespace OnlineShop.Application.Services.Interfaces.Users;
+namespace OnlineShop.Application.Services;
 
 public interface IUserService
 {

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using SharedKernel.Application.Responses;
 using SharedKernel.Properties;
 
 namespace SharedKernel.Middlewares;
@@ -28,10 +29,12 @@ public class UnauthorizedHandlerMiddleware
             context.Response.ContentType = "application/json";
 
             var localizer = context.RequestServices.GetRequiredService<IStringLocalizer<Resources>>();
-            // await context.Response.WriteAsync(JsonConvert.SerializeObject(new BaseResponse { Status = "unauthorized", Error = new Error(401, localizer["unauthorized"]) }, new JsonSerializerSettings
-            // {
-            //     ContractResolver = new CamelCasePropertyNamesContractResolver()
-            // }));
+            
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApiResult() { StatusCode = (int)HttpStatusCode.Unauthorized, Error = new Error(401, localizer["unauthorized"])}, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                
+            }));
         }
     }
 }
