@@ -105,37 +105,36 @@ public static class CoreConfigure
             authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             authOptions.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-
+        
+        }).AddJwtBearer(jwtOptions =>
+        {
+            jwtOptions.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidAudience = Configuration["Auth:JwtSettings:Issuer"],
+                ValidateIssuer = true,
+                ValidIssuer = Configuration["Auth:JwtSettings:Issuer"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:JwtSettings:Key"])),
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+            };
+        
+            jwtOptions.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+        
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/socket-message"))
+                    {
+                        context.Token = accessToken;
+                    }
+                    return Task.CompletedTask;
+                }
+            };
         });
-        //     .AddJwtBearer(jwtOptions =>
-        // {
-        //     jwtOptions.TokenValidationParameters = new TokenValidationParameters
-        //     {
-        //         ValidateAudience = true,
-        //         ValidAudience = Configuration["Auth:JwtSettings:Issuer"],
-        //         ValidateIssuer = true,
-        //         ValidIssuer = Configuration["Auth:JwtSettings:Issuer"],
-        //         ValidateIssuerSigningKey = true,
-        //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:JwtSettings:Key"])),
-        //         ValidateLifetime = true,
-        //         ClockSkew = TimeSpan.Zero,
-        //     };
-        //
-        //     jwtOptions.Events = new JwtBearerEvents
-        //     {
-        //         OnMessageReceived = context =>
-        //         {
-        //             var accessToken = context.Request.Query["access_token"];
-        //
-        //             var path = context.HttpContext.Request.Path;
-        //             if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/socket-message"))
-        //             {
-        //                 context.Token = accessToken;
-        //             }
-        //             return Task.CompletedTask;
-        //         }
-        //     };
-        // });
         return services;
     }
     
@@ -148,7 +147,7 @@ public static class CoreConfigure
                 .Or<RedisConnectionException>();
         });
         
-        services.AddSingleton<IBaseCaching>(s => new RedisCache(
+        services.AddSingleton<IRedisCache>(s => new RedisCache(
             redisCacheSettings.ConnectionString,
             redisCacheSettings.InstanceName, 
             redisCacheSettings.DatabaseIndex,
@@ -156,7 +155,7 @@ public static class CoreConfigure
 
 
         services.AddMemoryCache();
-        services.AddSingleton<IBaseCaching>(s =>
+        services.AddSingleton<IMemoryCaching>(s =>
             new MemoryCaching(s.GetRequiredService<IMemoryCache>()));
         
         services.AddSingleton<ISequenceCaching, SequenceCaching>();
@@ -218,9 +217,9 @@ public static class CoreConfigure
     
     public static IServiceCollection AddCoreBehaviors(this IServiceCollection services)
     {
-        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
-        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(EventsBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(EventsBehavior<,>));
         return services;
     }
 
@@ -243,18 +242,22 @@ public static class CoreConfigure
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseWebSockets(new WebSocketOptions
-        {
-            KeepAliveInterval = TimeSpan.FromSeconds(120),
-        });
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapHub<MessageHub>("/socket-message");
-        });
+        
+        // app.UseWebSockets(new WebSocketOptions
+        // {
+        //     KeepAliveInterval = TimeSpan.FromSeconds(120),
+        // });
+
+        // app.UseEndpoints(endpoints =>
+        // {
+        //     endpoints.MapHub<MessageHub>("/socket-message");
+        // });
+        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
         });
+        
         app.UseCoreHealthChecks();
     }
     
@@ -396,7 +399,7 @@ public static class CoreConfigure
     public static IWebHostBuilder UseCoreSerilog(this IWebHostBuilder builder) =>
     builder.UseSerilog((context, loggerConfiguration) =>
     {
-        // CoreSettings.SetDefaultElasticSearchConfig(context.Configuration);
+        CoreSettings.SetDefaultElasticSearchConfig(context.Configuration);
         loggerConfiguration
             .Enrich.FromLogContext()
             .Enrich.WithMachineName()
@@ -420,6 +423,31 @@ public static class CoreConfigure
 
         CoreSettings.SetLoggingConfig(configuration, logger);
     });
+    
+    public static Action<HostBuilderContext, LoggerConfiguration> Configure =>
+        (context, configuration) =>
+        {
+            var applicationName = context.HostingEnvironment.ApplicationName.ToLower().Replace(".", "-");
+            var environmentName = context.HostingEnvironment.EnvironmentName ?? "Development";
+
+            configuration
+                .WriteTo.Debug()
+                .WriteTo.Console(outputTemplate:
+                    "[{Timestamp: HH:mm:ss} {Level}] {SourceContext} {NewLine} {Message:lj}{NewLine}{Exception}{NewLine}")
+                .WriteTo.File(
+                    $@"Logs/{applicationName}-{environmentName}.txt",
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}",
+                    fileSizeLimitBytes: 10485760, // 10 MB
+                    rollOnFileSizeLimit: true,
+                    retainedFileCountLimit: 30
+                )
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithProperty("Environment", environmentName)
+                .Enrich.WithProperty("Application", applicationName)
+                .ReadFrom.Configuration(context.Configuration);
+        };
     
     #endregion
 }

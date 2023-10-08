@@ -36,7 +36,7 @@ public static class CoreSettings
     
     public static void SetDefaultElasticSearchConfig(IConfiguration configuration)
     {
-        // DefaultElasticSearchConfig.SetDefaultElasticSearchConfig(configuration);
+         DefaultElasticSearchConfig.SetDefaultElasticSearchConfig(configuration);
     }
 
     public static void SetS3AmazonConfig(IConfiguration configuration)

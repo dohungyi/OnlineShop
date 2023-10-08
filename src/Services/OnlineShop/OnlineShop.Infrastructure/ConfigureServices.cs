@@ -30,8 +30,9 @@ public static class ConfigureServices
         // services.AddScoped(typeof(IBaseReadOnlyRepository<,>), typeof(BaseReadOnlyRepository<,>));
         // services.AddScoped(typeof(IBaseWriteOnlyRepository<,>), typeof(BaseWriteOnlyRepository<,>));
         //
-        // // Auth
-        // services.AddScoped<IAuthRepository, AuthRepository>();
+        
+        // Auth
+        services.AddScoped<IAuthRepository, AuthRepository>();
         //
         // // User
         // services.AddScoped<IUserWriteOnlyRepository, UserWriteOnlyRepository>();

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SharedKernel.Application;
 using SharedKernel.Application.Consts;
+using SharedKernel.Caching;
 using SharedKernel.Domain;
 
 namespace SharedKernel.Libraries.Utility;
@@ -137,29 +138,28 @@ public static class AuthUtility
         return ip;
     }
 
-    // public static async Task<IpInformation> GetIpInformationAsync(IServiceProvider provider, string ip)
-    // {
-    //     var sequenceCaching = provider.GetRequiredService<ISequenceCaching>();
-    //     var key = BaseCacheKeys.GetClientInformationKey(ip);
-    //     var data = await sequenceCaching.GetAsync<IpInformation>(key);
-    //     if (data is not null)
-    //     {
-    //         return data;
-    //     }
-    //
-    //     var client = HttpClientFactory.Create();
-    //     var configuration = provider.GetRequiredService<IConfiguration>();
-    //     var token = configuration.GetRequiredSection("IpInfoToken").Value;
-    //     var result = await client.GetAsync($"https://ipinfo.io/{ip}?token={token}");
-    //
-    //     if (result.IsSuccessStatusCode)
-    //     {
-    //         var info = JsonConvert.DeserializeObject<IpInformation>(await result.Content.ReadAsStringAsync());
-    //         await sequenceCaching.SetAsync(key, info, TimeSpan.FromDays(90));
-    //         return info;
-    //     }
-    //     return null;
-    // }
-
+    public static async Task<IpInformation> GetIpInformationAsync(IServiceProvider provider, string ip)
+    {
+        var sequenceCaching = provider.GetRequiredService<ISequenceCaching>();
+        var key = BaseCacheKeys.GetClientInformationKey(ip);
+        var data = await sequenceCaching.GetAsync<IpInformation>(key);
+        if (data is not null)
+        {
+            return data;
+        }
+    
+        var client = HttpClientFactory.Create();
+        var configuration = provider.GetRequiredService<IConfiguration>();
+        var token = configuration.GetRequiredSection("IpInfoToken").Value;
+        var result = await client.GetAsync($"https://ipinfo.io/{ip}?token={token}");
+    
+        if (result.IsSuccessStatusCode)
+        {
+            var info = JsonConvert.DeserializeObject<IpInformation>(await result.Content.ReadAsStringAsync());
+            await sequenceCaching.SetAsync(key, info, TimeSpan.FromDays(90));
+            return info;
+        }
+        return null;
+    }
     
 }

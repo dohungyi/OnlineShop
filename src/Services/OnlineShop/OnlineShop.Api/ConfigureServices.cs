@@ -1,6 +1,9 @@
+using System.IO.Compression;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SharedKernel.Configure;
@@ -17,8 +20,11 @@ public static class ConfigureServices
         
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-        //services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme).AddCertificate();
+        // Điều này đăng ký dịch vụ xác thực chứng chỉ vào hệ thống xác thực của ứng dụng
+        services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme).AddCertificate();
         
+        // Đoạn mã này đang cấu hình các tùy chọn cho xử lý dữ liệu form.
+        // Cụ thể, nó đang cấu hình giới hạn độ dài giá trị, độ dài của phần thân và phần đầu của yêu cầu dữ liệu đa phần (multipart)
         services.Configure<FormOptions>(x =>
         {
             x.ValueLengthLimit = int.MaxValue;
@@ -26,22 +32,22 @@ public static class ConfigureServices
             x.MultipartHeadersLengthLimit = int.MaxValue;
         });
         
-        //services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
+        // Đoạn mã đang cấu hình mức độ nén cho việc nén gzip. Trong trường hợp này, nó được cấu hình để sử dụng mức độ nén nhanh nhất 
+        services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Fastest);
 
-        //services.AddResponseCompression(options =>
-        //{
-        //    options.EnableForHttps = true;
-        //    options.MimeTypes = ResponseCompressionDefaults.MimeTypes;
-        //    options.Providers.Add<GzipCompressionProvider>();
-        //});
+        // cấu hình này giúp ứng dụng của bạn có khả năng nén phản hồi để giảm băng thông và tăng tốc độ truyền tải cho client.
+        services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.MimeTypes = ResponseCompressionDefaults.MimeTypes;
+            options.Providers.Add<GzipCompressionProvider>();
+        });
 
         services.AddCors();
 
         services.AddCoreLocalization();
 
         services.AddCoreRateLimit();
-
-        services.AddCoreBehaviors();
         
         #region AddController + CamelCase + FluentValidation
 

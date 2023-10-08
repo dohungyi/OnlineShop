@@ -1,3 +1,4 @@
+using MediatR;
 using SharedKernel.Application;
 using SharedKernel.Domain;
 
