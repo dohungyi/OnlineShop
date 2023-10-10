@@ -10,10 +10,16 @@ namespace OnlineShop.Infrastructure.Persistence;
 public class ApplicationDbContext : AppDbContext, IApplicationDbContext
 {
     #region [CONSTRUCTOR]
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base()
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         
     }
+    
+    public ApplicationDbContext(string connectionString) : base(new DbContextOptionsBuilder<ApplicationDbContext>().UseNpgsql(connectionString).Options)
+    {
+        
+    }
+    
     #endregion
     
     #region [DB SET]

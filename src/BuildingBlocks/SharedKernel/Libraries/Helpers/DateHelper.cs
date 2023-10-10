@@ -2,7 +2,7 @@
 
 public static class DateHelper
 {
-    public static DateTime Now => DateTime.Now.AddHours(0);
+    public static DateTime Now => DateTime.UtcNow;
 
     public static long GetTotalMilliseconds(DateTime date)
     {

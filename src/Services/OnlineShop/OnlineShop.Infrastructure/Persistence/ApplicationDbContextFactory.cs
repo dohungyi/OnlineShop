@@ -10,7 +10,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         optionsBuilder
-            .UseNpgsql(@"Host=localhost:3306;Database=online_shop;Uid=root;Pwd=Hung89hy1@", 
+            .UseNpgsql(@"Host=localhost:5432;Database=online_shop;Uid=postgres;Pwd=1", 
                 opts =>
                 {
                     opts.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds); 

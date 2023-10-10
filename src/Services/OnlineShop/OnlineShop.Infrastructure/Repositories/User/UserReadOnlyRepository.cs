@@ -56,10 +56,6 @@ public class UserReadOnlyRepository : BaseReadOnlyRepository<ApplicationUser, Ap
         var user = await _dbContext.ApplicationUsers
             .Where(a => a.Id.ToString() == _currentUser.Context.UserId && !a.IsDeleted)
             .Include(a => a.Avatar)
-            .Include(a => a.UserConfig)
-            .Include(a => a.UserAddresses)
-            .Include(a => a.UserPayments)
-            .Include(a => a.Orders)
             .FirstOrDefaultAsync(cancellationToken);
 
         return user;

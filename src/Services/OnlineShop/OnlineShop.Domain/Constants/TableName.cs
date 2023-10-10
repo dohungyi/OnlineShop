@@ -5,13 +5,16 @@ public static class TableName
     public const string Action = "action";
     public const string Role = "role";
     public const string RoleAction = "role_action";
-    public const string SignInHistory = "auth_sign_in_history";
+    public const string SignInHistory = "sign_in_history";
     public const string User = "user";
     public const string UserAddress = "user_address";
     public const string UserConfig = "user_config";
     public const string Avatar = "avatar";
     public const string UserPayment = "user_payment";
     public const string UserRole = "user_role";
+    public const string RefreshToken = "refresh_token";
+
+    public const string RequestInformation = "request_information";
     
     public const string Brand = "brand";
     public const string Category = "category";

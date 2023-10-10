@@ -1,8 +1,10 @@
+using Castle.Components.DictionaryAdapter.Xml;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using OnlineShop.Api;
 using OnlineShop.Api.ControllerFilters;
 using OnlineShop.Infrastructure;
+using OnlineShop.Infrastructure.Persistence;
 using Serilog;
 using SharedKernel.Configure;
 using SharedKernel.Core;
@@ -16,54 +18,85 @@ builder.Host.UseSerilog(CoreConfigure.Configure);
 
 // Add services to the container.
 var services = builder.Services;
+var configuration = builder.Configuration;
 
-CoreSettings.SetEmailConfig(builder.Configuration);
-CoreSettings.SetS3AmazonConfig(builder.Configuration);
-
-services.AddCoreServices(builder.Configuration);
-
-services.AddCoreAuthentication(builder.Configuration);
-
-services.AddCoreCaching(builder.Configuration);
-
-services.AddHealthChecks();
-
-services.Configure<ForwardedHeadersOptions>(o => o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto);
-
-services.AddCoreProviders();
-
-services.AddSignalR();
-
-services.AddCoreMasstransitRabbitMq(builder.Configuration);
-
-services.AddCurrentUser();
-
-services.AddBus();
-
-services.AddExceptionHandler();
-
-services.AddEndpointsApiExplorer();
-
-services.AddSwaggerGen(c =>
+try
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "", Version = "v1" });
-    c.DocumentFilter<HideOcelotControllersFilter>();
-});
+    CoreSettings.SetEmailConfig(configuration);
+    CoreSettings.SetS3AmazonConfig(configuration);
 
-services.AddControllersWithViews(options =>
+    services.AddCoreServices(configuration);
+
+    services.AddCoreAuthentication(configuration);
+
+    services.AddCoreCaching(configuration);
+
+    services.AddHealthChecks();
+
+    services.Configure<ForwardedHeadersOptions>(o => o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto);
+
+    services.AddCoreProviders();
+
+    services.AddSignalR();
+
+    services.AddCoreMasstransitRabbitMq(configuration);
+
+    services.AddCurrentUser();
+
+    services.AddBus();
+
+    services.AddExceptionHandler();
+
+    services.AddEndpointsApiExplorer();
+
+    services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "", Version = "v1" });
+        c.DocumentFilter<HideOcelotControllersFilter>();
+    });
+
+    services.AddControllersWithViews(options =>
+    {
+        options.Filters.Add(new AccessTokenValidatorAsyncFilter());
+    });
+
+    services.AddInfrastructureServices(configuration);
+
+    services.AddApplicationServices(configuration);
+
+
+    // Configure the HTTP request pipeline.
+    var app = builder.Build();
+
+    // Initialise and seed database
+    using (var scope = app.Services.CreateScope())
+    {
+        var contextSeed = scope.ServiceProvider.GetRequiredService<ApplicationDbContextSeed>();
+        await contextSeed.InitialiseAsync();
+        await contextSeed.SeedAsync();
+    }
+
+    app.UseCoreSwagger();
+
+    app.UseCoreCors(configuration);
+
+    app.UseCoreConfigure(app.Environment);
+
+    app.Run();
+}
+catch (Exception exception)
 {
-    options.Filters.Add(new AccessTokenValidatorAsyncFilter());
-});
+    string type = exception.GetType().Name;
+    if (type.Equals("StopTheHostException", StringComparison.Ordinal))
+    {
+        throw;
+    }
 
-services.AddInfrastructureServices(builder.Configuration);
-
-services.AddApplicationServices(builder.Configuration);
-
-
-
-// Configure the HTTP request pipeline.
-var app = builder.Build();
-app.UseCoreSwagger();
-app.UseCoreCors(builder.Configuration);
-app.UseCoreConfigure(app.Environment);
-app.Run();
+    Log.Fatal(exception, $"Unhandled exception {exception.Message}");
+    return;
+}
+finally
+{
+    Log.Information("Shut down OnlineShop API complete.");
+    Log.CloseAndFlush();
+}

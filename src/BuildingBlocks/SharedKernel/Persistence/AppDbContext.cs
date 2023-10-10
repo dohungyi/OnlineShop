@@ -6,21 +6,15 @@ using SharedKernel.Domain;
 
 namespace SharedKernel.Persistence;
 
-public class AppDbContext : DbContext, IAppDbContext
+public abstract class AppDbContext : DbContext, IAppDbContext
 {
-    
     #region [CONSTRUCTOR]
 
-    public AppDbContext() : base()
+    public AppDbContext(DbContextOptions options) : base(options)
     {
         
     }
     
-    public AppDbContext(string connectionString) : base(new DbContextOptionsBuilder<AppDbContext>().UseSqlServer(connectionString).Options)
-    {
-        // Các cài đặt khác nếu cần
-    }
-
     #endregion [CONSTRUCTOR]
     
     #region [EVENTS]
@@ -37,82 +31,6 @@ public class AppDbContext : DbContext, IAppDbContext
 
             DomainEvents.Clear();
         }
-    }
-    
-    #endregion
-    
-    #region [OVERIDE]
-
-    public override ValueTask<EntityEntry<TEntity>> AddAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = new CancellationToken())
-    {
-        if (typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
-        {
-            var @base = (IBaseEntity)entity;
-            if (@base.DomainEvents is not null && @base.DomainEvents.Any())
-            {
-                DomainEvents.AddRange(@base.DomainEvents);
-            }
-        }
-        
-        return base.AddAsync(entity, cancellationToken);
-    }
-    public override Task AddRangeAsync(IEnumerable<object> entities, CancellationToken cancellationToken = new CancellationToken())
-    {
-        if (entities is not null && typeof(IBaseEntity).IsAssignableFrom(entities.First()?.GetType()))
-        {
-            foreach (var entity in entities)
-            {
-                var @base = (IBaseEntity)entity;
-                if (@base.DomainEvents is not null && @base.DomainEvents.Any())
-                {
-                    DomainEvents.AddRange(@base.DomainEvents);
-                }
-            }
-        }
-        return base.AddRangeAsync(entities, cancellationToken);
-    }
-    public override EntityEntry<TEntity> Update<TEntity>(TEntity entity)
-    {
-        if (typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
-        {
-            var @base = (IBaseEntity)entity;
-            if (@base.DomainEvents is not null && @base.DomainEvents.Any())
-            {
-                DomainEvents.AddRange(@base.DomainEvents);
-            }
-        }
-        
-        return base.Update(entity);
-    }
-    public override EntityEntry<TEntity> Remove<TEntity>(TEntity entity)
-    {
-        if (typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
-        {
-            var @base = (IBaseEntity)entity;
-            if (@base.DomainEvents is not null && @base.DomainEvents.Any())
-            {
-                DomainEvents.AddRange(@base.DomainEvents);
-            }
-        }
-        
-        return base.Remove(entity);
-    }
-    public override void RemoveRange(IEnumerable<object> entities)
-    {
-        
-        if (entities is not null && typeof(IBaseEntity).IsAssignableFrom(entities.First()?.GetType()))
-        {
-            foreach (var entity in entities)
-            {
-                var @base = (IBaseEntity)entity;
-                if (@base.DomainEvents is not null && @base.DomainEvents.Any())
-                {
-                    DomainEvents.AddRange(@base.DomainEvents);
-                }
-            }
-        }
-        
-        base.RemoveRange(entities);
     }
     
     #endregion
@@ -175,15 +93,31 @@ public class AppDbContext : DbContext, IAppDbContext
     #region [IMPLEMENT IUNITOFWORK]
     
     public async Task CommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
-    {
-        await SaveChangesAsync(cancellationToken);
-        
-        if (!dispatchEvent)
+    { 
+        if (dispatchEvent)
         {
-            DomainEvents.Clear();
+            ProcessDomainEvents();
         }
+        
+        await SaveChangesAsync(cancellationToken);
     }
     
     #endregion
+    
+    private void ProcessDomainEvents()
+    {
+        var entitiesWithEvents = ChangeTracker
+            .Entries<IBaseEntity>()
+            .Select(e => e.Entity)
+            .Where(e => e.DomainEvents is not null && e.DomainEvents.Any())
+            .ToList();
+
+        if (entitiesWithEvents.Any())
+        {
+            DomainEvents = entitiesWithEvents
+                .SelectMany(e => e.DomainEvents)
+                .ToList();
+        }
+    }
     
 }

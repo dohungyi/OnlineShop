@@ -37,6 +37,6 @@ public class SignInHistory : BaseEntity
     public string Origin { get; set; }
     
     #region [REFRENCE PROPERTIES]
-    public User User { get; set; }
+    public ApplicationUser User { get; set; }
     #endregion
 }

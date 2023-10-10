@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineShop.Domain.Constants;
 using Action = OnlineShop.Domain.Entities.Action;
 
-namespace OnlineShop.Infrastructure.Persistence.Configurations.Users;
+namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
 public class ActionConfiguration : IEntityTypeConfiguration<Action>
 {

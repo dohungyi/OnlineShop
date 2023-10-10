@@ -1,10 +1,9 @@
 ﻿namespace OnlineShop.Domain.Entities;
 
-[Table("common_role_action")]
 public class RoleAction : BaseEntity
 {
-    public int RoleId { get; set; }
-    public long ActionId { get; set; }
+    public Guid RoleId { get; set; }
+    public Guid ActionId { get; set; }
     
     #region [REFRENCE PROPERTIES]
     

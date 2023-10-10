@@ -1,4 +1,42 @@
-## Online Shop
+## Project OnlineShop 
+```
++ Business domain: e-Commerce application
++ Backend API:
+    - REST API with .NET 7 design with Domain Driven Design mindset
+    - Postgresql
+    - MongoDb
+    - Redis Caching
+    - RabbitMQ
+    - CQRS (Command Query Reposibility Separation)
+    ...
++ Frontend:
+    - NextJs
+```
+
+## Prepare environment
+* Install dotnet core version in file `global.json`
+* Jetbrains Rider Csharp 2023
+* Docker Desktop
+
+## How to run the project
+
+Run command for build project
+```Powershell
+dotnet build
+```
+
+Go to folder contain file  `docker-compose`
+
+1. Using docker-compose
+```Powershell
+docker compose -f docker-compose.yml -f docker-compose.override.yml up -d --remove-orphans
+```
+
+2. Using Jetbrains Rider Csharp 2023
+- Open eCommerce.sln - `eCommerce.sln`
+- Run Compound to start multi projects
+
+
 
 ## Try your best
 - https://github.com/microsoftarchive/redis/releases

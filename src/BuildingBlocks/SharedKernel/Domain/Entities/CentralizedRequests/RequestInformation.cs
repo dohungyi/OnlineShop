@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using SharedKernel.Libraries;
+﻿using SharedKernel.Libraries;
 
 namespace SharedKernel.Domain;
 
-[Table("requests")]
-public class RequestInformation 
+public class RequestInformation
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
 
     public string RequestId { get; set; }
 

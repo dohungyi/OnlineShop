@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineShop.Domain.Constants;
 using OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Infrastructure.Persistence.Configurations.Users;
+namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 {
@@ -53,29 +53,40 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
 
-        builder.HasMany(u => u.UserAddresses)
+        builder.HasOne(u => u.RefreshToken)
+            .WithOne(uc => uc.User)
+            .HasForeignKey<ApplicationUser>(u => u.RefreshTokenId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasMany(u => u.SignInHistories)
             .WithOne(ur => ur.User)
             .HasForeignKey(ur => ur.UserId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
         
-        builder.HasMany(u => u.UserPayments)
-            .WithOne(ur => ur.User)
-            .HasForeignKey(ur => ur.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired(false);
-        
-        builder.HasMany(u => u.Ratings)
-            .WithOne(r => r.User)
-            .HasForeignKey(r => r.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired(false);
-        
-        builder.HasMany(u => u.Orders)
-            .WithOne(o => o.User)
-            .HasForeignKey(o => o.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired(false);
-        
+        // builder.HasMany(u => u.UserAddresses)
+        //     .WithOne(ur => ur.User)
+        //     .HasForeignKey(ur => ur.UserId)
+        //     .OnDelete(DeleteBehavior.Cascade)
+        //     .IsRequired(false);
+        //
+        // builder.HasMany(u => u.UserPayments)
+        //     .WithOne(ur => ur.User)
+        //     .HasForeignKey(ur => ur.UserId)
+        //     .OnDelete(DeleteBehavior.Cascade)
+        //     .IsRequired(false);
+        //
+        // builder.HasMany(u => u.Ratings)
+        //     .WithOne(r => r.User)
+        //     .HasForeignKey(r => r.UserId)
+        //     .OnDelete(DeleteBehavior.Cascade)
+        //     .IsRequired(false);
+        //
+        // builder.HasMany(u => u.Orders)
+        //     .WithOne(o => o.User)
+        //     .HasForeignKey(o => o.UserId)
+        //     .OnDelete(DeleteBehavior.Cascade)
+        //     .IsRequired(false);
+
     }
 }

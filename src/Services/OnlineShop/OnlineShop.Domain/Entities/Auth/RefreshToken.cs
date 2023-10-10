@@ -6,7 +6,7 @@ public class RefreshToken : PersonalizedEntity
 
     public string CurrentAccessToken { get; set; }
 
-    public DateTime ExpriedDate { get; set; }
+    public DateTime ExpirationDate { get; set; }
     
     #region [REFRENCE PROPERTIES]
     

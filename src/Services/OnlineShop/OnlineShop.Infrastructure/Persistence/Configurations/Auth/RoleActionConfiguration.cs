@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineShop.Domain.Constants;
 using OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Infrastructure.Persistence.Configurations.Users;
+namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
 public class RoleActionConfiguration : IEntityTypeConfiguration<RoleAction>
 {
@@ -11,7 +11,7 @@ public class RoleActionConfiguration : IEntityTypeConfiguration<RoleAction>
     {
         builder.ToTable(TableName.RoleAction);
         
-        builder.HasKey(ur => new { ur.Action, ur.RoleId });
+        builder.HasKey(ur => new { ur.ActionId, ur.RoleId });
 
         builder.HasOne(ur => ur.Role)
             .WithMany(u => u.RoleActions)
