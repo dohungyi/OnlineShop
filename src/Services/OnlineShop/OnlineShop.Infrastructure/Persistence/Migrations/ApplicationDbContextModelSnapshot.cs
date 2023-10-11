@@ -649,7 +649,6 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Origin")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RequestId")
@@ -657,7 +656,6 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UA")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

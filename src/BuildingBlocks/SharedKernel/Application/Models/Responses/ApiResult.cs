@@ -8,7 +8,7 @@ public class ApiResult
     {
         get
         {
-            if (Error is not null)
+            if (Error is null)
             {
                 return true;
             }

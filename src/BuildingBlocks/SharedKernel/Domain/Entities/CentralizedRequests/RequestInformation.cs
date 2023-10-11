@@ -20,9 +20,9 @@ public class RequestInformation
 
     public string Device { get; set; }
 
-    public string UA { get; set; }
+    public string? UA { get; set; }
 
-    public string Origin { get; set; }
+    public string? Origin { get; set; }
 
     public DateTime CreatedDate { get; set; }
 

@@ -1,15 +1,16 @@
-using MediatR;
+﻿using MediatR;
+using OnlineShop.Application.Infrastructure.Persistence;
 using SharedKernel.Domain;
 using SharedKernel.Persistence;
 
-namespace SharedKernel.Infrastructures;
+namespace OnlineShop.Application.Pipelines;
 
 public class EventsBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-    private readonly IAppDbContext _context;
+    private readonly IApplicationDbContext _context;
     private readonly IEventBus _eventBus;
 
-    public EventsBehavior(IAppDbContext context, IEventBus eventBus)
+    public EventsBehavior(IApplicationDbContext context, IEventBus eventBus)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));

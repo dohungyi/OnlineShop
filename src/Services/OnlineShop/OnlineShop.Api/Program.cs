@@ -63,11 +63,16 @@ try
     services.AddInfrastructureServices(configuration);
 
     services.AddApplicationServices(configuration);
-
-
+    
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
+    app.UseCoreSwagger();
+
+    app.UseCoreCors(configuration);
+
+    app.UseCoreConfigure(app.Environment);
+    
     // Initialise and seed database
     using (var scope = app.Services.CreateScope())
     {
@@ -75,13 +80,7 @@ try
         await contextSeed.InitialiseAsync();
         await contextSeed.SeedAsync();
     }
-
-    app.UseCoreSwagger();
-
-    app.UseCoreCors(configuration);
-
-    app.UseCoreConfigure(app.Environment);
-
+    
     app.Run();
 }
 catch (Exception exception)

@@ -70,28 +70,31 @@ public class ApplicationDbContextSeed
             }
         }
 
-        var supperAdmin = roles.FirstOrDefault(r => r.Code == "SUPPER_ADMIN");
-
-        if (supperAdmin is not null)
+        if (!_context.RoleActions.Any())
         {
-            foreach (var action in actions)
+            var supperAdmin = roles.FirstOrDefault(r => r.Code == "SUPPER_ADMIN");
+
+            if (supperAdmin is not null)
             {
-                var roleAction = new RoleAction
+                foreach (var action in actions)
                 {
-                    Id = Guid.NewGuid(),
-                    Role = supperAdmin,
-                    Action = action,
-                    IsDeleted = false, 
-                    CreatedDate = SharedKernel.Libraries.DateHelper.Now, 
-                    CreatedBy = "admin", 
-                    LastModifiedDate = null, 
-                    LastModifiedBy = null, 
-                    DeletedDate = null, 
-                    DeletedBy = null
-                };
+                    var roleAction = new RoleAction
+                    {
+                        Id = Guid.NewGuid(),
+                        Role = supperAdmin,
+                        Action = action,
+                        IsDeleted = false, 
+                        CreatedDate = SharedKernel.Libraries.DateHelper.Now, 
+                        CreatedBy = "admin", 
+                        LastModifiedDate = null, 
+                        LastModifiedBy = null, 
+                        DeletedDate = null, 
+                        DeletedBy = null
+                    };
                 
-                await _context.RoleActions.AddAsync(roleAction);
+                    await _context.RoleActions.AddAsync(roleAction);
                 
+                }
             }
         }
         

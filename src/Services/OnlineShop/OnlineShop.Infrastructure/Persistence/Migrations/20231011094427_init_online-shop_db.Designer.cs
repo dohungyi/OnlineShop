@@ -12,7 +12,7 @@ using OnlineShop.Infrastructure.Persistence;
 namespace OnlineShop.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231010101350_init_onlineshop_db")]
+    [Migration("20231011094427_init_online-shop_db")]
     partial class initonlineshopdb
     {
         /// <inheritdoc />
@@ -652,7 +652,6 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Origin")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RequestId")
@@ -660,7 +659,6 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UA")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

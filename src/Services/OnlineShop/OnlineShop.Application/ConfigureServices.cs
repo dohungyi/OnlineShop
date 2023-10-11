@@ -24,8 +24,9 @@ public static class ConfigureServices
         });
 
         // Pipelines
-        // services.AddCoreBehaviors();
-        // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestBehavior<,>));
+        services.AddCoreBehaviors();
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(EventsBehavior<,>));
         
         return services;
     }

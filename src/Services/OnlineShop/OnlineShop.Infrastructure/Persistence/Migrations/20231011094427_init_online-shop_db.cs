@@ -87,8 +87,8 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     Browser = table.Column<string>(type: "text", nullable: false),
                     OS = table.Column<string>(type: "text", nullable: false),
                     Device = table.Column<string>(type: "text", nullable: false),
-                    UA = table.Column<string>(type: "text", nullable: false),
-                    Origin = table.Column<string>(type: "text", nullable: false),
+                    UA = table.Column<string>(type: "text", nullable: true),
+                    Origin = table.Column<string>(type: "text", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>

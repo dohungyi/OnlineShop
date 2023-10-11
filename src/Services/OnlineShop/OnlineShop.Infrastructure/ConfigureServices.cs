@@ -2,9 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Infrastructure;
+using OnlineShop.Application.Infrastructure.Persistence;
 using OnlineShop.Application.Repositories;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repositories;
+using OnlineShop.Infrastructure.Services.Auth;
 using OnlineShop.Infrastructure.Settings;
 using SharedKernel.Infrastructures.Repositories;
 
@@ -17,13 +19,13 @@ public static class ConfigureServices
         // DbContext
         var databaseSetting = configuration.GetSection(DatabaseSetting.Section).Get<DatabaseSetting>();
         
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
             options.UseNpgsql(databaseSetting.Default)
                 .LogTo(s => System.Diagnostics.Debug.WriteLine(s))
                 .EnableDetailedErrors(true)
                 .EnableSensitiveDataLogging(true)
         );
-
+        
         services.AddScoped<ApplicationDbContextSeed>();
         
         // // Base
@@ -32,6 +34,7 @@ public static class ConfigureServices
         //
         
         // Auth
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAuthRepository, AuthRepository>();
         //
         // // User
