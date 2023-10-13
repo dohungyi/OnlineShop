@@ -10,10 +10,12 @@ public static class CoreSettings
     public static DefaultLoggingConfig DefaultLoggingConfig { get; private set; }
     public static DefaultEmailConfig DefaultEmailConfig { get; private set; }
     public static DefaultElasticSearchConfig DefaultElasticSearchConfig { get; private set; }
+    public static DefaultJwtConfig DefaultJwtConfig { get; private set; }
     
     public static void SetConfig(IConfiguration configuration, ILogger logger)
     {
         // SetConnectionStrings(configuration);
+        // SetJwtConfig(configuration);
         // SetLoggingConfig(configuration, logger);
         // SetEmailConfig(configuration);
         // SetDefaultElasticSearchConfig(configuration);
@@ -23,10 +25,15 @@ public static class CoreSettings
     {
         ConnectionStrings = configuration.GetRequiredSection("ConnectionStrings").Get<Dictionary<string, string>>();
     }
+
+    public static void SetJwtConfig(IConfiguration configuration)
+    {
+        DefaultJwtConfig.SetDefaultJwtConfig(configuration);
+    }
     
     public static void SetEmailConfig(IConfiguration configuration)
     {
-        // DefaultEmailConfig.SetDefaultEmailConfig(configuration);
+        DefaultEmailConfig.SetDefaultEmailConfig(configuration);
     }
 
     public static void SetLoggingConfig(IConfiguration configuration, ILogger logger)

@@ -34,7 +34,7 @@ public static class Utility
         return sb.ToString();
     }
     
-    public static string RandomString(int length, bool hasNumber)
+    public static string RandomString(int length, bool hasNumber = true)
     {
         var random = new Random();
         var mix = Enumerable.Range(65, 26).Concat(Enumerable.Range(97, 26)).ToList();

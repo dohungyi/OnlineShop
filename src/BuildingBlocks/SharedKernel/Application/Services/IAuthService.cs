@@ -9,5 +9,5 @@ public interface IAuthService
     Task<string> GenerateAccessTokenAsync(TokenUser token, CancellationToken cancellationToken);
     string GenerateRefreshToken();
     Task RevokeAccessTokenAsync(string accessToken, CancellationToken cancellationToken);
-    Task<bool> CheckRefreshTokenAsync(string value, long ownerId, CancellationToken cancellationToken);
+    Task<bool> CheckRefreshTokenAsync(string value, Guid userId, CancellationToken cancellationToken);
 }
