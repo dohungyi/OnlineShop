@@ -11,9 +11,9 @@ public class DefaultElasticSearchConfig
 
     public static void SetDefaultElasticSearchConfig(IConfiguration configuration)
     {
-        ApplicationName = configuration.GetRequiredSection("ApplicationName").Value ?? throw new ArgumentNullException(nameof(DefaultElasticSearchConfig));
-        Uri = configuration.GetRequiredSection("ElasticConfiguration:Uri").Value ?? throw new ArgumentNullException(nameof(DefaultElasticSearchConfig));
-        Username = configuration.GetRequiredSection("ElasticConfiguration:Username").Value ?? throw new ArgumentNullException(nameof(DefaultElasticSearchConfig));
-        Password = configuration.GetRequiredSection("ElasticConfiguration:Password").Value ?? throw new ArgumentNullException(nameof(DefaultElasticSearchConfig));
+        ApplicationName = configuration.GetRequiredSection("ApplicationName").Value;
+        Uri = configuration.GetRequiredSection("ElasticConfiguration:Uri").Value;
+        Username = configuration.GetRequiredSection("ElasticConfiguration:Username").Value;
+        Password = configuration.GetRequiredSection("ElasticConfiguration:Password").Value;
     }
 }

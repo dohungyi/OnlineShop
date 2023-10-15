@@ -56,7 +56,8 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
         builder.HasOne(u => u.RefreshToken)
             .WithOne(uc => uc.User)
             .HasForeignKey<ApplicationUser>(u => u.RefreshTokenId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired(false);
         
         builder.HasMany(u => u.SignInHistories)
             .WithOne(ur => ur.User)

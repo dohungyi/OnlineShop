@@ -11,7 +11,7 @@ public static class AuthUtility
 
         for (int i = 1; i <= exponent; i++)
             result *= two;
-
+        
         return result.ToString();
     }
 
@@ -19,7 +19,9 @@ public static class AuthUtility
     {
         var result = new BigInteger(0);
         foreach (var exponent in exponents)
+        {
             result += BigInteger.Parse(FromExponentToPermission(exponent));
+        }
         return result.ToString();
     }
 

@@ -111,11 +111,11 @@ public static class CoreConfigure
             jwtOptions.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = true,
-                ValidAudience = Configuration["Auth:JwtSettings:Issuer"],
+                ValidAudience = DefaultJwtConfig.Audience,
                 ValidateIssuer = true,
-                ValidIssuer = Configuration["Auth:JwtSettings:Issuer"],
+                ValidIssuer = DefaultJwtConfig.Issuer,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Auth:JwtSettings:Key"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(DefaultJwtConfig.Key)),
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero,
             };

@@ -11,9 +11,9 @@ public class DefaultJwtConfig
     
     public static void SetDefaultJwtConfig(IConfiguration configuration)
     {
-        Key = configuration.GetRequiredSection("Auth:JwtSettings:Key").Value ?? throw new ArgumentNullException(nameof(DefaultJwtConfig));
-        Issuer = configuration.GetRequiredSection("Auth:JwtSettings:Issuer").Value ?? throw new ArgumentNullException(nameof(DefaultJwtConfig));
-        Audience = configuration.GetRequiredSection("Auth:JwtSettings:Audience").Value ?? throw new ArgumentNullException(nameof(DefaultJwtConfig));
-        ExpiredSecond = Convert.ToInt32(configuration.GetRequiredSection("Auth:JwtSettings:ExpiredSecond").Value ?? throw new ArgumentNullException(nameof(DefaultJwtConfig)));
+        Key = configuration.GetRequiredSection("JwtSettings:Key").Value;
+        Issuer = configuration.GetRequiredSection("JwtSettings:Issuer").Value;
+        Audience = configuration.GetRequiredSection("JwtSettings:Audience").Value;
+        ExpiredSecond = int.Parse(configuration.GetRequiredSection("JwtSettings:ExpiredSecond").Value);
     }
 }

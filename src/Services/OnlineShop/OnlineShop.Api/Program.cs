@@ -1,4 +1,3 @@
-using Castle.Components.DictionaryAdapter.Xml;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using OnlineShop.Api;
@@ -22,9 +21,13 @@ var configuration = builder.Configuration;
 
 try
 {
+    // Core setting project
     CoreSettings.SetEmailConfig(configuration);
     CoreSettings.SetS3AmazonConfig(configuration);
+    CoreSettings.SetJwtConfig(configuration);
+    CoreSettings.SetConnectionStrings(configuration);
 
+    // Services
     services.AddCoreServices(configuration);
 
     services.AddCoreAuthentication(configuration);
@@ -67,6 +70,7 @@ try
     // Configure the HTTP request pipeline.
     var app = builder.Build();
 
+    // Pipelines
     app.UseCoreSwagger();
 
     app.UseCoreCors(configuration);

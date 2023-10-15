@@ -6,7 +6,7 @@ using OnlineShop.Application.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repositories;
 using OnlineShop.Infrastructure.Services;
-using OnlineShop.Infrastructure.Settings;
+using SharedKernel.Core;
 
 namespace OnlineShop.Infrastructure;
 
@@ -14,11 +14,9 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // DbContext
-        var databaseSetting = configuration.GetSection(DatabaseSetting.Section).Get<DatabaseSetting>();
         
         services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
-            options.UseNpgsql(databaseSetting.Default)
+            options.UseNpgsql(CoreSettings.ConnectionStrings["Postgresql"])
                 .LogTo(s => System.Diagnostics.Debug.WriteLine(s))
                 .EnableDetailedErrors(true)
                 .EnableSensitiveDataLogging(true)
@@ -34,7 +32,7 @@ public static class ConfigureServices
         // Auth
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAuthRepository, AuthRepository>();
-        //
+        
         // // User
         // services.AddScoped<IUserWriteOnlyRepository, UserWriteOnlyRepository>();
         // services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();

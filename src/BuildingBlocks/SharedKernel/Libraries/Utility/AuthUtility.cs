@@ -78,14 +78,14 @@ public static class AuthUtility
         return string.Join("", result.Reverse());
     }
 
-    public static bool ComparePermissionAsString(string permission, string acttionPermission)
+    public static bool ComparePermissionAsString(string permission, string actionPermission)
     {
-        if (string.IsNullOrEmpty(permission) || string.IsNullOrEmpty(acttionPermission))
+        if (string.IsNullOrEmpty(permission) || string.IsNullOrEmpty(actionPermission))
         {
             return false;
         }
         var left = ConvertToBinary(permission);
-        var right = ConvertToBinary(acttionPermission);
+        var right = ConvertToBinary(actionPermission);
         var offset = "";
         var andResult = "";
 

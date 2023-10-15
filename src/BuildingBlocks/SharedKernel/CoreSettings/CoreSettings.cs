@@ -38,7 +38,7 @@ public static class CoreSettings
 
     public static void SetLoggingConfig(IConfiguration configuration, ILogger logger)
     {
-        // DefaultLoggingConfig.SetDefaultLoggingConfig(configuration, logger);
+        DefaultLoggingConfig.SetDefaultLoggingConfig(configuration, logger);
     }
     
     public static void SetDefaultElasticSearchConfig(IConfiguration configuration)

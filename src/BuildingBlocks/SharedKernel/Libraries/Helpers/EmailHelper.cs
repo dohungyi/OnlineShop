@@ -42,10 +42,10 @@ public class EmailHelper
 
     private static SmtpClient SmtpClient => new SmtpClient()
     {
-        Host = DefaultEmailConfig.Host,
+        Host = DefaultEmailConfig.SMTPServer,
         Port = DefaultEmailConfig.Port,
         UseDefaultCredentials = false,
         EnableSsl = true,
-        Credentials = new NetworkCredential(DefaultEmailConfig.Sender, DefaultEmailConfig.AppPassword),
+        Credentials = new NetworkCredential(DefaultEmailConfig.UserName, DefaultEmailConfig.Password),
     };
 }

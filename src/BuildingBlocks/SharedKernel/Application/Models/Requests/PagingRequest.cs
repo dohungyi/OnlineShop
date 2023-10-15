@@ -43,6 +43,9 @@ public class PagingRequest
         }
     }
 
+    [BindProperty(Name = "indexFrom")] 
+    public int IndexForm { get; set; } = 1;
+    
     [BindProperty(Name = "offset")]
     public int Offset => _page * _size;
 

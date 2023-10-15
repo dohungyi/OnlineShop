@@ -3,22 +3,21 @@ version: '3.8'
 services:
   # database section
   
-  # customer database: postgres
-  onlineshopdb:
-    container_name: postgresdb
+  # onlineshop database: postgres
+  postgres:
+    container_name: postgres
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=DiscountDb
     restart: always
     ports:
-      - "5433:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
   # basket database: redis caching
-  basketdb:
-    container_name: basketdb
+  redis:
+    container_name: redis
     restart: always
     ports:
       - "6379:6379"
@@ -46,8 +45,8 @@ services:
   pgadmin:
     container_name: pgadmin
     environment:
-      - PGADMIN_DEFAULT_EMAIL=hungdc@ichiba.com
-      - PGADMIN_DEFAULT_PASSWORD=hungdc
+      - PGADMIN_DEFAULT_EMAIL=dohung.csharp@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=dohung.csharp
     restart: always
     ports:
       - "5050:80"
@@ -65,25 +64,3 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
   
-  # elasticsearch
-  elasticsearch:
-    container_name: elasticsearch
-    environment:
-      - xpack.monitoring.enabled=true
-      - xpack.watcher.enabled=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - discovery.type=single-node
-    ports:
-      - "9200:9200"
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-  
-  # kibana
-  kibana:
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
-    depends_on:
-      - elasticsearch
-    ports:
-      - "5601:5601"

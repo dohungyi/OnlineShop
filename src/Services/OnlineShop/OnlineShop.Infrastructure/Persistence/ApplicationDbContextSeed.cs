@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain.Entities;
 using SharedKernel.Auth;
+using SharedKernel.Libraries;
+using SharedKernel.Libraries.Utility;
 using SharedKernel.Log;
 using Action = OnlineShop.Domain.Entities.Action;
 
@@ -50,64 +52,165 @@ public class ApplicationDbContextSeed
     
     private async Task TrySeedAsync()
     {
+        var sa = GetSupperAdmin();
+        var admin = GetAdmin();
         var roles = GetRoles();
         var actions = GetActions();
-
-        if (!_context.Roles.Any())
+        var supperAdminRole = roles.FirstOrDefault(r => r.Code == "SUPPER_ADMIN");
+        var adminRole = roles.FirstOrDefault(r => r.Code == "ADMIN");
+        
+        if (!_context.ApplicationUsers.Any())
         {
+            // add role
             foreach (var role in roles)
             {
-                role.AddDomainEvent(new InsertAuditEvent<Role>(new List<Role> { role }, new CurrentUser(_accessor){}));
                 await _context.Roles.AddAsync(role);
             }
-        }
-
-        if (!_context.Actions.Any())
-        {
+            
+            // add action
             foreach (var action in actions)
             {
                 await _context.Actions.AddAsync(action);
             }
-        }
-
-        if (!_context.RoleActions.Any())
-        {
-            var supperAdmin = roles.FirstOrDefault(r => r.Code == "SUPPER_ADMIN");
-
-            if (supperAdmin is not null)
+            
+            // add role action
+            foreach (var action in actions)
             {
-                foreach (var action in actions)
+                var roleAction = new RoleAction
                 {
-                    var roleAction = new RoleAction
+                    Id = Guid.NewGuid(),
+                    Role = supperAdminRole,
+                    Action = action,
+                    IsDeleted = false, 
+                    CreatedDate = DateHelper.Now, 
+                    CreatedBy = "supperadmin", 
+                    LastModifiedDate = null, 
+                    LastModifiedBy = null, 
+                    DeletedDate = null, 
+                    DeletedBy = null
+                };
+            
+                await _context.RoleActions.AddAsync(roleAction);
+
+                if (action.Exponent < (int)ActionExponent.Admin)
+                {
+                    var roleAction_ = new RoleAction
                     {
                         Id = Guid.NewGuid(),
-                        Role = supperAdmin,
+                        Role = adminRole,
                         Action = action,
                         IsDeleted = false, 
-                        CreatedDate = SharedKernel.Libraries.DateHelper.Now, 
-                        CreatedBy = "admin", 
+                        CreatedDate = DateHelper.Now, 
+                        CreatedBy = "supperadmin", 
                         LastModifiedDate = null, 
                         LastModifiedBy = null, 
                         DeletedDate = null, 
                         DeletedBy = null
                     };
-                
-                    await _context.RoleActions.AddAsync(roleAction);
-                
+            
+                    await _context.RoleActions.AddAsync(roleAction_);
                 }
             }
+            
+            // add user
+            await _context.ApplicationUsers.AddAsync(sa);
+            await _context.ApplicationUsers.AddAsync(admin);
+            
+            // add user role
+            var uRSA = new UserRole()
+            {
+                Id = Guid.NewGuid(),
+                Role = supperAdminRole,
+                User = sa,
+                IsDeleted = false,
+                CreatedDate = DateHelper.Now,
+                CreatedBy = "supperadmin",
+                LastModifiedDate = null,
+                LastModifiedBy = null,
+                DeletedDate = null,
+                DeletedBy = null
+            };
+            
+            var uRA = new UserRole()
+            {
+                Id = Guid.NewGuid(),
+                Role = adminRole,
+                User = sa,
+                IsDeleted = false,
+                CreatedDate = DateHelper.Now,
+                CreatedBy = "supperadmin",
+                LastModifiedDate = null,
+                LastModifiedBy = null,
+                DeletedDate = null,
+                DeletedBy = null
+            };
+            await _context.UserRoles.AddAsync(uRSA);
+            await _context.UserRoles.AddAsync(uRA);
         }
         
-        await _context.SaveChangesAsync();
+        await _context.CommitAsync(false);
+    }
+
+    private ApplicationUser GetAdmin()
+    {
+        return new ApplicationUser()
+        {
+            Id = Guid.NewGuid(),
+            Username = "admin",
+            PasswordHash = "admin".ToMD5(),
+            Salt = Utility.RandomString(6),
+            PhoneNumber = "09897001xx",
+            ConfirmedPhone = true,
+            Email = "admin.csharp@gmail.com",
+            ConfirmedEmail = true,
+            FirstName = "Đỗ Chí",
+            LastName = "Hòa",
+            Address = "Đông Kết, Khoái Châu, Hưng Yên",
+            DateOfBirth = new DateTime(1967, 9, 6).ToUniversalTime(),
+            Gender = GenderType.Other,
+            CreatedDate = DateHelper.Now,
+            CreatedBy = "supperadmin",
+            LastModifiedDate = null,
+            LastModifiedBy = null,
+            DeletedDate = null,
+            DeletedBy = null,
+            IsDeleted = false
+        };
+    }
+    
+    private ApplicationUser GetSupperAdmin()
+    {
+        return new ApplicationUser()
+        {
+            Id = Guid.NewGuid(),
+            Username = "supperadmin",
+            PasswordHash = "supperadmin".ToMD5(),
+            Salt = Utility.RandomString(6),
+            PhoneNumber = "0976580418",
+            ConfirmedPhone = true,
+            Email = "dohung.csharp@gmail.com",
+            ConfirmedEmail = true,
+            FirstName = "Đỗ Chí",
+            LastName = "Hùng",
+            Address = "Đông Kết, Khoái Châu, Hưng Yên",
+            DateOfBirth = new DateTime(2002, 9, 6).ToUniversalTime(),
+            Gender = GenderType.Other,
+            CreatedDate = DateHelper.Now,
+            CreatedBy = "supperadmin",
+            LastModifiedDate = null,
+            LastModifiedBy = null,
+            DeletedDate = null,
+            DeletedBy = null,
+            IsDeleted = false
+        };
     }
 
     private IEnumerable<Role> GetRoles()
     {
         return new List<Role>()
         {
-            new Role() { Code = "SUPPER_ADMIN", Name = "Super Admin", IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Role() { Code = "ADMIN", Name = "Admin", IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Role() { Code = "STAFF", Name = "Staff", IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Role() { Code = "SUPPER_ADMIN", Name = "Super Admin", IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Role() { Code = "ADMIN", Name = "Admin", IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null }
         };
     }
 
@@ -115,17 +218,17 @@ public class ApplicationDbContextSeed
     {
         var actions = new List<Action>()
         {
-            new Action() { Code = "AllowAnonymous", Name = "Allow Anonymous", Exponent = (int)ActionExponent.AllowAnonymous, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Staff", Name = "Staff", Exponent = (int)ActionExponent.Staff, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Admin", Name = "Admin", Exponent = (int)ActionExponent.Admin, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "View", Name = "View", Exponent = (int)ActionExponent.View, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Add", Name = "Add", Exponent = (int)ActionExponent.Add, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Edit", Name = "Edit", Exponent = (int)ActionExponent.Edit, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Delete", Name = "Delete", Exponent = (int)ActionExponent.Delete, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Export", Name = "Export", Exponent = (int)ActionExponent.Export, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Import", Name = "Import", Exponent = (int)ActionExponent.Import, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Upload", Name = "Upload", Exponent = (int)ActionExponent.Upload, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "Download", Name = "Download", Exponent = (int)ActionExponent.Download, IsDeleted = false, CreatedDate = SharedKernel.Libraries.DateHelper.Now, CreatedBy = "admin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "ALLOW_ANONYMOUS", Name = "Allow Anonymous", Exponent = (int)ActionExponent.AllowAnonymous, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "SUPPER_ADMIN", Name = "Supper Admin", Exponent = (int)ActionExponent.Staff, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "ADMIN", Name = "Admin", Exponent = (int)ActionExponent.Admin, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "VIEW", Name = "View", Exponent = (int)ActionExponent.View, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "ADD", Name = "Add", Exponent = (int)ActionExponent.Add, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "EDIT", Name = "Edit", Exponent = (int)ActionExponent.Edit, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "DELETE", Name = "Delete", Exponent = (int)ActionExponent.Delete, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "EXPORT", Name = "Export", Exponent = (int)ActionExponent.Export, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "IMPORT", Name = "Import", Exponent = (int)ActionExponent.Import, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "UPLOAD", Name = "Upload", Exponent = (int)ActionExponent.Upload, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "DOWNLOAD", Name = "Download", Exponent = (int)ActionExponent.Download, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
         };
 
         return actions;

@@ -37,7 +37,7 @@ public class EmailOptionRequest
         {
             if (string.IsNullOrEmpty(_sender))
             {
-                _sender = DefaultEmailConfig.Sender;    
+                _sender = DefaultEmailConfig.From;    
             }
             return _sender;
         }

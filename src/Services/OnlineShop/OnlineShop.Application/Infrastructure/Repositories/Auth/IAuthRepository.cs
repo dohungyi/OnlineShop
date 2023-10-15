@@ -10,21 +10,21 @@ public interface IAuthRepository
 {
     IUnitOfWork UnitOfWork { get; }
 
-    Task<TokenUser> GetTokenUserByIdentityAsync(string username, string password, CancellationToken cancellationToken);
+    Task<TokenUser> GetTokenUserByIdentityAsync(string username, string password, CancellationToken cancellationToken = default);
 
-    Task<TokenUser> GetTokenUserByIdAsync(Guid userId, CancellationToken cancellationToken);
+    Task<TokenUser> GetTokenUserByIdAsync(Guid userId, CancellationToken cancellationToken = default);
 
-    Task SignOutAsync(CancellationToken cancellationToken);
+    Task SignOutAsync(CancellationToken cancellationToken = default);
 
-    Task<bool> CheckRefreshTokenAsync(string value, Guid userId, CancellationToken cancellationToken);
+    Task<bool> CheckRefreshTokenAsync(string value, Guid userId, CancellationToken cancellationToken = default);
 
-    Task CreateOrUpdateRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken);
+    Task CreateOrUpdateRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default);
 
-    Task RemoveRefreshTokenAsync(CancellationToken cancellationToken);
+    Task RemoveRefreshTokenAsync(CancellationToken cancellationToken = default);
 
-    Task SetRoleForUserAsync(Guid userId, List<long> roleIds, CancellationToken cancellationToken);
+    Task SetRoleForUserAsync(Guid userId, List<Guid> roleIds, CancellationToken cancellationToken = default);
 
-    Task<bool> VerifySecretKeyAsync(string secretKey, CancellationToken cancellationToken);
+    Task<bool> VerifySecretKeyAsync(string secretKey, CancellationToken cancellationToken = default);
 
-    Task<IPagedList<SignInHistoryDto>> GetSignInHistoryPaging(PagingRequest request, CancellationToken cancellationToken);
+    Task<IPagedList<SignInHistoryDto>> GetSignInHistoryPaging(PagingRequest request, CancellationToken cancellationToken = default);
 }

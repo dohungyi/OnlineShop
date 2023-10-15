@@ -1,5 +1,7 @@
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Dto.Auth;
 using OnlineShop.Application.Infrastructure;
 using OnlineShop.Application.Infrastructure.Persistence;
@@ -8,6 +10,8 @@ using SharedKernel.Application.Models.Requests;
 using SharedKernel.Application.Responses;
 using SharedKernel.Auth;
 using SharedKernel.Libraries;
+using SharedKernel.Libraries.Utility;
+using Action = OnlineShop.Domain.Entities.Action;
 
 namespace OnlineShop.Infrastructure.Repositories;
 
@@ -17,7 +21,10 @@ public class AuthRepository : IAuthRepository
     private readonly ICurrentUser _currentUser;
     private readonly IServiceProvider _provider;
 
-    public AuthRepository(IApplicationDbContext context, ICurrentUser currentUser, IServiceProvider provider)
+    public AuthRepository(
+        IApplicationDbContext context, 
+        ICurrentUser currentUser, 
+        IServiceProvider provider)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
@@ -26,79 +33,145 @@ public class AuthRepository : IAuthRepository
 
     public IUnitOfWork UnitOfWork => _context;
     
-    public async Task<TokenUser> GetTokenUserByIdentityAsync(string username, string password, CancellationToken cancellationToken)
+    public async Task<TokenUser> GetTokenUserByIdentityAsync(string username, string password, CancellationToken cancellationToken = default)
     {
-        var tokenUser = await _context.ApplicationUsers
-            .Where(u => u.Username == username && u.PasswordHash == password.ToMD5())
+        return await GetTokenUserByIdentityOrUserIdAsync(username, password, null, cancellationToken);
+    }
+
+    public async Task<TokenUser> GetTokenUserByIdAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return await GetTokenUserByIdentityOrUserIdAsync(null, null, userId, cancellationToken);
+    }
+
+    public async Task SignOutAsync(CancellationToken cancellationToken = default)
+    {
+        await RemoveRefreshTokenAsync(cancellationToken);
+    }
+
+    public async Task<bool> CheckRefreshTokenAsync(string value, Guid userId, CancellationToken cancellationToken = default)
+    {
+        var refreshToken = await _context.RefreshTokens
+            .FirstOrDefaultAsync(rt => 
+                rt.RefreshTokenValue == value 
+                && rt.UserId == userId 
+                && rt.ExpirationDate >= DateHelper.Now, 
+                cancellationToken);
+        
+        return refreshToken is not null;
+    }
+
+    public async Task CreateOrUpdateRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
+    {
+        var existingRefreshToken = await _context.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.CurrentAccessToken == refreshToken.CurrentAccessToken, cancellationToken);
+
+        if (existingRefreshToken is null)
+        {
+            _context.RefreshTokens.Add(refreshToken);
+        }
+        else
+        {
+            existingRefreshToken.RefreshTokenValue = refreshToken.RefreshTokenValue;
+            existingRefreshToken.CurrentAccessToken = refreshToken.CurrentAccessToken;
+            existingRefreshToken.ExpirationDate = refreshToken.ExpirationDate;
+        }
+    }
+
+    public async Task RemoveRefreshTokenAsync(CancellationToken cancellationToken = default)
+    {
+        var refreshToken = await _context.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.CurrentAccessToken == _currentUser.Context.AccessToken, cancellationToken);
+
+        if (refreshToken is null)
+        {
+            return;
+        }
+        
+        _context.RefreshTokens.Remove(refreshToken);
+    }
+
+    public async Task SetRoleForUserAsync(Guid userId, List<Guid> roleIds, CancellationToken cancellationToken = default)
+    {
+        _context.UserRoles.AddRange(roleIds.Select(r => new UserRole { UserId = userId, RoleId = userId }));
+    }
+
+    public async Task<bool> VerifySecretKeyAsync(string secretKey, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<IPagedList<SignInHistoryDto>> GetSignInHistoryPaging(PagingRequest request, CancellationToken cancellationToken = default)
+    {
+        var mapper = _provider.GetRequiredService<IMapper>();
+
+        var signInHistoryPaging = await _context.SignInHistories
+            .Where(s => s.Username == _currentUser.Context.Username &&
+                        s.UserId.ToString() == _currentUser.Context.UserId)
+            .ProjectTo<SignInHistoryDto>(mapper.ConfigurationProvider)
+            .ToPagedListAsync(request.Page, request.Size, request.IndexForm, cancellationToken);
+
+        return signInHistoryPaging;
+    }
+
+    #region [Private]
+
+    private async Task<TokenUser> GetTokenUserByIdentityOrUserIdAsync(string? username, string? password, Guid? userId, CancellationToken cancellationToken)
+    {
+        var user = await _context.ApplicationUsers
+            .Where(u => (u.Username == username && u.PasswordHash == password.ToMD5()) || u.Id == userId)
             .Include(u => u.UserRoles)
             .ThenInclude(u => u.Role)
             .ThenInclude(u => u.RoleActions)
-            .ThenInclude(u => u.Action)
-            .Select(u => new TokenUser()
-            {
-                Username = u.Username,
-                PasswordHash = u.PasswordHash,
-                Salt = u.Salt,
-                PhoneNumber = u.PhoneNumber,
-                ConfirmedPhone = u.ConfirmedPhone,
-                Email = u.Email,
-                ConfirmedEmail = u.ConfirmedEmail,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                DateOfBirth = u.DateOfBirth,
-                Gender = u.Gender,
-                Permission = string.Join(",", u.UserRoles.SelectMany(ur => ur.Role.RoleActions.Select(ra => ra.Action.Name))),
-                RoleNames = u.UserRoles.Select(ur => ur.Role.Name).ToList(),
-            })
-            .SingleOrDefaultAsync(cancellationToken);
+            .ThenInclude(u => u.Action).SingleOrDefaultAsync(cancellationToken);
 
-        if (tokenUser is null)
+        if (user is null)
         {
-            return null;
+            return null!;
+        }
+
+        var roleActions = user.UserRoles?.SelectMany(u => u.Role.RoleActions);
+        
+        var tokenUser = new TokenUser()
+        {
+            Username = user.Username,
+            PasswordHash = user.PasswordHash,
+            Salt = user.Salt,
+            PhoneNumber = user.PhoneNumber,
+            ConfirmedPhone = user.ConfirmedPhone,
+            Email = user.Email,
+            ConfirmedEmail = user.ConfirmedEmail,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            DateOfBirth = user.DateOfBirth,
+            Gender = user.Gender,
+        };
+
+        if (roleActions is null)
+        {
+            return tokenUser;
         }
         
-        // handler ......
+        var sa = roleActions.FirstOrDefault(x => x.Role.Code.Equals(RoleConstant.SupperAdmin));
+        var admin = roleActions.FirstOrDefault(x => x.Role.Code.Equals(RoleConstant.Admin));
+        
+        if (sa is not null)
+        {
+            tokenUser.Permission = AuthUtility.CalculateToTalPermission(Enumerable.Range(0, sa.Action.Exponent + 1));
+        }
+        else if (admin is not null)
+        {
+            tokenUser.Permission = AuthUtility.CalculateToTalPermission(Enumerable.Range(0, admin.Action.Exponent + 1));
+        }
+        else
+        {
+            tokenUser.Permission = AuthUtility.CalculateToTalPermission(roleActions.Select(x => x.Action.Exponent));
+        }
 
+        tokenUser.RoleNames = roleActions.DistinctBy(x => x.Role.Name).Select(x => x.Role.Name).ToList();
+        
         return tokenUser;
     }
+    
 
-    public async Task<TokenUser> GetTokenUserByIdAsync(Guid userId, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task SignOutAsync(CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<bool> CheckRefreshTokenAsync(string value, Guid userId, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task CreateOrUpdateRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task RemoveRefreshTokenAsync(CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task SetRoleForUserAsync(Guid userId, List<long> roleIds, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<bool> VerifySecretKeyAsync(string secretKey, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IPagedList<SignInHistoryDto>> GetSignInHistoryPaging(PagingRequest request, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    #endregion
 }

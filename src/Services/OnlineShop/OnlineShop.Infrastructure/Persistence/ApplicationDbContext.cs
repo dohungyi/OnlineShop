@@ -32,10 +32,12 @@ public class ApplicationDbContext : AppDbContext, IApplicationDbContext
     public DbSet<ApplicationUserConfig> ApplicationUserConfigs { get; set; }
     public DbSet<ApplicationUserAddress> ApplicationUserAddresses { get; set; }
     public DbSet<ApplicationUserPayment> ApplicationUserPayments { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
     public DbSet<Action> Actions { get; set; }
     public DbSet<RoleAction> RoleActions { get; set; }
+    public DbSet<SignInHistory> SignInHistories { get; set; }
 
     #endregion [USERS]
     

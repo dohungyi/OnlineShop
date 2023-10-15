@@ -173,9 +173,9 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserConfigId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AvatarId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RefreshTokenId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserConfigId = table.Column<Guid>(type: "uuid", nullable: true),
+                    AvatarId = table.Column<Guid>(type: "uuid", nullable: true),
+                    RefreshTokenId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<string>(type: "text", nullable: false),
