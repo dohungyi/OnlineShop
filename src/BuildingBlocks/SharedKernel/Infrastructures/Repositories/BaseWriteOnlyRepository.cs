@@ -13,11 +13,11 @@ public class BaseWriteOnlyRepository<TEntity,TDbContext> : IBaseWriteOnlyReposit
     where TEntity : BaseEntity
     where TDbContext : AppDbContext
 {
-    private readonly TDbContext _dbContext;
-    private readonly DbSet<TEntity> _dbSet;
-    private readonly string _tableName;
-    private readonly ISequenceCaching _sequenceCaching;
-    private readonly ICurrentUser _currentUser;
+    protected readonly TDbContext _dbContext;
+    protected readonly DbSet<TEntity> _dbSet;
+    protected readonly string _tableName;
+    protected readonly ISequenceCaching _sequenceCaching;
+    protected readonly ICurrentUser _currentUser;
     
     public BaseWriteOnlyRepository(
         TDbContext dbContext, 

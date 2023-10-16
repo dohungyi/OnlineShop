@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Application.Features.VersionOne;
 using SharedKernel.Application.Responses;
 
-namespace OnlineShop.Api.Controllers;
+namespace OnlineShop.Api.Controllers.VersionOne;
 
 
 public class AuthController : BaseController

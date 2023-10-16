@@ -56,8 +56,8 @@ public class ApplicationDbContextSeed
         var admin = GetAdmin();
         var roles = GetRoles();
         var actions = GetActions();
-        var supperAdminRole = roles.FirstOrDefault(r => r.Code == "SUPPER_ADMIN");
-        var adminRole = roles.FirstOrDefault(r => r.Code == "ADMIN");
+        var supperAdminRole = roles.FirstOrDefault(r => r.Code == RoleConstant.SupperAdmin);
+        var adminRole = roles.FirstOrDefault(r => r.Code == RoleConstant.Admin);
         
         if (!_context.ApplicationUsers.Any())
         {
@@ -209,8 +209,9 @@ public class ApplicationDbContextSeed
     {
         return new List<Role>()
         {
-            new Role() { Code = "SUPPER_ADMIN", Name = "Super Admin", IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Role() { Code = "ADMIN", Name = "Admin", IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null }
+            new Role() { Code = RoleConstant.SupperAdmin, Name = "Super Admin", IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Role() { Code = RoleConstant.Admin, Name = "Admin", IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Role() { Code = RoleConstant.Customer, Name = "Customer", IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null }
         };
     }
 

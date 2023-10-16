@@ -1,3 +1,6 @@
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using OnlineShop.Application.Infrastructure;
 using OnlineShop.Application.Repositories;
 using OnlineShop.Domain.Entities;
 using OnlineShop.Infrastructure.Persistence;
@@ -9,26 +12,61 @@ namespace OnlineShop.Infrastructure.Repositories;
 
 public class UserWriteOnlyRepository : BaseWriteOnlyRepository<ApplicationUser, ApplicationDbContext>, IUserWriteOnlyRepository
 {
+    private readonly IAuthRepository _authRepository;
+    private readonly IMapper _mapper;
+    
     public UserWriteOnlyRepository(
         ApplicationDbContext dbContext, 
         ICurrentUser currentUser, 
-        ISequenceCaching sequenceCaching) 
+        ISequenceCaching sequenceCaching,
+        IAuthRepository authRepository,
+        IMapper mapper) 
         : base(dbContext, currentUser, sequenceCaching)
     {
+        _authRepository = authRepository ?? throw new ArgumentNullException(nameof(authRepository));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public Task<Guid> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default)
+    public async Task<Guid> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _dbContext.ApplicationUsers.AddAsync(user, cancellationToken);
+        
+        var customerRole = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Code == RoleConstant.Customer, cancellationToken);
+        
+        await _authRepository.SetRoleForUserAsync(user.Id, new List<Guid> { customerRole.Id }, cancellationToken);
+        
+        return user.Id;
     }
 
-    public Task SetAvatarAsync(string fileName, CancellationToken cancellationToken = default)
+    public async Task SetAvatarAsync(string fileName, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var avatar = await _dbContext.Avatars
+                .FirstOrDefaultAsync(a => a.UserId.ToString() == _currentUser.Context.UserId, cancellationToken);
+
+        if (avatar is null)
+        {
+            var avatarNew = new Avatar
+            {
+                FileName = fileName,
+                UserId = Guid.Parse(_currentUser.Context.UserId)
+            };
+            
+            await _dbContext.AddAsync(avatarNew, cancellationToken);
+        }
+        else
+        {
+            avatar.FileName = fileName;
+            
+            _dbContext.Update(avatar);
+        }
     }
 
-    public Task RemoveAvatarAsync(CancellationToken cancellationToken = default)
+    public async Task RemoveAvatarAsync(CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var avatar = await _dbContext.Avatars
+            .FirstOrDefaultAsync(a => a.UserId.ToString() == _currentUser.Context.UserId, cancellationToken);
+
+        _dbContext.Remove(avatar);
+        
     }
 }

@@ -128,8 +128,6 @@ public class AuthRepository : IAuthRepository
         {
             return null!;
         }
-
-        var roleActions = user.UserRoles?.SelectMany(u => u.Role.RoleActions);
         
         var tokenUser = new TokenUser()
         {
@@ -146,6 +144,8 @@ public class AuthRepository : IAuthRepository
             Gender = user.Gender,
         };
 
+        var roleActions = user.UserRoles?.SelectMany(u => u.Role.RoleActions);
+        
         if (roleActions is null)
         {
             return tokenUser;
