@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace SharedKernel.Application.Responses;
+namespace SharedKernel.Application;
 
 public class Error
 {

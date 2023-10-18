@@ -6,8 +6,6 @@ using OnlineShop.Application.Dto.Auth;
 using OnlineShop.Application.Infrastructure;
 using OnlineShop.Application.Infrastructure.Persistence;
 using OnlineShop.Domain.Entities;
-using SharedKernel.Application.Models.Requests;
-using SharedKernel.Application.Responses;
 using SharedKernel.Auth;
 using SharedKernel.Libraries;
 using SharedKernel.Libraries.Utility;
@@ -67,13 +65,15 @@ public class AuthRepository : IAuthRepository
 
         if (existingRefreshToken is null)
         {
-            _context.RefreshTokens.Add(refreshToken);
+            await _context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
         }
         else
         {
             existingRefreshToken.RefreshTokenValue = refreshToken.RefreshTokenValue;
             existingRefreshToken.CurrentAccessToken = refreshToken.CurrentAccessToken;
             existingRefreshToken.ExpirationDate = refreshToken.ExpirationDate;
+            
+            _context.RefreshTokens.Update(refreshToken);
         }
     }
 

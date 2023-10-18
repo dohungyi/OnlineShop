@@ -1,8 +1,5 @@
 using OnlineShop.Application.Dto.Auth;
 using OnlineShop.Domain.Entities;
-using SharedKernel.Application;
-using SharedKernel.Application.Models.Requests;
-using SharedKernel.Application.Responses;
 
 namespace OnlineShop.Application.Infrastructure;
 

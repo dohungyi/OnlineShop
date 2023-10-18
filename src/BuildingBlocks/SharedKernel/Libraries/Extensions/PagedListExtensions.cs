@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SharedKernel.Application.Responses;
+using SharedKernel.Application;
 
 namespace SharedKernel.Libraries;
 

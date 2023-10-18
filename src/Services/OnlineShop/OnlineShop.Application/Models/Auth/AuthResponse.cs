@@ -1,5 +1,3 @@
-using SharedKernel.Application.Responses;
-
 namespace OnlineShop.Application.Models.Auth;
 
 public class AuthResponse : ApiSuccessResult

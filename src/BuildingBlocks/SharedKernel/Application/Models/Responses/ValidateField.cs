@@ -1,4 +1,4 @@
-namespace SharedKernel.Application.Responses;
+namespace SharedKernel.Application;
 
 public class ValidateField
 {

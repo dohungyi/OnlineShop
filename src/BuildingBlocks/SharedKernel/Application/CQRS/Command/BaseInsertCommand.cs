@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace SharedKernel.Application.CQRS.Command;
+namespace SharedKernel.Application;
 
 public class BaseInsertCommand<TResponse> : BaseCommand<TResponse>
 {

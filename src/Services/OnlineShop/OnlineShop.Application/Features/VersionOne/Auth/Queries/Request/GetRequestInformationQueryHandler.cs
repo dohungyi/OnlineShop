@@ -10,7 +10,7 @@ using UAParser;
 
 namespace OnlineShop.Application.Features.VersionOne;
 
-public class GetRequestInformationQueryHandler : IRequestHandler<GetRequestInformationQuery, RequestValue>
+public class GetRequestInformationQueryHandler : IRequestHandler<GetRequestInformationQuery, ApiResult>
 {
     private readonly IHttpContextAccessor _context;
     private readonly IServiceProvider _provider;
@@ -23,7 +23,7 @@ public class GetRequestInformationQueryHandler : IRequestHandler<GetRequestInfor
         _provider = provider;
     }
 
-    public async Task<RequestValue> Handle(GetRequestInformationQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult> Handle(GetRequestInformationQuery request, CancellationToken cancellationToken)
     {
         var value = new RequestValue();
         var httpRequest = _context.HttpContext.Request;
@@ -40,6 +40,8 @@ public class GetRequestInformationQueryHandler : IRequestHandler<GetRequestInfor
         value.Time = DateHelper.Now.ToString();
         value.IpInformation = await AuthUtility.GetIpInformationAsync(_provider, value.Ip);
 
-        return value;
+        var result = new ApiSimpleResult(value);
+        
+        return result;
     }
 }

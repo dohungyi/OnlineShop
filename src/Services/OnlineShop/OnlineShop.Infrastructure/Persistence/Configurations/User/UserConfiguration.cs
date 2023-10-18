@@ -9,6 +9,9 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
+        // Query
+        builder.HasQueryFilter(x => !x.IsDeleted);
+        
         // TableName
         builder.ToTable(TableName.User);
 

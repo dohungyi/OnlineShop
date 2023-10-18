@@ -1,6 +1,13 @@
+using OnlineShop.Application.Dto.Auth;
+
 namespace OnlineShop.Application.Features.VersionOne;
 
-public class SignInHistoryPagingQuery
+public class SignInHistoryPagingQuery : BaseQuery<IPagedList<SignInHistoryDto>>
 {
-    
+    public PagingRequest PagingRequest { get; }
+
+    public SignInHistoryPagingQuery(PagingRequest pagingRequest)
+    {
+        PagingRequest = pagingRequest;
+    }
 }

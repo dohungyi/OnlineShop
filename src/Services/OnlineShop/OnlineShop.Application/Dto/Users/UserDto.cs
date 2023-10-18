@@ -1,8 +1,10 @@
+using OnlineShop.Application.Mappings;
+using OnlineShop.Domain.Entities;
 using SharedKernel.Application;
 
 namespace OnlineShop.Application.Dto;
 
-public class UserDto
+public class UserDto : IMapFrom<ApplicationUser>
 {
     public string Id { get; set; }
 

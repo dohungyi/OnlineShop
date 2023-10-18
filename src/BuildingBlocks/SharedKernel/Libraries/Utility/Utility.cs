@@ -1,5 +1,7 @@
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
+using SharedKernel.Application.Consts;
 
 namespace SharedKernel.Libraries.Utility;
 
@@ -70,5 +72,14 @@ public static class Utility
         {
             return false;
         }
+    }
+    
+    public static bool IsPhoneNumber(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return false;
+        }
+        return Regex.IsMatch(input, RegexPattern.PHONE_NUMBER_PATTERN);
     }
 }

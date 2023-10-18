@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SharedKernel.Application.Models.Requests;
+namespace SharedKernel.Application;
 
 public class PagingRequest
 {
@@ -54,4 +54,10 @@ public class PagingRequest
 
     [BindProperty(Name = "sort")]
     public SortModel Sorts { get; set; } = new SortModel();
+    
+    public PagingRequest(int page, int size)
+    {
+        Page = page;
+        Size = size;
+    }
 }

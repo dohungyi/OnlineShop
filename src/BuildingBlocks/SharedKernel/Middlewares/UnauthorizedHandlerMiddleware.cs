@@ -1,12 +1,9 @@
 using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using SharedKernel.Application.Responses;
-using SharedKernel.Properties;
+using SharedKernel.Application;
 
 namespace SharedKernel.Middlewares;
 

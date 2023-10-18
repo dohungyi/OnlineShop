@@ -1,4 +1,4 @@
-namespace SharedKernel.Application.Models.Requests;
+namespace SharedKernel.Application;
 
 
 public class SortModel

@@ -1,9 +1,14 @@
 using System.Net;
 
-namespace SharedKernel.Application.Responses;
+namespace SharedKernel.Application;
 
 public class ApiErrorResult : ApiResult
 {
+    public ApiErrorResult()
+    {
+        
+    }
+    
     public ApiErrorResult(Error error)
     {
         StatusCode = (int)HttpStatusCode.BadRequest;

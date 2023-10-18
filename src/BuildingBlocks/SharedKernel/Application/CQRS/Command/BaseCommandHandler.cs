@@ -1,6 +1,6 @@
 using SharedKernel.Domain;
 
-namespace SharedKernel.Application.CQRS.Command;
+namespace SharedKernel.Application;
 
 public abstract class BaseCommandHandler
 {

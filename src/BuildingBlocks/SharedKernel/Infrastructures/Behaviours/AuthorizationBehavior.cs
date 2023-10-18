@@ -1,7 +1,5 @@
-
 using MediatR;
 using SharedKernel.Application;
-using SharedKernel.Application.CQRS.Command;
 using SharedKernel.Auth;
 using SharedKernel.Libraries;
 using SharedKernel.Runtime.Exceptions;
