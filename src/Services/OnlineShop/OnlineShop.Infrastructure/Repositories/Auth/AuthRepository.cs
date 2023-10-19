@@ -122,7 +122,8 @@ public class AuthRepository : IAuthRepository
             .Include(u => u.UserRoles)
             .ThenInclude(u => u.Role)
             .ThenInclude(u => u.RoleActions)
-            .ThenInclude(u => u.Action).SingleOrDefaultAsync(cancellationToken);
+            .ThenInclude(u => u.Action)
+            .SingleOrDefaultAsync(cancellationToken);
 
         if (user is null)
         {

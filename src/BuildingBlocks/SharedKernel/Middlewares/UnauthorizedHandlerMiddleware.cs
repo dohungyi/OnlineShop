@@ -1,9 +1,12 @@
 using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SharedKernel.Application;
+using SharedKernel.Properties;
 
 namespace SharedKernel.Middlewares;
 
@@ -26,7 +29,7 @@ public class UnauthorizedHandlerMiddleware
             context.Response.StatusCode = (int)HttpStatusCode.OK;
             context.Response.ContentType = "application/json";
 
-            // var localizer = context.RequestServices.GetRequiredService<IStringLocalizer<Resources>>();
+            var localizer = context.RequestServices.GetRequiredService<IStringLocalizer<Resources>>();
             
             await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApiResult() { StatusCode = (int)HttpStatusCode.Unauthorized, Error = new Error(401, "Unauthorized")}, new JsonSerializerSettings
             {

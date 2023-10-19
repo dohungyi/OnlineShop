@@ -28,6 +28,7 @@ public class AuthController : BaseController
 
     #region [Ping]
 
+    [HttpGet("ping")]
     public IActionResult Ping()
     {
         return Ok(new ApiSimpleResult("pong pong pong"));
@@ -115,7 +116,6 @@ public class AuthController : BaseController
         return Ok(result);
     }
     
-    [AllowAnonymous]
     [HttpGet("request-information")]
     public async Task<IActionResult> RequestInformation(CancellationToken cancellationToken = default)
     {

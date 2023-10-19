@@ -53,9 +53,12 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
             CurrentAccessToken = authResponse.AccessToken,
             UserId = tokenUser.Id,
             ExpirationDate = DateHelper.Now.AddSeconds(AuthConstant.REFRESH_TOKEN_TIME),
+            CreatedBy = "supperadmin",
+            CreatedDate = DateHelper.Now
         };
         
         await _authRepository.CreateOrUpdateRefreshTokenAsync(refreshToken, cancellationToken);
+        await _authRepository.UnitOfWork.CommitAsync(false, cancellationToken);
         
         // Publish event
         // var @event = new SignInEvent(_currentUser, Guid.NewGuid(), new

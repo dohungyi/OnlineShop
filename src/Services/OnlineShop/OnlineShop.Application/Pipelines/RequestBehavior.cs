@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using OnlineShop.Application.Infrastructure.Persistence;
 using SharedKernel.Application;
@@ -15,12 +16,12 @@ public class RequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     where TRequest : IRequest<TResponse>
 {
     private readonly IHttpContextAccessor _accessor;
-    private readonly IApplicationDbContext _context;
+    private readonly IServiceProvider _provider;
 
-    public RequestBehavior(IHttpContextAccessor accessor, IApplicationDbContext context)
+    public RequestBehavior(IHttpContextAccessor accessor, IServiceProvider provider)
     {
         _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
     
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -34,16 +35,20 @@ public class RequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         
         _ = Task.Run(async () =>
         {
-            try
+            using (var scope = _provider.CreateScope())
             {
-                var requestInformation = GetParameter(openRequest, requestId);
-                await _context.RequestInformations.AddAsync(requestInformation, cancellationToken);
-                await _context.CommitAsync(false ,cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                Logging.Error(ex);
-            }
+                try
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<IApplicationDbContext>();
+                    var requestInformation = GetParameter(openRequest, requestId);
+                    await context.RequestInformations.AddAsync(requestInformation, cancellationToken);
+                    await context.CommitAsync(false ,cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    Logging.Error(ex);
+                }
+            } 
             
         }, cancellationToken);
         
