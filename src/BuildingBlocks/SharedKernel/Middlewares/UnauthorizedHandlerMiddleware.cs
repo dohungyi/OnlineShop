@@ -31,7 +31,7 @@ public class UnauthorizedHandlerMiddleware
 
             var localizer = context.RequestServices.GetRequiredService<IStringLocalizer<Resources>>();
             
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApiResult() { StatusCode = (int)HttpStatusCode.Unauthorized, Error = new Error(401, "Unauthorized")}, new JsonSerializerSettings
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApiResult() { Status = "unauthorized",Error = new Error(401, localizer["unauthorized"])}, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
                 

@@ -4,27 +4,26 @@ namespace SharedKernel.Application;
 
 public class ApiResult
 {
-    public bool Status
+    protected string _status = "success";
+
+    public string Status
     {
         get
         {
-            if (Error is null)
+            if (_status == "success" && Error != null)
             {
-                return true;
+                _status = "error";
             }
-            return false;
+            return _status;
         }
+        set { _status = value; }
     }
-    public int StatusCode { get; set; }
+
     public Error Error { get; set; }
     
     public ApiResult()
     {
-        StatusCode = (int)HttpStatusCode.OK;
     }
     
-    public ApiResult(HttpStatusCode statusCode)
-    {
-        StatusCode = (int)statusCode;
-    }
+    
 }

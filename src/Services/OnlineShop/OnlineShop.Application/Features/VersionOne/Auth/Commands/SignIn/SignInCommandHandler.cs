@@ -9,6 +9,7 @@ using OnlineShop.Domain.Entities;
 using OnlineShop.Domain.Events.Auth;
 using SharedKernel.Libraries;
 using SharedKernel.Libraries.Utility;
+using SharedKernel.Runtime.Exceptions;
 
 namespace OnlineShop.Application.Features.VersionOne;
 
@@ -34,10 +35,11 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
 
         if (tokenUser is null)
         {
-            return new ApiErrorResult
-            {
-                Error = new Error(HttpStatusCode.BadRequest, _localizer["auth_sign_in_info_incorrect"].Value)
-            };
+            throw new BadRequestException(_localizer["auth_sign_in_info_incorrect"].Value);
+            // return new ApiErrorResult
+            // {
+            //     Error = new Error(HttpStatusCode.BadRequest, _localizer["auth_sign_in_info_incorrect"].Value)
+            // };
         }
 
         var authResponse = new AuthResponse()
@@ -53,7 +55,7 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
             CurrentAccessToken = authResponse.AccessToken,
             UserId = tokenUser.Id,
             ExpirationDate = DateHelper.Now.AddSeconds(AuthConstant.REFRESH_TOKEN_TIME),
-            CreatedBy = "supperadmin",
+            CreatedBy = tokenUser.Username,
             CreatedDate = DateHelper.Now
         };
         

@@ -8,7 +8,6 @@ namespace OnlineShop.Application.Infrastructure.Persistence;
 
 public interface IApplicationDbContext : IAppDbContext
 {
-    
     DbSet<RequestInformation> RequestInformations { get; set; }
     DbSet<ApplicationUser> ApplicationUsers { get; set; }
     DbSet<Avatar> Avatars { get; set; }

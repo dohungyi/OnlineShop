@@ -22,12 +22,11 @@ public class UserController : BaseController
     {
         return Ok(new ApiSimpleResult());
     }
-    
+
     [HttpDelete("remove-avatar")]
     public async Task<IActionResult> RemoveAvatar(CancellationToken cancellationToken = default)
     {
         return Ok(new ApiSimpleResult());
     }
-    
-    
+
 }

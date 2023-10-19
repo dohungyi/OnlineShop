@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace SharedKernel.Application;
 
 public class ApiErrorResult : ApiResult
@@ -11,13 +9,12 @@ public class ApiErrorResult : ApiResult
     
     public ApiErrorResult(Error error)
     {
-        StatusCode = (int)HttpStatusCode.BadRequest;
         Error = error;
     }
 
-    public ApiErrorResult(HttpStatusCode statusCode, Error error)
+    public ApiErrorResult(string status, Error error)
     {
-        StatusCode = (int)statusCode;
+        Status = status;
         Error = error;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Net;
+using System.Reflection.Metadata;
 using System.Text;
 using AspNetCoreRateLimit;
 using HealthChecks.UI.Client;
@@ -31,11 +32,14 @@ using SharedKernel.Domain;
 using SharedKernel.Domain.DomainEvents.Dispatcher;
 using SharedKernel.Filters;
 using SharedKernel.Infrastructures;
+using SharedKernel.Libraries.Security;
+using SharedKernel.Log;
 using SharedKernel.MessageBroker;
 using SharedKernel.Middlewares;
 using SharedKernel.Persistence.ExceptionHandler;
 using SharedKernel.Properties;
 using SharedKernel.Providers.Storage.S3;
+using SharedKernel.Runtime.Exceptions;
 using StackExchange.Redis;
 
 namespace SharedKernel.Configure;
@@ -299,51 +303,47 @@ public static class CoreConfigure
 
             // Handle Exception
             // Catchable
-            // if (exception is CatchableException)
-            // {
-            //     responseContent.Error = new Error(500, exception.Message);
-            //     Logging.Error(exception);
-            // }
-            // // For bi đần
-            // else if (exception is ForbiddenException)
-            // {
-            //     responseContent.Error = new Error(403, localizer["not_permission"].Value);
-            // }
-            // // Sql Injection
-            // else if (exception is SqlInjectionException)
-            // {
-            //     responseContent.Error = new Error(400, Secure.MsgDetectedSqlInjection);
-            //     Logging.Error(exception);
-            // }
-            // // Bad request
-            // else if (exception is BadRequestException)
-            // {
-            //     if ((exception as BadRequestException).Body != null)
-            //     {
-            //         responseContent = new SimpleDataResult
-            //         {
-            //             Data = (exception as BadRequestException).Body,
-            //             Error = new Error(400, exception.Message, (exception as BadRequestException).Type)
-            //         };
-            //     }
-            //     else
-            //     {
-            //         responseContent.Error = new Error(400, exception.Message, (exception as BadRequestException).Type);
-            //     }
-            // }
-            // // Unknown exception
-            // else
-            // {
-            //     responseContent.Error = new Error(500, localizer["system_error_occurred"].Value);
-            //     Logging.Error(exception);
-            // }
+            if (exception is CatchableException)
+            {
+                responseContent.Error = new Error(HttpStatusCode.InternalServerError, exception.Message);
+                Logging.Error(exception);
+            }
+            // Forbidden
+            else if (exception is ForbiddenException)
+            {
+                responseContent.Error = new Error(HttpStatusCode.Forbidden, localizer["not_permission"].Value);
+            }
+            // Bad request
+            else if (exception is BadRequestException)
+            {
+                if ((exception as BadRequestException).Body is not null)
+                {
+                    responseContent = new ApiSimpleResult()
+                    {
+                        Data = (exception as BadRequestException).Body,
+                        Error = new Error(400, exception.Message, (exception as BadRequestException).Type)
+                    };
+                }
+                else
+                {
+                    responseContent.Error = new Error(HttpStatusCode.BadRequest, exception.Message, (exception as BadRequestException).Type);
+                }
+            }
+            // Unknown exception
+            else
+            {
+                responseContent.Error = new Error(HttpStatusCode.InternalServerError, localizer["system_error_occurred"].Value);
+                Logging.Error(exception);
+            }
 
             context.Response.StatusCode = (int)HttpStatusCode.OK;
             context.Response.ContentType = "application/json";
+            
             await context.Response.WriteAsync(JsonConvert.SerializeObject(responseContent, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             }));
+            
         }));
     }
 
