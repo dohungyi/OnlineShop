@@ -135,6 +135,10 @@ public static class CoreConfigure
                     return Task.CompletedTask;
                 }
             };
+        }).AddGoogle(googleOptions =>
+        {
+            googleOptions.ClientId = DefaultGoogleConfig.ClientId;
+            googleOptions.ClientSecret = DefaultGoogleConfig.ClientSecret;
         });
         return services;
     }

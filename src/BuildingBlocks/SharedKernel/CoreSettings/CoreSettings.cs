@@ -19,6 +19,7 @@ public static class CoreSettings
         // SetLoggingConfig(configuration, logger);
         // SetEmailConfig(configuration);
         // SetDefaultElasticSearchConfig(configuration);
+        // SetGoogleConfig(configuration);
     }
     
     public static void SetConnectionStrings(IConfiguration configuration)
@@ -30,7 +31,12 @@ public static class CoreSettings
     {
         DefaultJwtConfig.SetDefaultJwtConfig(configuration);
     }
-    
+
+    public static void SetGoogleConfig(IConfiguration configuration)
+    {
+        DefaultGoogleConfig.SetDefaultGoogleConfig(configuration);
+    }
+
     public static void SetEmailConfig(IConfiguration configuration)
     {
         DefaultEmailConfig.SetDefaultEmailConfig(configuration);

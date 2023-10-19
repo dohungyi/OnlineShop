@@ -59,4 +59,7 @@
     <data name="user_upload_avatar_failed" xml:space="preserve">
         <value>Upload avatar failed</value>
     </data>
+    <data name="auth_id_token_must_not_be_empty" xml:space="preserve">
+        <value>Id token must not be empty</value>
+    </data>
 </root>

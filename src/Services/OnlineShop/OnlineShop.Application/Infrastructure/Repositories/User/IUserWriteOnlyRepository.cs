@@ -6,7 +6,7 @@ namespace OnlineShop.Application.Repositories;
 
 public interface IUserWriteOnlyRepository : IBaseWriteOnlyRepository<ApplicationUser, IAppDbContext>
 {
-    Task<Guid> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default);
+    Task<ApplicationUser> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default);
 
     Task SetAvatarAsync(string fileName, CancellationToken cancellationToken = default);
 

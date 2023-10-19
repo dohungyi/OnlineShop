@@ -1,14 +1,10 @@
-using System.Net;
-using MediatR;
 using Microsoft.Extensions.Localization;
 using OnlineShop.Application.Constants;
+using OnlineShop.Application.Dto.Auth;
 using OnlineShop.Application.Infrastructure;
-using OnlineShop.Application.Models.Auth;
 using OnlineShop.Application.Properties;
 using OnlineShop.Domain.Entities;
-using OnlineShop.Domain.Events.Auth;
 using SharedKernel.Libraries;
-using SharedKernel.Libraries.Utility;
 using SharedKernel.Runtime.Exceptions;
 
 namespace OnlineShop.Application.Features.VersionOne;
@@ -36,12 +32,8 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
         if (tokenUser is null)
         {
             throw new BadRequestException(_localizer["auth_sign_in_info_incorrect"].Value);
-            // return new ApiErrorResult
-            // {
-            //     Error = new Error(HttpStatusCode.BadRequest, _localizer["auth_sign_in_info_incorrect"].Value)
-            // };
         }
-
+        
         var authResponse = new AuthResponse()
         {
             AccessToken = await _authService.GenerateAccessTokenAsync(tokenUser, cancellationToken),
@@ -56,7 +48,6 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
             UserId = tokenUser.Id,
             ExpirationDate = DateHelper.Now.AddSeconds(AuthConstant.REFRESH_TOKEN_TIME),
             CreatedBy = tokenUser.Username,
-            CreatedDate = DateHelper.Now
         };
         
         await _authRepository.CreateOrUpdateRefreshTokenAsync(refreshToken, cancellationToken);
@@ -74,6 +65,6 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
         // _ = _eventBus.PublishEvent(@event, cancellationToken);
         // _ = _eventBus.PublishEvent(new SignInAuditEvent(_currentUser), cancellationToken);
 
-        return authResponse;
+        return new ApiSuccessResult<AuthResponse>(authResponse);
     }
 }

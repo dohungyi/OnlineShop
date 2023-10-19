@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver.Linq;
 using OnlineShop.Domain.Entities;
 using OnlineShop.Infrastructure.Persistence;
 using SharedKernel.Auth;
@@ -20,25 +19,40 @@ public class UserReadOnlyRepository : BaseReadOnlyRepository<ApplicationUser, Ap
         
     }
 
+    public async Task<ApplicationUser> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        var user = await _dbSet.FirstOrDefaultAsync(u => u.Email == email && !u.IsDeleted, cancellationToken);
+        return user;
+    }
+
     public async Task<string> CheckDuplicateAsync(string username, string email, string phone, CancellationToken cancellationToken = default)
     {
-        
-        var userNameExists  = await _dbContext.ApplicationUsers.AnyAsync(u => u.Username == username, cancellationToken);
-        if (userNameExists)
+
+        if (!string.IsNullOrEmpty(username))
         {
-            return nameof(username);
+            var userNameExists  = await _dbSet.AnyAsync(u => u.Username == username && !u.IsDeleted, cancellationToken);
+            if (userNameExists)
+            {
+                return nameof(username);
+            }
+        }
+
+        if (!string.IsNullOrEmpty(phone))
+        {
+            var phoneExists  = await _dbSet.AnyAsync(u => u.PhoneNumber == phone && !u.IsDeleted, cancellationToken);
+            if (phoneExists)
+            {
+                return nameof(phone);
+            }
         }
         
-        var phoneExists  = await _dbContext.ApplicationUsers.AnyAsync(u => u.PhoneNumber == phone, cancellationToken);
-        if (phoneExists)
+        if (!string.IsNullOrEmpty(email))
         {
-            return nameof(phone);
-        }
-        
-        var emailExists  = await _dbContext.ApplicationUsers.AnyAsync(u => u.Email == email, cancellationToken);
-        if (emailExists)
-        {
-            return nameof(email);
+            var emailExists  = await _dbSet.AnyAsync(u => u.Email == email && !u.IsDeleted, cancellationToken);
+            if (emailExists)
+            {
+                return nameof(email);
+            }
         }
 
         return string.Empty;
@@ -53,7 +67,7 @@ public class UserReadOnlyRepository : BaseReadOnlyRepository<ApplicationUser, Ap
 
     public async Task<User> GetUserInformationAsync(CancellationToken cancellationToken)
     {
-        var user = await _dbContext.ApplicationUsers
+        var user = await _dbSet
             .Where(a => a.Id.ToString() == _currentUser.Context.UserId && !a.IsDeleted)
             .Include(a => a.Avatar)
             .FirstOrDefaultAsync(cancellationToken);

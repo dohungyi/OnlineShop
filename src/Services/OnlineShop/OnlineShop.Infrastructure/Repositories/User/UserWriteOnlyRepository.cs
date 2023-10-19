@@ -27,7 +27,7 @@ public class UserWriteOnlyRepository : BaseWriteOnlyRepository<ApplicationUser, 
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
-    public async Task<Guid> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default)
+    public async Task<ApplicationUser> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default)
     {
         await _dbContext.ApplicationUsers.AddAsync(user, cancellationToken);
         
@@ -35,7 +35,7 @@ public class UserWriteOnlyRepository : BaseWriteOnlyRepository<ApplicationUser, 
         
         await _authRepository.SetRoleForUserAsync(user.Id, new List<Guid> { customerRole.Id }, cancellationToken);
         
-        return user.Id;
+        return user;
     }
 
     public async Task SetAvatarAsync(string fileName, CancellationToken cancellationToken = default)

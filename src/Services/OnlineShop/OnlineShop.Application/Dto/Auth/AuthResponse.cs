@@ -1,6 +1,6 @@
-namespace OnlineShop.Application.Models.Auth;
+namespace OnlineShop.Application.Dto.Auth;
 
-public class AuthResponse : ApiSuccessResult
+public class AuthResponse
 {
     public string AccessToken { get; set; }
 

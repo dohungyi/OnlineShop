@@ -25,6 +25,7 @@ try
     CoreSettings.SetEmailConfig(configuration);
     CoreSettings.SetS3AmazonConfig(configuration);
     CoreSettings.SetJwtConfig(configuration);
+    CoreSettings.SetGoogleConfig(configuration);
     CoreSettings.SetConnectionStrings(configuration);
 
     // Services

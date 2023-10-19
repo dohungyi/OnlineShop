@@ -38,7 +38,6 @@
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
         
         <!-- EF Core -->
-        <!-- EF Core -->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2">
             <PrivateAssets>all</PrivateAssets>
@@ -82,6 +81,8 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
+        <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.61.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.10" />
 
         <!-- Swagger-->
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />

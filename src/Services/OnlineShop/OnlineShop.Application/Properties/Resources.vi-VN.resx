@@ -59,4 +59,7 @@
     <data name="user_upload_avatar_failed" xml:space="preserve">
         <value>Tải lên ảnh đại diện thất bại</value>
     </data>
+    <data name="auth_id_token_must_not_be_empty" xml:space="preserve">
+        <value>Mã token không được để trống</value>
+    </data>
 </root>
