@@ -15,9 +15,9 @@ public class UserService : IUserService
 
     public UserService(IUserReadOnlyRepository userReadOnlyRepository, ISequenceCaching caching, IS3StorageProvider s3)
     {
-        _userReadOnlyRepository = userReadOnlyRepository ?? throw new ArgumentNullException(nameof(userReadOnlyRepository));
-        _caching = caching ?? throw new ArgumentNullException(nameof(caching));
-        _s3 = s3 ?? throw new ArgumentNullException(nameof(s3));
+        _userReadOnlyRepository = userReadOnlyRepository;
+        _caching = caching ;
+        _s3 = s3 ;
     }
     
     public async Task<string> GetAvatarUrlByFileNameAsync(string fileName, object userId, CancellationToken cancellationToken)

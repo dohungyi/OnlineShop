@@ -17,8 +17,8 @@ public class RequestBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 
     public RequestBehavior(IHttpContextAccessor accessor, IServiceProvider provider)
     {
-        _accessor = accessor ?? throw new ArgumentNullException(nameof(accessor));
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _accessor = accessor;
+        _provider = provider;
     }
     
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)

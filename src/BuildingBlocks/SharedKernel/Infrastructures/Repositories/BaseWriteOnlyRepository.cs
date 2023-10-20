@@ -24,9 +24,9 @@ public class BaseWriteOnlyRepository<TEntity,TDbContext> : IBaseWriteOnlyReposit
         ICurrentUser currentUser,
         ISequenceCaching sequenceCaching)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        _sequenceCaching = sequenceCaching ?? throw new ArgumentNullException(nameof(sequenceCaching));
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+        _dbContext = dbContext;
+        _sequenceCaching = sequenceCaching;
+        _currentUser = currentUser;
         
         _dbSet = dbContext.Set<TEntity>();
         _tableName = nameof(TEntity);

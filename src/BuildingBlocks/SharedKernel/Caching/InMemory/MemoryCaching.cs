@@ -11,7 +11,7 @@ public class MemoryCaching : IMemoryCaching
     
     public MemoryCaching(IMemoryCache caching)
     {
-        _caching = caching ?? throw new ArgumentNullException(nameof(caching));
+        _caching = caching;
     }
     
     public TimeSpan DefaultAbsoluteExpireTime => TimeSpan.FromHours(2);

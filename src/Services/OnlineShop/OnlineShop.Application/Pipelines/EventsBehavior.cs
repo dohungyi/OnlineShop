@@ -12,8 +12,8 @@ public class EventsBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, T
 
     public EventsBehavior(IApplicationDbContext context, IEventBus eventBus)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-        _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+        _context = context;
+        _eventBus = eventBus;
     }
     
 

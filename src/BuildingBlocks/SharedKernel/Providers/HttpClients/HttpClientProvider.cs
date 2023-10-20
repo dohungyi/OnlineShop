@@ -16,7 +16,7 @@ public class HttpClientProvider : IHttpClientProvider
 
     public HttpClientProvider(IServiceProvider provider)
     {
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _provider = provider;
 
         var clientHandler = new HttpClientHandler()
         {

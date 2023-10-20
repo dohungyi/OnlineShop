@@ -18,7 +18,7 @@ public class RedisCache : IRedisCache
         var connection = ConnectionMultiplexer.Connect(connectionString);
         _cache = connection.GetDatabase(database) ?? throw new ArgumentNullException(nameof(database));
         _server = connection.GetServer(connectionString) ?? throw new ArgumentNullException(nameof(connectionString));
-        _instance = prefix ?? throw new ArgumentNullException(nameof(_instance));
+        _instance = prefix;
         _retryPolicy = asyncRetryPolicy;
     }
     

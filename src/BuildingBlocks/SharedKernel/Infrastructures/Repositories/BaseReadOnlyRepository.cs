@@ -26,10 +26,10 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
         ISequenceCaching sequenceCaching, 
         IServiceProvider provider)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _sequenceCaching = sequenceCaching ?? throw new ArgumentNullException(nameof(sequenceCaching));
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _dbContext = dbContext;
+        _currentUser = currentUser;
+        _sequenceCaching = sequenceCaching;
+        _provider = provider;
         
         _tableName = nameof(TEntity);
         _dbSet = dbContext.Set<TEntity>();

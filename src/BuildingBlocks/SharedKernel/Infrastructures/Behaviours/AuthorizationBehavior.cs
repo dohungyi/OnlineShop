@@ -13,8 +13,8 @@ public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TReq
 
     public AuthorizationBehavior(ICurrentUser currentUser, IAuthService authService)
     {
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+        _currentUser = currentUser;
+        _authService = authService;
     }
     
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SharedKernel.Configure;
-using SharedKernel.MessageBroker;
 using ZymLabs.NSwag.FluentValidation;
 
 namespace OnlineShop.Api;

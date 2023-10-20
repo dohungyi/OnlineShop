@@ -24,9 +24,9 @@ public class AuthRepository : IAuthRepository
         ICurrentUser currentUser, 
         IServiceProvider provider)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _context = context;
+        _currentUser = currentUser;
+        _provider = provider;
     }
 
     public IUnitOfWork UnitOfWork => _context;

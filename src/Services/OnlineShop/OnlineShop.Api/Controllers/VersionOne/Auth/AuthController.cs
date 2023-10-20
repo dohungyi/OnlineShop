@@ -6,7 +6,6 @@ namespace OnlineShop.Api.Controllers.VersionOne;
 
 public class AuthController : BaseController
 {
-    
     [AllowAnonymous]
     [HttpGet("shop-owner-information")]
     public async Task<IActionResult> GetAsync()

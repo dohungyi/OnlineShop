@@ -28,10 +28,10 @@ public class AuthService : IAuthService
         ICurrentUser currentUser
         )
     {
-        _authRepository = authRepository ?? throw new ArgumentNullException(nameof(authRepository));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-        _sequenceCaching = sequenceCaching ?? throw new ArgumentNullException(nameof(sequenceCaching));
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+        _authRepository = authRepository;
+        _configuration = configuration;
+        _sequenceCaching = sequenceCaching;
+        _currentUser = currentUser;
     }
     
     public bool CheckPermission(ActionExponent exponent)

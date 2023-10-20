@@ -24,8 +24,8 @@ public class UserWriteOnlyRepository : BaseWriteOnlyRepository<ApplicationUser, 
         IMapper mapper) 
         : base(dbContext, currentUser, sequenceCaching)
     {
-        _authRepository = authRepository ?? throw new ArgumentNullException(nameof(authRepository));
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _authRepository = authRepository;
+        _mapper = mapper;
     }
 
     public async Task<ApplicationUser> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default)
