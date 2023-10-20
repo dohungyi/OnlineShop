@@ -62,4 +62,7 @@
     <data name="auth_id_token_must_not_be_empty" xml:space="preserve">
         <value>Id token must not be empty</value>
     </data>
+    <data name="auth_id_token_is_invalid" xml:space="preserve">
+        <value>Id token is invalid</value>
+    </data>
 </root>

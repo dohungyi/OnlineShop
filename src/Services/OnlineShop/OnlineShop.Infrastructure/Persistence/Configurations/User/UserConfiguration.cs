@@ -33,15 +33,13 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 
         builder.Property(u => u.PhoneNumber).HasMaxLength(20).IsUnicode(false);
 
-        builder.Property(u => u.Email).IsRequired().HasMaxLength(255).IsUnicode(false);
+        builder.Property(u => u.Email).HasMaxLength(255).IsUnicode(false);
 
         builder.Property(u => u.FirstName).HasMaxLength(50);
 
         builder.Property(u => u.LastName).HasMaxLength(50);
 
         builder.Property(u => u.Address).HasMaxLength(255);
-
-        builder.Property(u => u.Gender).IsRequired();
         
         // Reference Property
         builder.HasOne(u => u.Avatar)

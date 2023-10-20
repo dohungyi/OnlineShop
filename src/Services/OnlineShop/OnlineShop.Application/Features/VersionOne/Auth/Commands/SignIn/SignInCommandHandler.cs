@@ -20,8 +20,8 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
         IStringLocalizer<Resources> localizer
         ) : base(eventBus, authService)
     {
-        _authRepository = authRepository ?? throw new ArgumentNullException(nameof(authRepository));
-        _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
+        _authRepository = authRepository;
+        _localizer = localizer;
     }
 
     public async Task<ApiResult> Handle(SignInCommand request, CancellationToken cancellationToken)
@@ -52,18 +52,6 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
         
         await _authRepository.CreateOrUpdateRefreshTokenAsync(refreshToken, cancellationToken);
         await _authRepository.UnitOfWork.CommitAsync(false, cancellationToken);
-        
-        // Publish event
-        // var @event = new SignInEvent(_currentUser, Guid.NewGuid(), new
-        // {
-        //     TokenUser = tokenUser,
-        //     RequestId = AuthUtility.GetCurrentRequestId(_currentUser.Context.HttpContext)
-        // });
-        //
-        // _currentUser.Context.AccessToken = authResponse.AccessToken;
-        // _currentUser.Context.UserId = tokenUser.Id.ToString(); 
-        // _ = _eventBus.PublishEvent(@event, cancellationToken);
-        // _ = _eventBus.PublishEvent(new SignInAuditEvent(_currentUser), cancellationToken);
 
         return new ApiSuccessResult<AuthResponse>(authResponse);
     }

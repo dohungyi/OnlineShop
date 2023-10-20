@@ -107,6 +107,15 @@ namespace OnlineShop.Application.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        internal static string auth_id_token_is_invalid {
+            get {
+                return ResourceManager.GetString("auth_id_token_is_invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         internal static string auth_id_token_must_not_be_empty {
             get {
                 return ResourceManager.GetString("auth_id_token_must_not_be_empty", resourceCulture);

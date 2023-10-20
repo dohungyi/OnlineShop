@@ -92,7 +92,7 @@ public class ApplicationDbContextSeed
             
                 await _context.RoleActions.AddAsync(roleAction);
 
-                if (action.Exponent < (int)ActionExponent.Admin)
+                if (action.Exponent <= (int)ActionExponent.Admin)
                 {
                     var roleAction_ = new RoleAction
                     {
@@ -166,7 +166,7 @@ public class ApplicationDbContextSeed
             FirstName = "Đỗ Chí",
             LastName = "Hòa",
             Address = "Đông Kết, Khoái Châu, Hưng Yên",
-            DateOfBirth = new DateTime(1967, 9, 6).ToUniversalTime(),
+            DateOfBirth = new DateTime(1990, 01, 01).ToUniversalTime(),
             Gender = GenderType.Other,
             CreatedDate = DateHelper.Now,
             CreatedBy = "supperadmin",

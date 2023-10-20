@@ -1,4 +1,5 @@
 ﻿
+using Google.Apis.Auth;
 using Microsoft.Extensions.Localization;
 using OnlineShop.Application.Constants;
 using OnlineShop.Application.Dto.Auth;
@@ -9,10 +10,11 @@ using OnlineShop.Domain.Entities;
 using OnlineShop.Infrastructure.Repositories;
 using SharedKernel.Core;
 using SharedKernel.Libraries;
+using SharedKernel.Libraries.Utility;
 using SharedKernel.Runtime.Exceptions;
-using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace OnlineShop.Application.Features.VersionOne;
+
 
 public class SignInByGoogleCommandHandler : BaseCommandHandler, IRequestHandler<SignInByGoogleCommand, ApiResult>
 {
@@ -29,37 +31,26 @@ public class SignInByGoogleCommandHandler : BaseCommandHandler, IRequestHandler<
         IStringLocalizer<Resources> localizer
         ) : base(eventBus, authService)
     {
-        _userReadOnlyRepository = userReadOnlyRepository ?? throw new ArgumentNullException(nameof(userReadOnlyRepository));
-        _userWriteOnlyRepository = userWriteOnlyRepository ?? throw new ArgumentNullException(nameof(userWriteOnlyRepository));
-        _authRepository = authRepository ?? throw new ArgumentNullException(nameof(authRepository));
-        _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
+        _userReadOnlyRepository = userReadOnlyRepository;
+        _userWriteOnlyRepository = userWriteOnlyRepository;
+        _authRepository = authRepository;
+        _localizer = localizer;
     }
 
     public async Task<ApiResult> Handle(SignInByGoogleCommand request, CancellationToken cancellationToken)
     {
-        Payload payload = await ValidateAsync(request.IdToken, new ValidationSettings
-        {
-            Audience = new[] { DefaultGoogleConfig.ClientId }
-        });
-
+        var payload = await ValidateAndParseGoogleIdTokenAsync(request.IdToken);
+        
         var user = await _userReadOnlyRepository.FindByEmailAsync(payload.Email, cancellationToken);
         TokenUser tokenUser = null;
         
         if (user is null)
         {
-            tokenUser = await _authRepository.GetTokenUserByIdAsync(user.Id, cancellationToken);
+            user = GetUserFromPayload(payload);
+            user = await _userWriteOnlyRepository.CreateUserAsync(user, cancellationToken);
         }
-        else
-        {
-            // Create user 
-            var userNew = new ApplicationUser()
-            {
-                
-            };
-
-            await _userWriteOnlyRepository.CreateUserAsync(userNew, cancellationToken);
-            tokenUser = await _authRepository.GetTokenUserByIdAsync(userNew.Id, cancellationToken);
-        }
+        
+        tokenUser = await _authRepository.GetTokenUserByIdAsync(user.Id, cancellationToken);
         
         var authResponse = new AuthResponse()
         {
@@ -80,19 +71,38 @@ public class SignInByGoogleCommandHandler : BaseCommandHandler, IRequestHandler<
         await _authRepository.CreateOrUpdateRefreshTokenAsync(refreshToken, cancellationToken);
         await _authRepository.UnitOfWork.CommitAsync(false, cancellationToken);
         
-        // Publish event
-        // var @event = new SignInEvent(_currentUser, Guid.NewGuid(), new
-        // {
-        //     TokenUser = tokenUser,
-        //     RequestId = AuthUtility.GetCurrentRequestId(_currentUser.Context.HttpContext)
-        // });
-        //
-        // _currentUser.Context.AccessToken = authResponse.AccessToken;
-        // _currentUser.Context.UserId = tokenUser.Id.ToString(); 
-        // _ = _eventBus.PublishEvent(@event, cancellationToken);
-        // _ = _eventBus.PublishEvent(new SignInAuditEvent(_currentUser), cancellationToken);
-
         return new ApiSuccessResult<AuthResponse>(authResponse);
     }
-    
+
+    private async Task<GoogleJsonWebSignature.Payload> ValidateAndParseGoogleIdTokenAsync(string idToken)
+    {
+        var settings = new GoogleJsonWebSignature.ValidationSettings()
+        {
+            Audience = new List<string>() { DefaultGoogleConfig.ClientId }
+        };
+        
+        var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+
+        if (payload is null)
+        {
+            throw new BadRequestException(_localizer["auth_id_token_is_invalid"].Value);
+        }
+
+        return payload;
+    }
+
+    private ApplicationUser GetUserFromPayload(GoogleJsonWebSignature.Payload payload)
+    {
+        return new ApplicationUser()
+        {
+            Username = payload.Email,
+            PasswordHash = payload.Email.ToMD5(),
+            Salt = Utility.RandomString(6),
+            Email = payload.Email,
+            ConfirmedEmail = payload.EmailVerified,
+            FirstName = payload.FamilyName,
+            LastName = payload.GivenName,
+            DateOfBirth = new DateTime(1990, 01, 01).ToUniversalTime(),
+        };
+    } 
 }

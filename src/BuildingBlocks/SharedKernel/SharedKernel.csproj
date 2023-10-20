@@ -81,7 +81,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
-        <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.61.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="7.0.10" />
 
         <!-- Swagger-->

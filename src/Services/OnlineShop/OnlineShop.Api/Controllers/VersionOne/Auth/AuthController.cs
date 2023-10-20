@@ -23,6 +23,7 @@ public class AuthController : BaseController
                 MostBeautifulDay = "Ngày em đẹp nhất là ngày anh chưa có gì trong tay!"
             }
         };
+        
         return Ok(result);
     }
 

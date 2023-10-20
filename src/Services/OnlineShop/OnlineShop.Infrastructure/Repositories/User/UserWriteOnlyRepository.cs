@@ -7,6 +7,7 @@ using OnlineShop.Infrastructure.Persistence;
 using SharedKernel.Auth;
 using SharedKernel.Caching;
 using SharedKernel.Infrastructures.Repositories;
+using SharedKernel.Libraries;
 
 namespace OnlineShop.Infrastructure.Repositories;
 
@@ -29,7 +30,7 @@ public class UserWriteOnlyRepository : BaseWriteOnlyRepository<ApplicationUser, 
 
     public async Task<ApplicationUser> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default)
     {
-        await _dbContext.ApplicationUsers.AddAsync(user, cancellationToken);
+        await InsertAsync(user, cancellationToken);
         
         var customerRole = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Code == RoleConstant.Customer, cancellationToken);
         
@@ -48,7 +49,8 @@ public class UserWriteOnlyRepository : BaseWriteOnlyRepository<ApplicationUser, 
             var avatarNew = new Avatar
             {
                 FileName = fileName,
-                UserId = Guid.Parse(_currentUser.Context.UserId)
+                UserId = Guid.Parse(_currentUser.Context.UserId),
+                CreatedBy = _currentUser.Context.Username
             };
             
             await _dbContext.AddAsync(avatarNew, cancellationToken);
@@ -56,6 +58,8 @@ public class UserWriteOnlyRepository : BaseWriteOnlyRepository<ApplicationUser, 
         else
         {
             avatar.FileName = fileName;
+            avatar.LastModifiedBy = _currentUser.Context.Username;
+            avatar.LastModifiedDate = DateHelper.Now;
             
             _dbContext.Update(avatar);
         }

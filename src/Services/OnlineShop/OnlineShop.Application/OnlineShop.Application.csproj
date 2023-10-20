@@ -30,4 +30,8 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Google.Apis.Auth" Version="1.62.1" />
+    </ItemGroup>
+
 </Project>
