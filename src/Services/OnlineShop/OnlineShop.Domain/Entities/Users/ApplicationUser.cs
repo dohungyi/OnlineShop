@@ -4,11 +4,6 @@ namespace OnlineShop.Domain.Entities;
 
 public class ApplicationUser : User
 {
-    
-    public Guid? UserConfigId { get; set; }
-    public Guid? AvatarId { get; set; }
-    public Guid? RefreshTokenId { get; set; }
-    
     #region [REFRENCE PROPERTIES]
     
     public virtual Avatar Avatar { get; set; }

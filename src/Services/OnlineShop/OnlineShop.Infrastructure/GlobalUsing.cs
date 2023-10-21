@@ -5,3 +5,4 @@ global using SharedKernel.Domain;
 global using FluentValidation;
 global using MediatR;
 global using SharedKernel.Runtime.Exceptions;
+global using SharedKernel.Persistence;

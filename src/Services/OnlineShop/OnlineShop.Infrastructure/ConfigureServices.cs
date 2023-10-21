@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Infrastructure;
 using OnlineShop.Application.Infrastructure.Persistence;
+using OnlineShop.Application.Repositories;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repositories;
 using OnlineShop.Infrastructure.Services;
@@ -34,8 +35,8 @@ public static class ConfigureServices
         services.AddScoped<IAuthRepository, AuthRepository>();
         
         // // User
-        // services.AddScoped<IUserWriteOnlyRepository, UserWriteOnlyRepository>();
-        // services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
+        services.AddScoped<IUserWriteOnlyRepository, UserWriteOnlyRepository>();
+        services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
         
         // ...
         

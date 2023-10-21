@@ -5,7 +5,7 @@ using OnlineShop.Domain.Entities;
 
 namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
-public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+public class UserConfiguration : BaseEntityConfiguration<ApplicationUser>
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
@@ -44,19 +44,19 @@ public class UserConfiguration : IEntityTypeConfiguration<ApplicationUser>
         // Reference Property
         builder.HasOne(u => u.Avatar)
             .WithOne(a => a.User)
-            .HasForeignKey<ApplicationUser>(u => u.AvatarId)
+            .HasPrincipalKey<Avatar>(e => e.UserId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
         
         builder.HasOne(u => u.UserConfig)
             .WithOne(uc => uc.User)
-            .HasForeignKey<ApplicationUser>(u => u.UserConfigId)
+            .HasForeignKey<ApplicationUserConfig>(u => u.UserId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
 
         builder.HasOne(u => u.RefreshToken)
             .WithOne(uc => uc.User)
-            .HasForeignKey<ApplicationUser>(u => u.RefreshTokenId)
+            .HasForeignKey<RefreshToken>(u => u.UserId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
         

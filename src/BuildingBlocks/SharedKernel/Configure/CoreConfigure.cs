@@ -3,6 +3,7 @@ using System.Net;
 using System.Reflection.Metadata;
 using System.Text;
 using AspNetCoreRateLimit;
+using FluentValidation;
 using HealthChecks.UI.Client;
 using MassTransit;
 using MediatR;
@@ -135,10 +136,10 @@ public static class CoreConfigure
                     return Task.CompletedTask;
                 }
             };
-        }).AddGoogle(googleOptions =>
-        {
-            googleOptions.ClientId = DefaultGoogleConfig.ClientId;
-            googleOptions.ClientSecret = DefaultGoogleConfig.ClientSecret;
+        // }).AddGoogle(googleOptions =>
+        // {
+        //     googleOptions.ClientId = DefaultGoogleConfig.ClientId;
+        //     googleOptions.ClientSecret = DefaultGoogleConfig.ClientSecret;
         });
         return services;
     }
@@ -325,7 +326,7 @@ public static class CoreConfigure
                     responseContent = new ApiSimpleResult()
                     {
                         Data = (exception as BadRequestException).Body,
-                        Error = new Error(400, exception.Message, (exception as BadRequestException).Type)
+                        Error = new Error(HttpStatusCode.BadRequest, exception.Message, (exception as BadRequestException).Type)
                     };
                 }
                 else
@@ -333,11 +334,23 @@ public static class CoreConfigure
                     responseContent.Error = new Error(HttpStatusCode.BadRequest, exception.Message, (exception as BadRequestException).Type);
                 }
             }
+            // Fluent validation
+            else if(exception is ValidationException)
+            {
+                string errors = string.Join(", ", (exception as ValidationException).Errors
+                    .GroupBy(x => x.PropertyName)
+                    .ToDictionary(
+                        x => x.Key,
+                        x => string.Join("; ", x.Select(y => y.ErrorMessage))
+                    )
+                    .Select(kv => $"{kv.Key}: {kv.Value}"));
+                
+                responseContent.Error = new Error(HttpStatusCode.BadRequest, errors, "BAD_REQUEST");
+            }
             // Unknown exception
             else
             {
                 responseContent.Error = new Error(HttpStatusCode.InternalServerError, localizer["system_error_occurred"].Value);
-                Logging.Error(exception);
             }
 
             context.Response.StatusCode = (int)HttpStatusCode.OK;

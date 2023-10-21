@@ -12,7 +12,7 @@ using OnlineShop.Infrastructure.Persistence;
 namespace OnlineShop.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231011094427_init_online-shop_db")]
+    [Migration("20231021140234_init_online_shop_db")]
     partial class initonlineshopdb
     {
         /// <inheritdoc />
@@ -33,9 +33,7 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -51,8 +49,7 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Exponent")
                         .HasColumnType("integer");
@@ -68,12 +65,11 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("action", (string)null);
+                    b.ToTable("Actions");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUser", b =>
@@ -83,17 +79,12 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text");
 
-                    b.Property<Guid>("AvatarId")
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("ConfirmedEmail")
+                    b.Property<bool?>("ConfirmedEmail")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("ConfirmedPhone")
+                    b.Property<bool?>("ConfirmedPhone")
                         .HasColumnType("boolean");
 
                     b.Property<string>("CreatedBy")
@@ -103,7 +94,7 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DeletedBy")
@@ -113,17 +104,13 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
-                    b.Property<int>("Gender")
+                    b.Property<int?>("Gender")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsDeleted")
@@ -137,54 +124,26 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<Guid>("RefreshTokenId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("text");
 
                     b.Property<string>("Salt")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<Guid>("UserConfigId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("text");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AvatarId")
-                        .IsUnique();
-
-                    b.HasIndex("Id");
-
-                    b.HasIndex("RefreshTokenId")
-                        .IsUnique();
-
-                    b.HasIndex("UserConfigId")
-                        .IsUnique();
-
-                    b.HasIndex("Username")
-                        .IsUnique()
-                        .HasAnnotation("SqlServer:Clustered", true);
-
-                    b.ToTable("user", (string)null);
+                    b.ToTable("ApplicationUsers");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUserAddress", b =>
@@ -222,7 +181,7 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("user_address", (string)null);
+                    b.ToTable("ApplicationUserAddresses");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUserConfig", b =>
@@ -262,7 +221,10 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("user_config", (string)null);
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("ApplicationUserConfigs");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUserPayment", b =>
@@ -300,7 +262,7 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("user_payment", (string)null);
+                    b.ToTable("ApplicationUserPayments");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.Avatar", b =>
@@ -324,8 +286,7 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -341,7 +302,10 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("avatar", (string)null);
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Avatars");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.RefreshToken", b =>
@@ -388,7 +352,10 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("refresh_token", (string)null);
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.Role", b =>
@@ -399,8 +366,7 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -426,23 +392,20 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
-                        .HasAnnotation("SqlServer:Clustered", true);
-
-                    b.ToTable("role", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.RoleAction", b =>
                 {
-                    b.Property<Guid>("ActionId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid>("ActionId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("CreatedBy")
@@ -458,9 +421,6 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -470,11 +430,16 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("ActionId", "RoleId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("role_action", (string)null);
+                    b.ToTable("RoleActions");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.SignInHistory", b =>
@@ -575,15 +540,13 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("sign_in_history", (string)null);
+                    b.ToTable("SignInHistories");
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.UserRole", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("CreatedBy")
@@ -599,9 +562,6 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
@@ -611,11 +571,19 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("UserId", "RoleId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("user_role", (string)null);
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("SharedKernel.Domain.RequestInformation", b =>
@@ -666,31 +634,6 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     b.ToTable("request_information", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUser", b =>
-                {
-                    b.HasOne("OnlineShop.Domain.Entities.Avatar", "Avatar")
-                        .WithOne("User")
-                        .HasForeignKey("OnlineShop.Domain.Entities.ApplicationUser", "AvatarId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("OnlineShop.Domain.Entities.RefreshToken", "RefreshToken")
-                        .WithOne("User")
-                        .HasForeignKey("OnlineShop.Domain.Entities.ApplicationUser", "RefreshTokenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineShop.Domain.Entities.ApplicationUserConfig", "UserConfig")
-                        .WithOne("User")
-                        .HasForeignKey("OnlineShop.Domain.Entities.ApplicationUser", "UserConfigId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Avatar");
-
-                    b.Navigation("RefreshToken");
-
-                    b.Navigation("UserConfig");
-                });
-
             modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUserAddress", b =>
                 {
                     b.HasOne("OnlineShop.Domain.Entities.ApplicationUser", "User")
@@ -702,11 +645,44 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUserConfig", b =>
+                {
+                    b.HasOne("OnlineShop.Domain.Entities.ApplicationUser", "User")
+                        .WithOne("UserConfig")
+                        .HasForeignKey("OnlineShop.Domain.Entities.ApplicationUserConfig", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUserPayment", b =>
                 {
                     b.HasOne("OnlineShop.Domain.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.Entities.Avatar", b =>
+                {
+                    b.HasOne("OnlineShop.Domain.Entities.ApplicationUser", "User")
+                        .WithOne("Avatar")
+                        .HasForeignKey("OnlineShop.Domain.Entities.Avatar", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OnlineShop.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("OnlineShop.Domain.Entities.ApplicationUser", "User")
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("OnlineShop.Domain.Entities.RefreshToken", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -737,7 +713,8 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
                     b.HasOne("OnlineShop.Domain.Entities.ApplicationUser", "User")
                         .WithMany("SignInHistories")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -768,27 +745,18 @@ namespace OnlineShop.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("Avatar")
+                        .IsRequired();
+
+                    b.Navigation("RefreshToken")
+                        .IsRequired();
+
                     b.Navigation("SignInHistories");
 
+                    b.Navigation("UserConfig")
+                        .IsRequired();
+
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("OnlineShop.Domain.Entities.ApplicationUserConfig", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OnlineShop.Domain.Entities.Avatar", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OnlineShop.Domain.Entities.RefreshToken", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("OnlineShop.Domain.Entities.Role", b =>

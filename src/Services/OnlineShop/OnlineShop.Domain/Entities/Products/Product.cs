@@ -37,6 +37,5 @@ public class Product : BaseEntity
     public ICollection<Image> Images { get; set; }
     public ICollection<Rating> Rattings { get; set; }
     public ICollection<Property> Properties { get; set; }
-    
     #endregion
 }

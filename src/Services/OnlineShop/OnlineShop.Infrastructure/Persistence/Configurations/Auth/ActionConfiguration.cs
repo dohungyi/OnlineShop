@@ -5,7 +5,7 @@ using Action = OnlineShop.Domain.Entities.Action;
 
 namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
-public class ActionConfiguration : IEntityTypeConfiguration<Action>
+public class ActionConfiguration : BaseEntityConfiguration<Action>
 {
     public void Configure(EntityTypeBuilder<Action> builder)
     {
@@ -25,5 +25,7 @@ public class ActionConfiguration : IEntityTypeConfiguration<Action>
             .WithOne(ua => ua.Action)
             .HasForeignKey(ua => ua.ActionId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        base.Configure(builder);
     }
 }

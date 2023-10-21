@@ -5,7 +5,7 @@ using OnlineShop.Domain.Entities;
 
 namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
-public class SignInHistoryConfiguration : IEntityTypeConfiguration<SignInHistory>
+public class SignInHistoryConfiguration : BaseEntityConfiguration<SignInHistory>
 {
     public void Configure(EntityTypeBuilder<SignInHistory> builder)
     {
