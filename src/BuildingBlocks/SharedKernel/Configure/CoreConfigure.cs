@@ -319,25 +319,25 @@ public static class CoreConfigure
                 responseContent.Error = new Error(HttpStatusCode.Forbidden, localizer["not_permission"].Value);
             }
             // Bad request
-            else if (exception is BadRequestException)
+            else if (exception is BadRequestException badRequestException)
             {
-                if ((exception as BadRequestException).Body is not null)
+                if (badRequestException.Body is not null)
                 {
                     responseContent = new ApiSimpleResult()
                     {
-                        Data = (exception as BadRequestException).Body,
+                        Data = badRequestException.Body,
                         Error = new Error(HttpStatusCode.BadRequest, exception.Message, (exception as BadRequestException).Type)
                     };
                 }
                 else
                 {
-                    responseContent.Error = new Error(HttpStatusCode.BadRequest, exception.Message, (exception as BadRequestException).Type);
+                    responseContent.Error = new Error(HttpStatusCode.BadRequest, exception.Message, badRequestException.Type);
                 }
             }
             // Fluent validation
-            else if(exception is ValidationException)
+            else if(exception is ValidationException validationException)
             {
-                string errors = string.Join(", ", (exception as ValidationException).Errors
+                string errors = string.Join(", ", validationException.Errors
                     .GroupBy(x => x.PropertyName)
                     .ToDictionary(
                         x => x.Key,

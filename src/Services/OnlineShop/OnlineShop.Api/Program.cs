@@ -53,12 +53,6 @@ try
 
     services.AddEndpointsApiExplorer();
 
-    services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "", Version = "v1" });
-        c.DocumentFilter<HideOcelotControllersFilter>();
-    });
-
     services.AddControllersWithViews(options =>
     {
         options.Filters.Add(new AccessTokenValidatorAsyncFilter());
@@ -72,7 +66,10 @@ try
     var app = builder.Build();
 
     // Pipelines
-    app.UseCoreSwagger();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwaggerVersioning();
+    }
 
     app.UseCoreCors(configuration);
 
@@ -97,7 +94,6 @@ catch (Exception exception)
     }
 
     Log.Fatal(exception, $"Unhandled exception {exception.Message}");
-    return;
 }
 finally
 {

@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace OnlineShop.Api.Controllers;
+namespace OnlineShop.Api.Controllers.VersionOne;
 
-[Route("api/v1/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[ApiVersion("1.0")]
 public class BaseController : ControllerBase
 {
     private ISender? _mediator;

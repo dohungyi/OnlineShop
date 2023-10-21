@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace OnlineShop.Api.Controllers.VersionOne.User;
+namespace OnlineShop.Api.Controllers.VersionOne;
 
 public class UserController : BaseController
 {

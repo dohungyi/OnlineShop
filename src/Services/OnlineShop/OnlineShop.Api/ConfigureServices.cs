@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using OnlineShop.Api.ControllerFilters;
 using SharedKernel.Configure;
 using ZymLabs.NSwag.FluentValidation;
 
@@ -74,12 +76,44 @@ public static class ConfigureServices
         // Customise default API behaviour
         services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
+
+        // Api Versioning
+        services.AddApiVersioning(configuration);
         
         #endregion
         
         return services;
     }
 
+    public static IServiceCollection AddApiVersioning(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddApiVersioning(options =>
+        {
+            options.ReportApiVersions = true;
+        });
+        
+        services.AddVersionedApiExplorer(
+            options =>
+            {
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
+                
+                // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                // can also be used to control the format of the API version in route templates
+                options.SubstituteApiVersionInUrl = true;
+            });
+        
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "OnlineShop.Api version one", Version = "v1" });
+            c.SwaggerDoc("v2", new OpenApiInfo { Title = "OnlineShop.Api version two", Version = "v2" });
+            c.DocumentFilter<HideOcelotControllersFilter>();
+        });
+
+        return services;
+    }
+    
     public static IServiceCollection AddCoreMasstransitRabbitMq(this IServiceCollection services,
         IConfiguration configuration)
     {
