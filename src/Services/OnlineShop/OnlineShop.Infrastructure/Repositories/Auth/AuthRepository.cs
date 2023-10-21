@@ -132,6 +132,7 @@ public class AuthRepository : IAuthRepository
         
         var tokenUser = new TokenUser()
         {
+            Id = user.Id,
             Username = user.Username,
             PasswordHash = user.PasswordHash,
             Salt = user.Salt,
