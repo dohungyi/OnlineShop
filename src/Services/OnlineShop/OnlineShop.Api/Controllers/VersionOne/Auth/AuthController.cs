@@ -26,7 +26,6 @@ public class AuthController : BaseController
         return Ok(result);
     }
     
-    
 
     #region [Ping]
 
@@ -117,7 +116,9 @@ public class AuthController : BaseController
         var result = await Mediator.Send(new SignInHistoryPagingQuery(new PagingRequest(page, size)), cancellationToken);
         return Ok(result);
     }
-    
+
+    #region [Request Information]
+
     [Authorize]
     [HttpGet("request-information")]
     public async Task<IActionResult> GetRequestInformationAsync(CancellationToken cancellationToken = default)
@@ -136,4 +137,6 @@ public class AuthController : BaseController
         
         return Ok(result);
     }
+
+    #endregion
 }
