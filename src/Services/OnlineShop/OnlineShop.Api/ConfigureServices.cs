@@ -107,8 +107,36 @@ public static class ConfigureServices
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "OnlineShop.Api version one", Version = "v1" });
+            
             c.SwaggerDoc("v2", new OpenApiInfo { Title = "OnlineShop.Api version two", Version = "v2" });
+            
             c.DocumentFilter<HideOcelotControllersFilter>();
+            
+            // Configure Swagger to use the JWT bearer authentication scheme
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            };
+            c.AddSecurityDefinition("Bearer", securityScheme);
+    
+            // Make Swagger require a JWT token to access the endpoints
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    securityScheme,
+                    new string[] {}
+                }
+            });
         });
 
         return services;

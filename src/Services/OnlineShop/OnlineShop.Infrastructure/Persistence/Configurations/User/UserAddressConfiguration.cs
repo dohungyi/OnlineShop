@@ -5,7 +5,7 @@ using OnlineShop.Domain.Entities;
 
 namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
-public class UserAddressConfiguration : BaseEntityConfiguration<ApplicationUserAddress>
+public class UserAddressConfiguration : IEntityTypeConfiguration<ApplicationUserAddress>
 {
     public void Configure(EntityTypeBuilder<ApplicationUserAddress> builder)
     {

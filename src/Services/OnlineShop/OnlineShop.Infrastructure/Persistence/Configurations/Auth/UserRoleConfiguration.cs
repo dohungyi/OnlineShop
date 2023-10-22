@@ -5,7 +5,7 @@ using OnlineShop.Domain.Entities;
 
 namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
-public class UserRoleConfiguration : BaseEntityConfiguration<UserRole>
+public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 {
     public void Configure(EntityTypeBuilder<UserRole> builder)
     {

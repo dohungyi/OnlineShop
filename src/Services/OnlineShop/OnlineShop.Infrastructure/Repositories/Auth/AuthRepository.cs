@@ -61,7 +61,7 @@ public class AuthRepository : IAuthRepository
     public async Task CreateOrUpdateRefreshTokenAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
     {
         var existingRefreshToken = await _context.RefreshTokens
-            .FirstOrDefaultAsync(rt => rt.CurrentAccessToken == refreshToken.CurrentAccessToken, cancellationToken);
+            .FirstOrDefaultAsync(rt => rt.UserId == refreshToken.UserId, cancellationToken);
 
         if (existingRefreshToken is null)
         {
@@ -73,7 +73,7 @@ public class AuthRepository : IAuthRepository
             existingRefreshToken.CurrentAccessToken = refreshToken.CurrentAccessToken;
             existingRefreshToken.ExpirationDate = refreshToken.ExpirationDate;
             
-            _context.RefreshTokens.Update(refreshToken);
+            _context.RefreshTokens.Update(existingRefreshToken);
         }
     }
 
@@ -118,7 +118,9 @@ public class AuthRepository : IAuthRepository
     private async Task<TokenUser> GetTokenUserByIdentityOrUserIdAsync(string? username, string? password, Guid? userId, CancellationToken cancellationToken)
     {
         var user = await _context.ApplicationUsers
-            .Where(u => (u.Username == username && u.PasswordHash == password.ToMD5()) || u.Id == userId)
+            .Where(u => 
+                (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password) && u.Username == username && u.PasswordHash == password.ToMD5()) 
+                        || u.Id == userId)
             .Include(u => u.UserRoles)
             .ThenInclude(u => u.Role)
             .ThenInclude(u => u.RoleActions)

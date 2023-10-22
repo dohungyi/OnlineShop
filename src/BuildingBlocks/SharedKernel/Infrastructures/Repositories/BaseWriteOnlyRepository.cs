@@ -31,7 +31,7 @@ public class BaseWriteOnlyRepository<TEntity,TDbContext> : IBaseWriteOnlyReposit
         _dbSet = dbContext.Set<TEntity>();
         _tableName = nameof(TEntity);
     }
-
+    
     public IUnitOfWork UnitOfWork => _dbContext;
 
     #region [INSERTS]

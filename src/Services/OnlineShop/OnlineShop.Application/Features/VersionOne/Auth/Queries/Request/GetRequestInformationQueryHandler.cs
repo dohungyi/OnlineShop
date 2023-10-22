@@ -1,9 +1,6 @@
-using AutoMapper;
-using MediatR;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
-using SharedKernel.Application;
-using SharedKernel.Domain;
 using SharedKernel.Libraries;
 using SharedKernel.Libraries.Utility;
 using UAParser;

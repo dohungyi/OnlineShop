@@ -5,7 +5,7 @@ using OnlineShop.Domain.Entities;
 
 namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
-public class UserPaymentConfiguration : BaseEntityConfiguration<ApplicationUserPayment>
+public class UserPaymentConfiguration : IEntityTypeConfiguration<ApplicationUserPayment>
 {
     public void Configure(EntityTypeBuilder<ApplicationUserPayment> builder)
     {

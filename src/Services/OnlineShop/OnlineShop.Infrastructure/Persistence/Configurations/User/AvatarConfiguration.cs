@@ -5,7 +5,7 @@ using OnlineShop.Domain.Entities;
 
 namespace OnlineShop.Infrastructure.Persistence.Configurations;
 
-public class AvatarConfiguration : BaseEntityConfiguration<Avatar>
+public class AvatarConfiguration : IEntityTypeConfiguration<Avatar>
 {
     public void Configure(EntityTypeBuilder<Avatar> builder)
     {

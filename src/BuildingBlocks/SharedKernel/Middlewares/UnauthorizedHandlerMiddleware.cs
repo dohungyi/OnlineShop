@@ -21,7 +21,6 @@ public class UnauthorizedHandlerMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        
         await _next(context);
         
         if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)

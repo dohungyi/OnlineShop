@@ -135,7 +135,7 @@ public class ApplicationDbContextSeed
             {
                 Id = Guid.NewGuid(),
                 Role = adminRole,
-                User = sa,
+                User = admin,
                 IsDeleted = false,
                 CreatedDate = DateHelper.Now,
                 CreatedBy = "supperadmin",

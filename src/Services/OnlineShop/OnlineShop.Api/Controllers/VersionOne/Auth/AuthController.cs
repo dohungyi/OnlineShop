@@ -25,6 +25,8 @@ public class AuthController : BaseController
         
         return Ok(result);
     }
+    
+    
 
     #region [Ping]
 
@@ -116,11 +118,22 @@ public class AuthController : BaseController
         return Ok(result);
     }
     
+    [Authorize]
     [HttpGet("request-information")]
-    public async Task<IActionResult> RequestInformation(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetRequestInformationAsync(CancellationToken cancellationToken = default)
     {
         var query = new GetRequestInformationQuery();
         var result = await Mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
+    
+    [Authorize]
+    [HttpGet("request-and-user-information")]
+    public async Task<IActionResult> GetRequestAndUserInformationAsync(CancellationToken cancellationToken = default)
+    {
+        var query = new GetRequestAndUserInformationQuery();
+        var result = await Mediator.Send(query, cancellationToken);
+        
         return Ok(result);
     }
 }
