@@ -2,15 +2,16 @@
 ```
 + Business domain: e-Commerce application
 + Backend API:
-    - REST API with .NET 7 design with Domain Driven Design mindset
+    - REST API with .NET (7) design with Domain Driven Design mindset
     - Postgresql
     - MongoDb
     - Redis Caching
     - RabbitMQ
     - CQRS (Command Query Reposibility Separation)
+    - ORM: EF Core, Dapper
     ...
 + Frontend:
-    - NextJs
+    - Angular (16)
 ```
 
 ## Prepare environment
