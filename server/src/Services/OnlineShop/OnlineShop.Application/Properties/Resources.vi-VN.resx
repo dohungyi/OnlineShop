@@ -1,0 +1,68 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="auth_account_must_not_be_empty" xml:space="preserve">
+        <value>Tài khoản không được để trống</value>
+    </data>
+    <data name="auth_confirm_password_must_not_be_empty" xml:space="preserve">
+        <value>Mật khẩu xác nhận không được để trống</value>
+    </data>
+    <data name="auth_email_already_exist" xml:space="preserve">
+        <value>Email đã tồn tại trên hệ thống</value>
+    </data>
+    <data name="auth_email_is_invalid" xml:space="preserve">
+        <value>Email không hợp lệ</value>
+    </data>
+    <data name="auth_email_must_not_be_empty" xml:space="preserve">
+        <value>Email không được để trống</value>
+    </data>
+    <data name="auth_password_must_not_be_empty" xml:space="preserve">
+        <value>Mật khẩu không được để trống</value>
+    </data>
+    <data name="auth_phone_already_exist" xml:space="preserve">
+        <value>Số điện thoại đã tồn tại trên hệ thống</value>
+    </data>
+    <data name="auth_phone_is_invalid" xml:space="preserve">
+        <value>Số điện thoại không hợp lệ</value>
+    </data>
+    <data name="auth_phone_must_not_be_empty" xml:space="preserve">
+        <value>Số điện thoại không được để trống</value>
+    </data>
+    <data name="auth_pwd_n_cpwd_must_same" xml:space="preserve">
+        <value>Mật khẩu và mật khẩu xác nhận phải giống nhau</value>
+    </data>
+    <data name="auth_refresh_token_must_not_be_empty" xml:space="preserve">
+        <value>RefreshToken không được để trống</value>
+    </data>
+    <data name="auth_sign_in_info_incorrect" xml:space="preserve">
+        <value>Tài khoản hoặc mật khẩu không chính xác</value>
+    </data>
+    <data name="auth_userid_must_not_be_empty" xml:space="preserve">
+        <value>UserId không được để trống</value>
+    </data>
+    <data name="auth_user_already_exist" xml:space="preserve">
+        <value>Tài khoản đã tồn tại trên hệ thống</value>
+    </data>
+    <data name="user_does_not_exists" xml:space="preserve">
+        <value>Người dùng không tồn tại</value>
+    </data>
+    <data name="user_upload_avatar_failed" xml:space="preserve">
+        <value>Tải lên ảnh đại diện thất bại</value>
+    </data>
+    <data name="auth_id_token_must_not_be_empty" xml:space="preserve">
+        <value>Mã token không được để trống</value>
+    </data>
+    <data name="auth_id_token_is_invalid" xml:space="preserve">
+        <value>Id token không hợp lệ</value>
+    </data>
+</root>

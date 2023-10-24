@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  #database section
+  postgres:
+    image: postgres:alpine3.16
+  
+  redis:
+    image: redis:alpine
+  
+  inventorydb:
+    image: mongo
+  
+  # infrastructure section
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+  
+  pgadmin:
+    image: dpage/pgadmin4
+  
+  portainer:
+    image: portainer/portainer-ce
+
+#network section
+networks:
+  default:
+    name: online_shop
+    driver: bridge
+
+#volumes section
+volumes:
+  postgres_data:
+    name: postgres_data
+  
+  portainer_data:
+    name: portainer_data
+
+  
+  jaeger_data:
+    name: jaeger_data
+  
+  mongo_data:
+    name: mongo_data
+  
+  pgadmin_data:
+    name: pgadmin_data
+  
