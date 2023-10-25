@@ -11,7 +11,7 @@
         <!-- Versioning -->
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
-        
+
         <!-- HealthChecks-->
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
@@ -27,7 +27,7 @@
         <!-- AutoMapper-->
         <PackageReference Include="AutoMapper" Version="12.0.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-        
+
         <!-- FluentValidation-->
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
 
@@ -40,7 +40,7 @@
         <!-- MediatR-->
         <PackageReference Include="MediatR" Version="12.0.1" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
-        
+
         <!-- EF Core -->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2">
@@ -74,7 +74,7 @@
         <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
 
         <!-- ElasticSearch -->
-        
+
         <!-- Caching-->
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.0" />
@@ -134,6 +134,6 @@
 
 
 
-    
+
 
 </Project>
