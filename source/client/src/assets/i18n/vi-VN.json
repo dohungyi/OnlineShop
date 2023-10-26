@@ -1,0 +1,230 @@
+{
+    "COMMON": {
+        "ALL": "Tất cả",
+        "FEATURE_IS_IN_DEVELOPMENT": "Tính năng đang phát triển, vui lòng thử lại sau.",
+        "VIEW": "Xem",
+        "ADD": "Thêm",
+        "EDIT": "Sửa",
+        "DELETE": "Xóa",
+        "UPDATE": "Cập nhật",
+        "SAVE": "Lưu",
+        "VIEW_DETAIL": "Xem chi tiết",
+        "CANCEL": "Hủy",
+        "CLOSE": "Đóng",
+        "BACK": "Quay lại",
+        "LOADING": "Đang tải",
+        "SEARCH": "Tìm kiếm",
+        "BACK_TO_HOME": "Quay lại trang chủ",
+        "LAUNCHER": "Tất cả ứng dụng",
+        "HAS_NO_CONNECTION": "Không có kết nối, vui lòng  thử lại",
+        "WARNING_DELETE_SUCCESS_MSG": "Các dữ liệu liên quan cũng sẽ bị xóa. Bạn có chắc chắn muốn xóa không?",
+        "DATA_DOES_NOT_EXIST_OR_WAS_DELETED": "Bản ghi không tồn tại hoặc đã bị xóa",
+        "SAVE_SUCCESS_MSG": "Lưu thành công",
+        "UPDATE_SUCCESS_MSG": "Cập nhật thành công",
+        "DELETE_SUCCESS_MSG": "Xóa thành công",
+        "YES": "Vâng",
+        "AGREE": "Đồng ý",
+        "UPLOAD": "Tải lên",
+        "PROCESSING": "Đang xử lý",
+        "SUCCESS": "Thành công",
+        "FAILED": "Thất bại",
+        "RE_UPLOAD": "Thử lại",
+        "ALL_DONE": "Tải lên thành công",
+        "SHOW_MORE": "Xem thêm",
+        "AUTHENTICATING": "Đang xác thực",
+        "NOTIFICATION_TITLE": "Thông báo",
+        "MARK_AS_READ": "Đánh dấu là đã đọc",
+        "MARK_AS_UNREAD": "Đánh dấu là chưa đọc",
+        "MARK_ALL_AS_READ": "Đánh dấu tất cả đã đọc",
+        "UNREAD": "Chưa đọc"
+    },
+    "LANGUAGE": {
+        "ENGLISH": "Tiếng Anh",
+        "VIETNAMESE": "Tiếng Việt"
+    },
+    "ERROR": {
+        "UNKNOWN_MSG": "Đã xảy ra lỗi. Vui lòng thử lại sau",
+        "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn",
+        "NOT_PERMISSION": "Bạn không có quyền thực hiện hành động này"
+    },
+    "PERMISSION": {
+        "WARNING_ACCESS_AND_CONTACT_ADMIN": "Bạn không có quyền truy cập, vui lòng liên hệ quản trị viên!",
+        "WARNING_COMMAND_AND_CONTACT_ADMIN": "Bạn không được phép thực hiện lệnh này"
+    },
+    "ROUTER": {
+        "NOT_FOUND": "404",
+        "ACCESS_DENIED": "Từ chối truy cập",
+        "UN_SUPPORT_DEVICE": "Không hỗ trợ",
+        "TOKEN_RECEIVER": "Đang xử lý...",
+        "SIGN_IN": "Đăng nhập",
+        "SIGN_OUT": "Đang đăng xuất...",
+        "SIGN_IN_HISTORY": "Lịch sử đăng nhập",
+        "HOME": "Trang chủ",
+        "SESSION_LOG": "Session log",
+        "FEEDBACK": "Góp ý",
+        "CPANEL": "cPanel",
+        "NOTEBOOK": "Ghi chú",
+        "NOTEBOOK_VIEW_MODE": "Chế độ xem",
+        "DIRECTORY": "Hệ thống đám mây",
+        "INFORMATION": "Thông tin",
+        "AUDIT_LOG": "Lịch sử thao tác",
+        "CHAT_GENERATOR": "Trình tạo tin nhắn",
+        "GENERATE_HISTORY": "Lịch sử tạo tin nhắn",
+        "GENERATE_CHAT": "Trình tạo tin nhắn"
+    },
+    "SIGN_IN": {
+        "LABEL": "Đăng nhập",
+        "USERNAME": "Tài khoản",
+        "PASSWORD": "Mật khẩu",
+        "USERNAME_PLACEHOLDER": "Tài khoản hoặc email",
+        "PASSWORD_PLACEHOLDER": "Mật khẩu",
+        "FORGOTTEN_PASSWORD": "Quên mật khẩu?",
+        "HAVE_NO_ACCOUNT": "Chưa có tài khoản?",
+        "REGISTER": "Đăng ký",
+        "SIGN_IN_BUTTON_TEXT": "Đăng nhập",
+        "SIGN_OUT_BUTTON_TEXT": "Đăng xuất",
+        "PLEASE_ENTER_USERNAME": "Vui lòng nhập tài khoản",
+        "PLEASE_ENTER_PASSWORD": "Vui lòng nhập mật khẩu",
+        "SIGN_IN_LOGGING_TOOLTIP": "Lịch sử đăng nhập"
+    },
+    "SIGN_UP": {
+        "LABEL": "Đăng ký",
+        "TENANT": "Công ty",
+        "USERNAME": "Tài khoản",
+        "PASSWORD": "Mật khẩu",
+        "CONFIRM_PASSWORD": "Mật khẩu xác nhận",
+        "EMAIL": "Email",
+        "FIRST_NAME": "Tên",
+        "LAST_NAME": "Họ và tên đệm",
+        "SIGN_UP_BUTTON_TEXT": "Đăng ký",
+        "HAVE_AN_ACCOUNT": "Đã có tài khoản?",
+        "SIGN_IN": "Đăng nhập",
+        "POLICY": "Tôi đồng ý với các điều khoản trong",
+        "POLICY_LINK": "Chính sách quyền riêng tư",
+        "PLEASE_ENTER_USERNAME": "Vui lòng nhập tài khoản",
+        "PLEASE_ENTER_EMAIL": "Vui lòng nhập email",
+        "PLEASE_ENTER_PASSWORD": "Vui lòng nhập mật khẩu",
+        "PLEASE_ENTER_CONFIRM_PASSWORD": "Vui lòng nhập mật khẩu xác nhận",
+        "PLEASE_ENTER_VALID_EMAIL": "Vui lòng nhập email hợp lệ",
+        "PLEASE_ENTER_SAME_PASSWORD": "Mật khẩu và mật khẩu xác nhận phải giống nhau",
+        "PLEASE_ENTER_FIRST_NAME": "Vui lòng nhập tên",
+        "PLEASE_ENTER_LAST_NAME": "Vui lòng nhập họ và tên đệm",
+        "CREATED_SUCCESS_MSG": "Tạo tài khoản thành công"
+    },
+    "SIGN_OUT": {
+        "LOGGING_OUT": "Đang đăng xuất..."
+    },
+    "AUDIT": {
+        "ORDINAL": "STT",
+        "DATE": "Ngày",
+        "TIME": "Giờ",
+        "MODULE": "Danh mục",
+        "ACTION": "Hành động",
+        "DESCRIPTION": "Mô tả",
+        "IP_ADDRESS": "Địa chỉ IP"
+    },
+    "SETTING": {
+        "CURRENT_LANGUAGE_LABEL": "Ngôn ngữ",
+        "CURRENT_LANGUAGE": "Tiếng Việt"
+    },
+    "HEADER": {
+        "FEEDBACK": "Góp ý kiến",
+        "HELP_AND_SUPPORT": "Trợ giúp và hỗ trợ",
+        "SETTING_AND_PRIVACY": "Cài đặt & quyền riêng tư",
+        "AUDIT": "Lịch sử thao tác",
+        "OTHER": "Khác",
+        "OTHER_CATEGORY": "Các danh mục khác"
+    },
+    "SECURITY": {
+        "SECRET_KEY_LABEL": "Mã bí mật",
+        "COMMIT_BUTTON_TEXT": "Xác nhận"
+    },
+    "PAGINATOR": {
+        "RECORDS_PER_PAGE": "Số bản ghi mỗi trang"
+    },
+    "LIST_DYNAMIC": {
+        "SEARCH_PLACEHOLDER": "Tìm kiếm...",
+        "FILTER_ADVANCE_TOOLTIP": "Bộ lọc nâng cao",
+        "UNSELECT": "Bỏ chọn",
+        "RECORDS": "bản ghi",
+        "RELOAD": "Tải lại",
+        "EXPORT_TO_EXCEL": "Xuất file excel",
+        "OTHER_FEATURE": "Các tính năng khác",
+        "PRINT": "In",
+        "IMPORT": "Nhập khẩu",
+        "EXPORT": "Xuất khẩu"
+    },
+    "FORM_DYNAMIC": {
+        "FORM_TITLE": {
+            "VIEW": "Thông tin chi tiết",
+            "ADD": "Thêm dữ liệu",
+            "EDIT": "Cập nhật thông tin"
+        },
+        "SAVE": "Lưu",
+        "SAVE_AND_ADD": "Lưu và thêm",
+        "UPDATE_AND_ADD": "Cập nhật và thêm"
+    },
+    "SIGN_IN_LOGGING": {
+        "COLUMNS": {
+            "SIGN_IN_TIME": "Thời gian",
+            "IP": "IP",
+            "DEVICE": "Thiết bị",
+            "BROWSER": "Trình duyệt",
+            "OS": "Hệ điều hành",
+            "CITY": "Thành phố",
+            "COUNTRY": "Quốc gia",
+            "LAT": "Kinh độ",
+            "LONG": "Vĩ độ",
+            "TIMEZONE": "Timezone",
+            "ORG": "Tổ chức",
+            "POSTAL": "Postal",
+            "ORIGIN": "Origin",
+            "USER_AGENT": "User agent"
+        }
+    },
+    "SPENDING": {
+        "SPENDING_DATE": "Thời gian",
+        "TOTAL": "Tổng",
+        "SPENDING_CATEGORY_NAME": "Loại"
+    },
+    "REQUEST_INFORMATION": {
+        "IP": "Địa chỉ ip",
+        "BROWSER": "Trình duyệt",
+        "OS": "Hệ điều hành",
+        "DEVICE": "Thiết bị",
+        "CITY": "Thành phố",
+        "COUNTRY": "Quốc gia",
+        "LOC": "Vị trí",
+        "TIMEZONE": "Timezone",
+        "ORG": "Tổ chức",
+        "POSTAL": "Postal",
+        "ORIGIN": "Origin",
+        "USER_AGENT": "User agent",
+        "TIME": "Thời gian"
+    },
+    "USER": {
+        "UPDATE_AVATAR_SUCCESS_MSG": "Cập nhật ảnh đại diện thành công",
+        "REMOVE_AVATAR_SUCCESS_MSG": "Xóa ảnh đại diện thành công",
+        "REMOVE_AVATAR_CONFIRM_MSG": "Bạn có chắc muốn xóa ảnh đại diện không?",
+        "UPDATE_AVATAR_TEXT": "Cập nhật ảnh đại diện",
+        "REMOVE_AVATAR_TEXT": "Xóa ảnh đại diện"
+    },
+    "GENERATOR": {
+        "ORDINAL": "STT",
+        "DATE": "Ngày",
+        "TIME": "Giờ",
+        "FILE_NAME": "Tên tệp",
+        "STATUS": "Trạng thái"
+    },
+    "CPANEL": {
+        "TITLE_ACCOUNT": "Số lượng tài khoản",
+        "TITLE_STORAGE": "Tổng dung lượng sử dụng",
+        "TITLE_NOTEBOOK": "Tổng số ghi chú",
+        "TITLE_AUDIT_LOG": "Tổng số lịch sử thao tác",
+        "TITLE_CHAT_GENERATOR": "Tổng số lượt tạo chatbox",
+        "TITLE_SEARCH_LOCATION": "Tổng số lượt tìm kiếm vị trí",
+        "TITLE_VIEW_SIGN_IN_LOGGING": "Tổng số lượt xem lịch sử đăng nhập",
+        "TITLE_VIEW_INFORMATION": "Tổng số lượt xem thông tin IP",
+        "TITLE_VIEW_POLICY": "Tổng số lượt xem policy"
+    },
+}

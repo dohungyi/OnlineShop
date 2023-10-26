@@ -1,0 +1,229 @@
+{
+    "COMMON": {
+        "ALL": "All",
+        "FEATURE_IS_IN_DEVELOPMENT": "This feature is in development. Please try again later",
+        "VIEW": "View",
+        "ADD": "Add",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "UPDATE": "Update",
+        "SAVE": "Save",
+        "VIEW_DETAIL": "View detail",
+        "CANCEL": "Cancel",
+        "CLOSE": "Close",
+        "BACK": "Back",
+        "LOADING": "Loading",
+        "SEARCH": "Search",
+        "BACK_TO_HOME": "Back to home",
+        "LAUNCHER": "Launcher",
+        "HAS_NO_CONNECTION": "Has no connection, please try again",
+        "WARNING_DELETE_SUCCESS_MSG": "The related data will also be deleted. Are you sure you want to delete these data?",
+        "DATA_DOES_NOT_EXIST_OR_WAS_DELETED": "This data does not exist or was deleted",
+        "SAVE_SUCCESS_MSG": "Save successfully",
+        "UPDATE_SUCCESS_MSG": "Update successfully",
+        "DELETE_SUCCESS_MSG": "Delete successfully",
+        "YES": "Yes",
+        "AGREE": "OK",
+        "UPLOAD": "Upload",
+        "PROCESSING": "Processing",
+        "SUCCESS": "Success",
+        "FAILED": "Failed",
+        "RE_UPLOAD": "Re upload",
+        "ALL_DONE": "All have been successfully uploaded",
+        "SHOW_MORE": "Show more",
+        "AUTHENTICATING": "Authenticating",
+        "NOTIFICATION_TITLE": "Notifications",
+        "MARK_AS_READ": "Mark as read",
+        "MARK_AS_UNREAD": "Mark as unread",
+        "MARK_ALL_AS_READ": "Mark all as read",
+        "UNREAD": "Unread"
+    },
+    "LANGUAGE": {
+        "ENGLISH": "English",
+        "VIETNAMESE": "Vietnamese"
+    },
+    "ERROR": {
+        "UNKNOWN_MSG": "An error occurred while processing your request",
+        "SESSION_EXPIRED": "Sign in session has expired",
+        "NOT_PERMISSION": "You are not allowed to do this!"
+    },
+    "PERMISSION": {
+        "WARNING_ACCESS_AND_CONTACT_ADMIN": "You do not have permission to access, contact administrator to request access!",
+        "WARNING_COMMAND_AND_CONTACT_ADMIN": "You do not have permission to access, contact administrator to request access!"
+    },
+    "ROUTER": {
+        "NOT_FOUND": "404",
+        "ACCESS_DENIED": "Access denied",
+        "UN_SUPPORT_DEVICE": "Not supported",
+        "TOKEN_RECEIVER": "waiting for handling...",
+        "SIGN_IN": "Sign in",
+        "SIGN_OUT": "Sign outing...",
+        "SIGN_IN_HISTORY": "Sign in history",
+        "HOME": "Home",
+        "SESSION_LOG": "Session log",
+        "FEEDBACK": "Feedback",
+        "CPANEL": "cPanel",
+        "NOTEBOOK": "Notebook",
+        "NOTEBOOK_VIEW_MODE": "View mode",
+        "DIRECTORY": "Vietnam Cloud",
+        "INFORMATION": "Information",
+        "AUDIT_LOG": "Action logs",
+        "CHAT_GENERATOR": "Chat generator",
+        "GENERATE_HISTORY": "Generate history",
+        "GENERATE_CHAT": "Generate chat"
+    },
+    "SIGN_IN": {
+        "LABEL": "Sign-in",
+        "USERNAME": "Username",
+        "PASSWORD": "Password",
+        "USERNAME_PLACEHOLDER": "Your account or email",
+        "PASSWORD_PLACEHOLDER": "Password",
+        "FORGOTTEN_PASSWORD": "Forgotten password?",
+        "HAVE_NO_ACCOUNT": "Have no an account?",
+        "REGISTER": "Register",
+        "SIGN_IN_BUTTON_TEXT": "Sign in",
+        "SIGN_OUT_BUTTON_TEXT": "Sign out",
+        "PLEASE_ENTER_USERNAME": "Please enter your account",
+        "PLEASE_ENTER_PASSWORD": "Please enter your password",
+        "SIGN_IN_LOGGING_TOOLTIP": "Sign in logging"
+    },
+    "SIGN_UP": {
+        "LABEL": "Sign-up",
+        "TENANT": "Tenant",
+        "USERNAME": "Username",
+        "PASSWORD": "Password",
+        "CONFIRM_PASSWORD": "Confirm password",
+        "EMAIL": "Email",
+        "FIRST_NAME": "First name",
+        "LAST_NAME": "Last name",
+        "SIGN_UP_BUTTON_TEXT": "Sign up",
+        "HAVE_AN_ACCOUNT": "Have an account?",
+        "SIGN_IN": "Sign in",
+        "POLICY": "I agree to the terms in",
+        "POLICY_LINK": "Privacy policy",
+        "PLEASE_ENTER_USERNAME": "Please enter your username",
+        "PLEASE_ENTER_EMAIL": "Please enter your email",
+        "PLEASE_ENTER_PASSWORD": "Please enter your password",
+        "PLEASE_ENTER_CONFIRM_PASSWORD": "Please enter your confirm password",
+        "PLEASE_ENTER_VALID_EMAIL": "Please enter a valid email",
+        "PLEASE_ENTER_SAME_PASSWORD": "Password and confirm password must be the same",
+        "PLEASE_ENTER_FIRST_NAME": "Please enter your first name",
+        "PLEASE_ENTER_LAST_NAME": "Please enter your last name",
+        "CREATED_SUCCESS_MSG": "Create account successfully"
+    },
+    "SIGN_OUT": {
+        "LOGGING_OUT": "Logging out..."
+    },
+    "AUDIT": {
+        "ORDINAL": "Ordinal",
+        "DATE": "Date",
+        "TIME": "Time",
+        "MODULE": "Module",
+        "ACTION": "Action",
+        "DESCRIPTION": "Description",
+        "IP_ADDRESS": "IP Address"
+    },
+    "SETTING": {
+        "CURRENT_LANGUAGE_LABEL": "Language",
+        "CURRENT_LANGUAGE": "English"
+    },
+    "HEADER": {
+        "FEEDBACK": "Feedback",
+        "HELP_AND_SUPPORT": "Help & support",
+        "SETTING_AND_PRIVACY": "Settings & privacy",
+        "AUDIT": "Activity history",
+        "OTHER": "Other",
+        "OTHER_CATEGORY": "Other categories"
+    },
+    "SECURITY": {
+        "SECRET_KEY_LABEL": "Secret key",
+        "COMMIT_BUTTON_TEXT": "Commit"
+    },
+    "PAGINATOR": {
+        "RECORDS_PER_PAGE": "Records per page"
+    },
+    "LIST_DYNAMIC": {
+        "SEARCH_PLACEHOLDER": "Search...",
+        "FILTER_ADVANCE_TOOLTIP": "Advance filter",
+        "UNSELECT": "Unselect",
+        "RECORDS": "record(s)",
+        "RELOAD": "Reload",
+        "EXPORT_TO_EXCEL": "Export to excel",
+        "OTHER_FEATURE": "Other feature",
+        "PRINT": "Print",
+        "IMPORT": "Import",
+        "EXPORT": "Export"
+    },
+    "FORM_DYNAMIC": {
+        "FORM_TITLE": {
+            "VIEW": "Detail information",
+            "ADD": "Add information",
+            "EDIT": "Update information"
+        },
+        "SAVE": "Save",
+        "SAVE_AND_ADD": "Save and add",
+        "UPDATE_AND_ADD": "Update and add"
+    },
+    "SIGN_IN_LOGGING": {
+        "COLUMNS": {
+            "SIGN_IN_TIME": "Sign-in time",
+            "IP": "IP",
+            "DEVICE": "Device",
+            "BROWSER": "Browser",
+            "OS": "Operating system",
+            "CITY": "City",
+            "COUNTRY": "Country",
+            "LAT": "Lat",
+            "LONG": "Log",
+            "TIMEZONE": "Timezone",
+            "ORG": "Organization",
+            "POSTAL": "Postal",
+            "ORIGIN": "Origin",
+            "USER_AGENT": "User agent"
+        }
+    },
+    "SPENDING": {
+        "SPENDING_DATE": "Spending date",
+        "TOTAL": "Total",
+        "SPENDING_CATEGORY_NAME": "Category"
+    },
+    "REQUEST_INFORMATION": {
+        "IP": "Ip address",
+        "BROWSER": "Browser",
+        "OS": "Operating system",
+        "DEVICE": "Device",
+        "CITY": "City",
+        "COUNTRY": "Country",
+        "LOC": "Location",
+        "TIMEZONE": "Timezone",
+        "ORG": "Organization",
+        "POSTAL": "Postal",
+        "ORIGIN": "Origin",
+        "USER_AGENT": "User agent",
+        "TIME": "Time"
+    },
+    "USER": {
+        "UPDATE_AVATAR_SUCCESS_MSG": "Update avatar successfully",
+        "REMOVE_AVATAR_SUCCESS_MSG": "Remove avatar successfully",
+        "REMOVE_AVATAR_CONFIRM_MSG": "Are you sure you want to delete your avatar",
+        "UPDATE_AVATAR_TEXT": "Update avatar",
+        "REMOVE_AVATAR_TEXT": "Remove avatar"
+    },
+    "GENERATOR": {
+        "ORDINAL": "Ordinal",
+        "DATE": "Date",
+        "TIME": "Time",
+        "FILE_NAME": "File name",
+        "STATUS": "Status"
+    },
+    "CPANEL": {
+        "TITLE_ACCOUNT": "Total account",
+        "TITLE_STORAGE": "Total used capacity",
+        "TITLE_AUDIT_LOG": "",
+        "TITLE_CHAT_GENERATOR": "",
+        "TITLE_SEARCH_LOCATION": "",
+        "TITLE_VIEW_SIGN_IN_LOGGING": "",
+        "TITLE_VIEW_INFORMATION": "",
+        "TITLE_VIEW_POLICY": ""
+    }
+}

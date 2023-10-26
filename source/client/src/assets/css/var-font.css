@@ -1,0 +1,84 @@
+* {
+    font-size: 13px;
+    font-family: "GoogleSans-Regular";
+}
+
+@font-face {
+    font-family: "GoogleSans-Black";
+    src: url("../font/GoogleSans-Black.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-BlackItalic";
+    src: url("../font/GoogleSans-BlackItalic.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-Bold";
+    src: url("../font/GoogleSans-Bold.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-BoldItalic";
+    src: url("../font/GoogleSans-BoldItalic.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-Italic";
+    src: url("../font/GoogleSans-Italic.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-Light";
+    src: url("../font/GoogleSans-Light.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-LightItalic";
+    src: url("../font/GoogleSans-LightItalic.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-Medium";
+    src: url("../font/GoogleSans-Medium.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-MediumItalic";
+    src: url("../font/GoogleSans-MediumItalic.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-Regular";
+    src: url("../font/GoogleSans-Regular.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-Thin";
+    src: url("../font/GoogleSans-Thin.otf");
+}
+
+@font-face {
+    font-family: "GoogleSans-ThinItalic";
+    src: url("../font/GoogleSans-ThinItalic.otf");
+}
+
+@font-face {
+    font-family: "Notosans-Regular";
+    src: url("../font/notosans-regular.2cb88a13.woff2");
+}
+
+@font-face {
+    font-family: "Notosans-Bold";
+    src: url("../font/notosans-bold.3ede5aff.woff2");
+}
+
+@font-face {
+    font-family: "Notosans-Italic";
+    src: url("../font/notosans-italic.1c1aaac9.woff2");
+}
+
+@font-face {
+    font-family: "Notosans-Semibold";
+    src: url("../font/notosans-semibold.df3e6dc4.woff2");
+}
