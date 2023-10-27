@@ -220,7 +220,7 @@ public class ApplicationDbContextSeed
         var actions = new List<Action>()
         {
             new Action() { Code = "ALLOW_ANONYMOUS", Name = "Allow Anonymous", Exponent = (int)ActionExponent.AllowAnonymous, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
-            new Action() { Code = "SUPPER_ADMIN", Name = "Supper Admin", Exponent = (int)ActionExponent.Staff, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
+            new Action() { Code = "SUPPER_ADMIN", Name = "Supper Admin", Exponent = (int)ActionExponent.SupperAdmin, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
             new Action() { Code = "ADMIN", Name = "Admin", Exponent = (int)ActionExponent.Admin, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
             new Action() { Code = "VIEW", Name = "View", Exponent = (int)ActionExponent.View, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
             new Action() { Code = "ADD", Name = "Add", Exponent = (int)ActionExponent.Add, IsDeleted = false, CreatedDate = DateHelper.Now, CreatedBy = "supperadmin", LastModifiedDate = null, LastModifiedBy = null, DeletedDate = null, DeletedBy = null },
