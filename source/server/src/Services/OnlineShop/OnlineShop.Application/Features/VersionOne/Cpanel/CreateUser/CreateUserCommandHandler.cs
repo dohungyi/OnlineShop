@@ -35,6 +35,7 @@ public class CreateUserCommandHandler : BaseCommandHandler, IRequestHandler<Crea
         var user = _mapper.Map<ApplicationUser>(request);
         
         await _userWriteOnlyRepository.CreateUserAsync(user, cancellationToken);
+        await _userWriteOnlyRepository.UnitOfWork.CommitAsync(cancellationToken: cancellationToken);
         
         return user.Id.ToString();
     }
