@@ -1,4 +1,4 @@
-namespace OnlineShop.Application.Dto.Auth;
+namespace OnlineShop.Application.Dtos;
 
 public class AuthResponse
 {

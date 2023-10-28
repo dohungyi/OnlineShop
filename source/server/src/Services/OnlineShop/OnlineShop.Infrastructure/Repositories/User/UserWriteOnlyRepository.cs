@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Application.Infrastructure;
-using OnlineShop.Application.Repositories;
 using OnlineShop.Domain.Entities;
 using OnlineShop.Infrastructure.Persistence;
 using SharedKernel.Auth;

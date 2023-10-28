@@ -1,9 +1,5 @@
-using Microsoft.Extensions.Localization;
 using OnlineShop.Application.Constants;
-using OnlineShop.Application.Dto.Auth;
 using OnlineShop.Application.Infrastructure;
-using OnlineShop.Application.Properties;
-using OnlineShop.Domain.Entities;
 using SharedKernel.Libraries;
 using SharedKernel.Runtime.Exceptions;
 

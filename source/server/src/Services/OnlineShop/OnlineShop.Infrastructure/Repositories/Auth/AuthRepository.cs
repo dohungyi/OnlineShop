@@ -2,7 +2,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using OnlineShop.Application.Dto.Auth;
+using OnlineShop.Application.Dtos;
 using OnlineShop.Application.Infrastructure;
 using OnlineShop.Application.Infrastructure.Persistence;
 using OnlineShop.Domain.Entities;

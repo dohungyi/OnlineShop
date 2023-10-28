@@ -1,8 +1,4 @@
-using OnlineShop.Application.Mappings;
-using OnlineShop.Domain.Entities;
-using SharedKernel.Libraries;
-
-namespace OnlineShop.Application.Features.VersionOne.Cpanel.CreateUser;
+namespace OnlineShop.Application.Features.VersionOne;
 
 [AuthorizationRequest(new ActionExponent[] { ActionExponent.SupperAdmin })]
 public class CreateUserCommand : BaseInsertCommand<string>, IMapFrom<ApplicationUser>

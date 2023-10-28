@@ -21,7 +21,12 @@ public class UnauthorizedHandlerMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        // Request
+        // ....
+
         await _next(context);
+        
+        // Response
         
         if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
         {
@@ -30,7 +35,8 @@ public class UnauthorizedHandlerMiddleware
 
             var localizer = context.RequestServices.GetRequiredService<IStringLocalizer<Resources>>();
             
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApiResult() { Status = "unauthorized",Error = new Error(401, localizer["unauthorized"])}, new JsonSerializerSettings
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(new ApiResult() 
+                { Status = "unauthorized",Error = new Error(401, localizer["unauthorized"])}, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
                 

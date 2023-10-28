@@ -13,7 +13,6 @@
 
     <ItemGroup>
       <Folder Include="Features\VersionOne\Auth\" />
-      <Folder Include="Features\VersionOne\Cpanel\SetPermission\" />
       <Folder Include="Features\VersionOne\Cpanel\UpdateRole\" />
       <Folder Include="Features\VersionOne\User\Command\" />
       <Folder Include="Features\VersionOne\User\Queries\" />

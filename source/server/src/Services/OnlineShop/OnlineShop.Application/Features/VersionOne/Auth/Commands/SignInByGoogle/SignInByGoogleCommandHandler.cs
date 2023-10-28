@@ -1,17 +1,5 @@
 ﻿
 using Google.Apis.Auth;
-using Microsoft.Extensions.Localization;
-using OnlineShop.Application.Constants;
-using OnlineShop.Application.Dto.Auth;
-using OnlineShop.Application.Infrastructure;
-using OnlineShop.Application.Properties;
-using OnlineShop.Application.Repositories;
-using OnlineShop.Domain.Entities;
-using OnlineShop.Infrastructure.Repositories;
-using SharedKernel.Core;
-using SharedKernel.Libraries;
-using SharedKernel.Libraries.Utility;
-using SharedKernel.Runtime.Exceptions;
 
 namespace OnlineShop.Application.Features.VersionOne;
 

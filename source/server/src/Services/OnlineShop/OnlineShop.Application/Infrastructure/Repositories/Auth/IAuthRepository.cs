@@ -1,6 +1,3 @@
-using OnlineShop.Application.Dto.Auth;
-using OnlineShop.Domain.Entities;
-
 namespace OnlineShop.Application.Infrastructure;
 
 public interface IAuthRepository

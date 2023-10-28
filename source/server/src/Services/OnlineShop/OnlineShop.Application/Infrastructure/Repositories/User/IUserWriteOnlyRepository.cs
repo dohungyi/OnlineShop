@@ -2,9 +2,9 @@ using OnlineShop.Domain.Entities;
 using SharedKernel.Application;
 using SharedKernel.Persistence;
 
-namespace OnlineShop.Application.Repositories;
+namespace OnlineShop.Application.Infrastructure;
 
-public interface IUserWriteOnlyRepository : IBaseWriteOnlyRepository<ApplicationUser, IAppDbContext>
+public interface IUserWriteOnlyRepository : IBaseWriteOnlyRepository<ApplicationUser, IApplicationDbContext>
 {
     Task<ApplicationUser> CreateUserAsync(ApplicationUser user, CancellationToken cancellationToken = default);
 

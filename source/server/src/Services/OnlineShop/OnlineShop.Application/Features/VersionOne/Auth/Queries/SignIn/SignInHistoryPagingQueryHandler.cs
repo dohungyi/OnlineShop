@@ -1,8 +1,3 @@
-using AutoMapper;
-using MediatR;
-using OnlineShop.Application.Dto.Auth;
-using OnlineShop.Application.Infrastructure;
-
 namespace OnlineShop.Application.Features.VersionOne;
 
 public class SignInHistoryPagingQueryHandler : BaseQueryHandler, IRequestHandler<SignInHistoryPagingQuery, IPagedList<SignInHistoryDto>>

@@ -1,7 +1,7 @@
 using OnlineShop.Application.Mappings;
-using OnlineShop.Domain.Entities;
 
-namespace OnlineShop.Application.Dto.Auth;
+
+namespace OnlineShop.Application.Dtos;
 
 public class SignInHistoryDto : IMapFrom<SignInHistory>
 {

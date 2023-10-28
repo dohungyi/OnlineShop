@@ -3,9 +3,9 @@ using SharedKernel.Application;
 using SharedKernel.Domain;
 using SharedKernel.Persistence;
 
-namespace OnlineShop.Infrastructure.Repositories;
+namespace OnlineShop.Application.Infrastructure;
 
-public interface IUserReadOnlyRepository : IBaseReadOnlyRepository<ApplicationUser, IAppDbContext>
+public interface IUserReadOnlyRepository : IBaseReadOnlyRepository<ApplicationUser, IApplicationDbContext>
 {
     Task<ApplicationUser> FindByEmailAsync(string email, CancellationToken cancellationToken = default);
     

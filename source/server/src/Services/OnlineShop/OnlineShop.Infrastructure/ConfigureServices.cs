@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Infrastructure;
 using OnlineShop.Application.Infrastructure.Persistence;
-using OnlineShop.Application.Repositories;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repositories;
 using OnlineShop.Infrastructure.Services;
@@ -11,7 +10,7 @@ using SharedKernel.Core;
 
 namespace OnlineShop.Infrastructure;
 
-public static class ConfigureServices
+public static class COcOConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {

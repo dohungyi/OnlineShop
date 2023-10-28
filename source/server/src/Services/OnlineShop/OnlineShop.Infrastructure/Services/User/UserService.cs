@@ -1,7 +1,7 @@
 ﻿
+using OnlineShop.Application.Infrastructure;
 using OnlineShop.Application.Services;
 using OnlineShop.Infrastructure.Constants;
-using OnlineShop.Infrastructure.Repositories;
 using SharedKernel.Caching;
 using SharedKernel.Providers.Storage.S3;
 

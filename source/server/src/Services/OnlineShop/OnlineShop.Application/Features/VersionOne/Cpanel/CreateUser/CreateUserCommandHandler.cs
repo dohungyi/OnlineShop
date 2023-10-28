@@ -1,9 +1,4 @@
-﻿using OnlineShop.Application.Repositories;
-using OnlineShop.Domain.Entities;
-using OnlineShop.Infrastructure.Repositories;
-using SharedKernel.Runtime.Exceptions;
-
-namespace OnlineShop.Application.Features.VersionOne.Cpanel.CreateUser;
+﻿namespace OnlineShop.Application.Features.VersionOne;
 
 public class CreateUserCommandHandler : BaseCommandHandler, IRequestHandler<CreateUserCommand, string>
 {

@@ -1,10 +1,3 @@
-using OnlineShop.Application.Constants;
-using OnlineShop.Application.Dto.Auth;
-using OnlineShop.Application.Infrastructure;
-using OnlineShop.Domain.Entities;
-using SharedKernel.Libraries;
-using SharedKernel.Runtime.Exceptions;
-
 namespace OnlineShop.Application.Features.VersionOne;
 
 public class RefreshTokenCommandHandler : BaseCommandHandler, IRequestHandler<RefreshTokenCommand, ApiResult>
