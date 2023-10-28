@@ -144,35 +144,35 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
     
     private IQueryable<TEntity> ApplyFilterConditions(IQueryable<TEntity> query, Field field)
     {
+        var localizer = _provider.GetRequiredService<IStringLocalizer<Resources>>();
         var entityType = typeof(TEntity);
         var propertyName = field.FieldName;
         var property = typeof(TEntity).GetProperty(propertyName);
 
-        if (property is null)
+        if (property is null || string.IsNullOrWhiteSpace(field.Value))
         {
-            var localizer = _provider.GetRequiredService<IStringLocalizer<Resources>>();
             throw new BadRequestException(localizer["repository_filter_is_invalid"].Value);
         }
-
+        
         switch (field.Condition)
         {
             case WhereType.E:
-                query = query.Where(entity => EF.Property<object>(entity, propertyName) == field.Value);
+                query = query.Where(entity => ((IComparable)property.GetValue(entity, null)).CompareTo(Convert.ChangeType(field.Value, property.PropertyType)) == 0);
                 break;
             case WhereType.NE:
-                query = query.Where(entity => EF.Property<object>(entity, propertyName) != field.Value);
+                query = query.Where(entity => ((IComparable)property.GetValue(entity, null)).CompareTo(Convert.ChangeType(field.Value, property.PropertyType)) != 0);
                 break;
             case WhereType.GT:
-                query = query.Where(entity => EF.Property<int>(entity, propertyName) > int.Parse(field.Value));
+                query = query.Where(entity => ((IComparable)property.GetValue(entity, null)).CompareTo(Convert.ChangeType(field.Value, property.PropertyType)) > 0);
                 break;
             case WhereType.GE:
-                query = query.Where(entity => EF.Property<int>(entity, propertyName) >= int.Parse(field.Value));
+                query = query.Where(entity => ((IComparable)property.GetValue(entity, null)).CompareTo(Convert.ChangeType(field.Value, property.PropertyType)) >= 0);
                 break;
             case WhereType.LT:
-                query = query.Where(entity => EF.Property<int>(entity, propertyName) < int.Parse(field.Value));
+                query = query.Where(entity => ((IComparable)property.GetValue(entity, null)).CompareTo(Convert.ChangeType(field.Value, property.PropertyType)) < 0);
                 break;
             case WhereType.LE:
-                query = query.Where(entity => EF.Property<int>(entity, propertyName) <= int.Parse(field.Value));
+                query = query.Where(entity => ((IComparable)property.GetValue(entity, null)).CompareTo(Convert.ChangeType(field.Value, property.PropertyType)) <= 0);
                 break;
             case WhereType.C:
                 query = query.Where(entity => EF.Functions.Like((string)entityType.GetProperty(propertyName).GetValue(entity, null), $"%{field.Value}%"));
