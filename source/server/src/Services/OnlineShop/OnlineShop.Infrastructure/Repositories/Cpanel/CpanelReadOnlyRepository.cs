@@ -1,4 +1,7 @@
-﻿using OnlineShop.Application.Dtos;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using OnlineShop.Application.Dtos;
 using OnlineShop.Application.Infrastructure;
 using OnlineShop.Domain.Entities;
 using OnlineShop.Infrastructure.Persistence;
@@ -22,10 +25,19 @@ public class CpanelReadOnlyRepository : BaseReadOnlyRepository<BaseEntity, Appli
 
     public async Task<IEnumerable<ApplicationUser>> GetUserByRoleIdAsync(object roleId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var users = await _dbContext.ApplicationUsers
+            .Join(_dbContext.UserRoles,
+                user => user.Id,
+                userRole => userRole.UserId,
+                (user, userRole) => new { User = user, UserRole = userRole })
+            .Where(x => x.UserRole.RoleId == (Guid)roleId && !x.User.IsDeleted && !x.UserRole.IsDeleted)
+            .Select(x => x.User)
+            .ToListAsync(cancellationToken);
+
+        return users;
     }
 
-    public async Task<IEnumerable<RoleDto>> GetRoleAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<RoleDto>> GetRolesAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
@@ -37,7 +49,15 @@ public class CpanelReadOnlyRepository : BaseReadOnlyRepository<BaseEntity, Appli
 
     public async Task<IPagedList<UserDto>> GetUserPagingAsync(PagingRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var brr = _provider.GetRequiredService<IBaseReadOnlyRepository<ApplicationUser, IApplicationDbContext>>();
+        
+        var users  = await brr.GetPagingAsync(request, cancellationToken);
+
+        var mapper = _provider.GetRequiredService<IMapper>();
+        
+        var usersDto = mapper.Map<IPagedList<UserDto>>(users);
+        
+        return usersDto;
     }
 
     public async Task<IEnumerable<RecordDashboardDto>> GetRecordDashboardAsync(CancellationToken cancellationToken = default)
