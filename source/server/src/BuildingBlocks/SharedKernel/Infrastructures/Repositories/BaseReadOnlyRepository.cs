@@ -1,11 +1,18 @@
 using System.Linq.Expressions;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using SharedKernel.Application;
 using SharedKernel.Application.Consts;
 using SharedKernel.Auth;
 using SharedKernel.Caching;
 using SharedKernel.Domain;
+using SharedKernel.Libraries;
 using SharedKernel.Persistence;
+using SharedKernel.Properties;
+using SharedKernel.Runtime.Exceptions;
 
 namespace SharedKernel.Infrastructures.Repositories;
 
@@ -33,7 +40,6 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
         
         _tableName = nameof(TEntity);
         _dbSet = dbContext.Set<TEntity>();
-
     }
 
     #region [CACHE]
@@ -95,5 +101,99 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
     {
          return await FindByCondition(x => x.Id.Equals(id), trackChanges: false, includeProperties)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public virtual async Task<IPagedList<TEntity>> GetPagingAsync(PagingRequest request, CancellationToken cancellationToken = default)
+    {
+        var query = _dbSet.Where(x => !x.IsDeleted).AsNoTracking();
+        
+        // Filter
+        if (request.Filter is not null && request.Filter.Fields is not null && request.Filter.Fields.Any())
+        {
+            foreach (var field in request.Filter.Fields)
+            {
+                query = ApplyFilterConditions(query, field);
+            }
+        }
+        
+        // OrderBy
+        if (request.Sorts is not null && request.Sorts.Any())
+        {
+            foreach (var sort in request.Sorts)
+            {
+                var property = typeof(TEntity).GetProperty(sort.FieldName);
+                if (property is  null)
+                {
+                    var localizer = _provider.GetRequiredService<IStringLocalizer<Resources>>();
+                    throw new BadRequestException(localizer["repository_sorts_is_invalid"].Value);
+                }
+                
+                if (sort.SortAscending)
+                {
+                    query = query.OrderBy(yourEntity => EF.Property<object>(yourEntity, sort.FieldName));
+                }
+                else
+                {
+                    query = query.OrderByDescending(yourEntity => EF.Property<object>(yourEntity, sort.FieldName));
+                }
+            }
+        }
+        
+        return (await query.ToPagedListAsync(request.Page, request.Size, cancellationToken: cancellationToken));
+    }
+    
+    private IQueryable<TEntity> ApplyFilterConditions(IQueryable<TEntity> query, Field field)
+    {
+        var entityType = typeof(TEntity);
+        var propertyName = field.FieldName;
+        var property = typeof(TEntity).GetProperty(propertyName);
+
+        if (property is null)
+        {
+            var localizer = _provider.GetRequiredService<IStringLocalizer<Resources>>();
+            throw new BadRequestException(localizer["repository_filter_is_invalid"].Value);
+        }
+
+        switch (field.Condition)
+        {
+            case WhereType.E:
+                query = query.Where(entity => EF.Property<object>(entity, propertyName) == field.Value);
+                break;
+            case WhereType.NE:
+                query = query.Where(entity => EF.Property<object>(entity, propertyName) != field.Value);
+                break;
+            case WhereType.GT:
+                query = query.Where(entity => EF.Property<int>(entity, propertyName) > int.Parse(field.Value));
+                break;
+            case WhereType.GE:
+                query = query.Where(entity => EF.Property<int>(entity, propertyName) >= int.Parse(field.Value));
+                break;
+            case WhereType.LT:
+                query = query.Where(entity => EF.Property<int>(entity, propertyName) < int.Parse(field.Value));
+                break;
+            case WhereType.LE:
+                query = query.Where(entity => EF.Property<int>(entity, propertyName) <= int.Parse(field.Value));
+                break;
+            case WhereType.C:
+                query = query.Where(entity => EF.Functions.Like((string)entityType.GetProperty(propertyName).GetValue(entity, null), $"%{field.Value}%"));
+                break;
+            case WhereType.NC:
+                query = query.Where(entity => !EF.Functions.Like((string)entityType.GetProperty(propertyName).GetValue(entity, null), $"%{field.Value}%"));
+                break;
+            case WhereType.SW:
+                query = query.Where(entity => EF.Functions.Like((string)entityType.GetProperty(propertyName).GetValue(entity, null), $"{field.Value}%"));
+                break;
+            case WhereType.NSW:
+                query = query.Where(entity => !EF.Functions.Like((string)entityType.GetProperty(propertyName).GetValue(entity, null), $"{field.Value}%"));
+                break;
+            case WhereType.EW:
+                query = query.Where(entity => EF.Functions.Like((string)entityType.GetProperty(propertyName).GetValue(entity, null), $"%{field.Value}"));
+                break;
+            case WhereType.NEW:
+                query = query.Where(entity => !EF.Functions.Like((string)entityType.GetProperty(propertyName).GetValue(entity, null), $"%{field.Value}"));
+                break;
+        }
+
+        return query;
     }
 }

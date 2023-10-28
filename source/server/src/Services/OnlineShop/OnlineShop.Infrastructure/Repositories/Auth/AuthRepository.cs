@@ -4,12 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Dtos;
 using OnlineShop.Application.Infrastructure;
-using OnlineShop.Application.Infrastructure.Persistence;
 using OnlineShop.Domain.Entities;
 using SharedKernel.Auth;
 using SharedKernel.Libraries;
 using SharedKernel.Libraries.Utility;
-using Action = OnlineShop.Domain.Entities.Action;
 
 namespace OnlineShop.Infrastructure.Repositories;
 

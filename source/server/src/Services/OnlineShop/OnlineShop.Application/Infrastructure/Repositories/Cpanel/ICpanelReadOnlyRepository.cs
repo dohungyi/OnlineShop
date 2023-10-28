@@ -6,7 +6,7 @@ public interface ICpanelReadOnlyRepository : IBaseReadOnlyRepository<BaseEntity,
 {
     Task<IEnumerable<ApplicationUser>> GetUserByRoleIdAsync(object roleId, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<RoleDto>> GetRoleAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<RoleDto>> GetRolesAsync(CancellationToken cancellationToken = default);
 
     Task<IEnumerable<Action>> GetActionsByExponentsAsync(List<ActionExponent> exponents, CancellationToken cancellationToken = default);
     

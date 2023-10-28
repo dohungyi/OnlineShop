@@ -4,7 +4,7 @@ using SharedKernel.Domain;
 using SharedKernel.Persistence;
 using Action = OnlineShop.Domain.Entities.Action;
 
-namespace OnlineShop.Application.Infrastructure.Persistence;
+namespace OnlineShop.Application.Infrastructure;
 
 public interface IApplicationDbContext : IAppDbContext
 {

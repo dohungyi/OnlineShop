@@ -25,4 +25,5 @@ public interface IBaseReadOnlyRepository<TEntity, TDbContext>
         params Expression<Func<TEntity, object>>[] includeProperties);
     Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties);
+    Task<IPagedList<TEntity>> GetPagingAsync(PagingRequest request, CancellationToken cancellationToken = default);
 }

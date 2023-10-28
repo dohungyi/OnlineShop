@@ -52,8 +52,8 @@ public class PagingRequest
     [BindProperty(Name = "filter")]
     public Filter Filter { get; set; }
 
-    [BindProperty(Name = "sort")]
-    public SortModel Sorts { get; set; } = new SortModel();
+    [BindProperty(Name = "sorts")]
+    public List<SortModel> Sorts { get; set; } = new List<SortModel>();
     
     public PagingRequest(int page, int size)
     {

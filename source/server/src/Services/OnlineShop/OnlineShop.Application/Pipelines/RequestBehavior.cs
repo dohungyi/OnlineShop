@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using OnlineShop.Application.Infrastructure.Persistence;
-using SharedKernel.Libraries.Utility;
 using SharedKernel.Log;
 using UAParser;
 

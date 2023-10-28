@@ -1,8 +1,4 @@
-﻿using MediatR;
-using OnlineShop.Application.Infrastructure.Persistence;
-using SharedKernel.Domain;
-using SharedKernel.Persistence;
-
+﻿
 namespace OnlineShop.Application.Pipelines;
 
 public class EventsBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
