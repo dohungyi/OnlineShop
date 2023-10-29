@@ -119,7 +119,7 @@ public static class CoreConfigure
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(DefaultJwtConfig.Key)),
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero,
+                ClockSkew = TimeSpan.Zero
             };
         
             jwtOptions.Events = new JwtBearerEvents

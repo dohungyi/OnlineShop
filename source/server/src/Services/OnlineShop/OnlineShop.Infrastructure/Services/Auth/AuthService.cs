@@ -63,12 +63,12 @@ public class AuthService : IAuthService
 
         // Add claims
         claims.Add(new Claim(ClaimConstant.USER_ID, tokenUser.Id.ToString()));
-        claims.Add(new Claim(ClaimConstant.USERNAME, tokenUser.Id.ToString()));
-        claims.Add(new Claim(ClaimConstant.ROLES, tokenUser.Id.ToString()));
-        claims.Add(new Claim(ClaimConstant.PERMISSION, tokenUser.Id.ToString()));
-        claims.Add(new Claim(ClaimConstant.CREATE_AT, tokenUser.Id.ToString()));
+        claims.Add(new Claim(ClaimConstant.USERNAME, tokenUser.Username));
+        claims.Add(new Claim(ClaimConstant.ROLES, string.Join(",", tokenUser.RoleNames)));
+        claims.Add(new Claim(ClaimConstant.PERMISSION, tokenUser.Permission));
+        claims.Add(new Claim(ClaimConstant.CREATE_AT, tokenUser.CreatedDate.ToString()));
         claims.Add(new Claim(ClaimConstant.AUTHOR, "Đỗ Chí Hùng"));
-        claims.Add(new Claim(ClaimConstant.ORGANIZATION, "Online Shop"));
+        claims.Add(new Claim(ClaimConstant.ORGANIZATION, "Online Shop Microservices"));
         claims.Add(new Claim(ClaimConstant.AUTHORS_MESSAGE, "Contact for work: 0976580418; Facebook: https://facebook.com/dohungiy"));
 
         var securityToken = new JwtSecurityToken(

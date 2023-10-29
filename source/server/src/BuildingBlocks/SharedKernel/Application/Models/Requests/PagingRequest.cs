@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel.Runtime.Exceptions;
 
 namespace SharedKernel.Application;
 
@@ -37,7 +38,7 @@ public class PagingRequest
         {
             if (value <= 0 || value > 1000)
             {
-                // throw new BadRequestException("Size should be between 1 and 1000");
+                throw new BadRequestException("Size should be between 1 and 1000");
             }
             _size = value;
         }
@@ -46,14 +47,18 @@ public class PagingRequest
     [BindProperty(Name = "indexFrom")] 
     public int IndexForm { get; set; } = 1;
     
+    
     [BindProperty(Name = "offset")]
     public int Offset => _page * _size;
+    
 
     [BindProperty(Name = "filter")]
     public Filter Filter { get; set; }
+    
 
     [BindProperty(Name = "sorts")]
     public List<SortModel> Sorts { get; set; } = new List<SortModel>();
+    
     
     public PagingRequest(int page, int size)
     {

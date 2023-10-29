@@ -22,22 +22,4 @@ public class CreateUserCommand : BaseInsertCommand<string>, IMapFrom<Application
     public DateTime DateOfBirth { get; init; }
     
     public GenderType Gender { get; init; }
-    
-    public CreateUserCommand(string username, string password, string confirmPassword, string phoneNumber, string email, string firstName, string lastName, DateTime dateOfBirth, GenderType gender)
-    {
-        Username = username;
-        Password = password;
-        ConfirmPassword = confirmPassword;
-        PhoneNumber = phoneNumber;
-        Email = email;
-        FirstName = firstName;
-        LastName = lastName;
-        DateOfBirth = dateOfBirth;
-        Gender = gender;
-    }
-
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<CreateUserCommand, User>();
-    }
 }

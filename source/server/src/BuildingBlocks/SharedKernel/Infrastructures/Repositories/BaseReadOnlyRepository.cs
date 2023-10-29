@@ -105,6 +105,8 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
 
     public virtual async Task<IPagedList<TEntity>> GetPagingAsync(PagingRequest request, CancellationToken cancellationToken = default)
     {
+        var localizer = _provider.GetRequiredService<IStringLocalizer<Resources>>();
+        
         var query = _dbSet.Where(x => !x.IsDeleted).AsNoTracking();
         
         // Filter
@@ -112,7 +114,7 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
         {
             foreach (var field in request.Filter.Fields)
             {
-                query = ApplyFilterConditions(query, field);
+                query = ApplyFilterConditions(query, field, localizer);
             }
         }
         
@@ -124,7 +126,6 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
                 var property = typeof(TEntity).GetProperty(sort.FieldName);
                 if (property is  null)
                 {
-                    var localizer = _provider.GetRequiredService<IStringLocalizer<Resources>>();
                     throw new BadRequestException(localizer["repository_sorts_is_invalid"].Value);
                 }
                 
@@ -141,10 +142,10 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
         
         return (await query.ToPagedListAsync(request.Page, request.Size, cancellationToken: cancellationToken));
     }
-    
-    private IQueryable<TEntity> ApplyFilterConditions(IQueryable<TEntity> query, Field field)
+
+    #region [Private]
+     private IQueryable<TEntity> ApplyFilterConditions(IQueryable<TEntity> query, Field field, IStringLocalizer<Resources> localizer)
     {
-        var localizer = _provider.GetRequiredService<IStringLocalizer<Resources>>();
         var entityType = typeof(TEntity);
         var propertyName = field.FieldName;
         var property = typeof(TEntity).GetProperty(propertyName);
@@ -196,4 +197,6 @@ public class BaseReadOnlyRepository<TEntity, TDbContext> : IBaseReadOnlyReposito
 
         return query;
     }
+    
+    #endregion
 }

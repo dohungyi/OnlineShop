@@ -31,4 +31,10 @@ public class UserDto : IMapFrom<ApplicationUser>
     public GenderType Gender { get; set; }
 
     public DateTime CreatedDate { get; set; }
+
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<ApplicationUser, UserDto>().ReverseMap();
+        profile.CreateMap<IPagedList<ApplicationUser>, PagedList<UserDto>>().ReverseMap();
+    }
 }

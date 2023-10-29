@@ -153,8 +153,8 @@ public class AuthRepository : IAuthRepository
             return tokenUser;
         }
         
-        var sa = roleActions.FirstOrDefault(x => x.Role.Code.Equals(RoleConstant.SupperAdmin));
-        var admin = roleActions.FirstOrDefault(x => x.Role.Code.Equals(RoleConstant.Admin));
+        var sa = roleActions.FirstOrDefault(x => x.Action.Code.Equals(RoleConstant.SupperAdmin));
+        var admin = roleActions.FirstOrDefault(x => x.Action.Code.Equals(RoleConstant.Admin));
         
         if (sa is not null)
         {

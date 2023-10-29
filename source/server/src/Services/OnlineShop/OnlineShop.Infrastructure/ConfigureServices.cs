@@ -6,6 +6,7 @@ using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repositories;
 using OnlineShop.Infrastructure.Services;
 using SharedKernel.Core;
+using SharedKernel.Infrastructures.Repositories;
 
 namespace OnlineShop.Infrastructure;
 
@@ -23,18 +24,22 @@ public static class COcOConfigureServices
         
         services.AddScoped<ApplicationDbContextSeed>();
         
-        // // Base
-        // services.AddScoped(typeof(IBaseReadOnlyRepository<,>), typeof(BaseReadOnlyRepository<,>));
-        // services.AddScoped(typeof(IBaseWriteOnlyRepository<,>), typeof(BaseWriteOnlyRepository<,>));
+        // Base
+        services.AddScoped(typeof(IBaseReadOnlyRepository<,>), typeof(BaseReadOnlyRepository<,>));
+        services.AddScoped(typeof(IBaseWriteOnlyRepository<,>), typeof(BaseWriteOnlyRepository<,>));
         //
         
         // Auth
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAuthRepository, AuthRepository>();
         
-        // // User
+        // User
         services.AddScoped<IUserWriteOnlyRepository, UserWriteOnlyRepository>();
         services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
+        
+        // Cpanel
+        services.AddScoped<ICpanelWriteOnlyRepository, CpanelWriteOnlyRepository>();
+        services.AddScoped<ICpanelReadOnlyRepository, CpanelReadOnlyRepository>();
         
         // ...
         
