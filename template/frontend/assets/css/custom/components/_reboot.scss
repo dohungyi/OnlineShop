@@ -1,0 +1,33 @@
+//
+// _reboot.scss
+//
+
+html {
+    overflow-x: hidden;
+}
+
+
+/*******font-weight*******/
+.fw-medium {
+    font-weight: $font-weight-medium;
+}
+
+.fw-semibold {
+    font-weight: $font-weight-semibold;
+}
+
+p {
+    line-height: 1.8;
+}
+
+.row>* {
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+}
+
+.modal-open {
+    padding-right: 0 !important;
+}

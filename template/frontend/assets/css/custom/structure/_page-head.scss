@@ -1,0 +1,52 @@
+// 
+// Page-title
+// 
+
+.page-title-box {
+    padding: 10px $grid-gutter-width;
+    background-color: $card-bg;
+    box-shadow: $box-shadow;
+    margin: -23px (-$grid-gutter-width) $grid-gutter-width (-$grid-gutter-width);
+
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+        font-size: 13px;
+    }
+
+    h4 {
+        font-weight: 700;
+        font-size: 15px!important;
+        text-transform: uppercase;
+    }
+}
+
+body[data-layout="horizontal"] {
+    .page-title-box {
+        padding: 1.2rem 0;
+        background-color: transparent !important;
+        border-bottom: none;
+        box-shadow: none;
+        margin: 0;
+
+        @media (min-width: 1024.1px) {
+            margin: -19px 0 0 0;
+        }
+    }
+}
+
+body[data-layout="vertical"] {
+    &[data-layout-style="detached"]{
+        .page-title-box {
+            padding: 1.2rem 0;
+            background-color: transparent !important;
+            border-bottom: none;
+            box-shadow: none;
+            margin: 0;
+    
+            @media (min-width: 1024.1px) {
+                margin: -19px 0 0 0;
+            }
+        }
+    }
+}
