@@ -1,6 +1,4 @@
-using SharedKernel.Providers.Storage.Models;
-
-namespace SharedKernel.Providers.Storage;
+namespace SharedKernel.Providers;
 
 public interface IStorageProvider
 {

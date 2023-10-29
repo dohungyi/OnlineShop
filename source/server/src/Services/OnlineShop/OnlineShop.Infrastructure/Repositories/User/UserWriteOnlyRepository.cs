@@ -1,13 +1,3 @@
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using OnlineShop.Application.Infrastructure;
-using OnlineShop.Domain.Entities;
-using OnlineShop.Infrastructure.Persistence;
-using SharedKernel.Auth;
-using SharedKernel.Caching;
-using SharedKernel.Infrastructures.Repositories;
-using SharedKernel.Libraries;
-
 namespace OnlineShop.Infrastructure.Repositories;
 
 public class UserWriteOnlyRepository : BaseWriteOnlyRepository<ApplicationUser, ApplicationDbContext>, IUserWriteOnlyRepository

@@ -1,14 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using OnlineShop.Application.Dtos;
-using OnlineShop.Application.Infrastructure;
-using OnlineShop.Domain.Entities;
-using OnlineShop.Infrastructure.Persistence;
-using SharedKernel.Auth;
-using SharedKernel.Caching;
-using SharedKernel.Infrastructures.Repositories;
-using Action = OnlineShop.Domain.Entities.Action;
+﻿using Action = OnlineShop.Domain.Entities.Action;
 
 namespace OnlineShop.Infrastructure.Repositories;
 

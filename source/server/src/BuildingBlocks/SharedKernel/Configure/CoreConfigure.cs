@@ -39,7 +39,7 @@ using SharedKernel.MessageBroker;
 using SharedKernel.Middlewares;
 using SharedKernel.Persistence.ExceptionHandler;
 using SharedKernel.Properties;
-using SharedKernel.Providers.Storage.S3;
+using SharedKernel.Providers;
 using SharedKernel.Runtime.Exceptions;
 using StackExchange.Redis;
 

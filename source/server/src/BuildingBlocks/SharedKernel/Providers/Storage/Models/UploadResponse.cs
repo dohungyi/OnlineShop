@@ -1,4 +1,4 @@
-namespace SharedKernel.Providers.Storage.Models;
+namespace SharedKernel.Providers;
 
 public class UploadResponse
 {

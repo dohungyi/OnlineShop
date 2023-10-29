@@ -1,9 +1,6 @@
 ﻿
-using OnlineShop.Application.Infrastructure;
 using OnlineShop.Application.Services;
 using OnlineShop.Infrastructure.Constants;
-using SharedKernel.Caching;
-using SharedKernel.Providers.Storage.S3;
 
 namespace OnlineShop.Infrastructure.Services;
 

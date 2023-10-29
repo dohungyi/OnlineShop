@@ -1,10 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using OnlineShop.Domain.Entities;
-using SharedKernel.Auth;
-using SharedKernel.Libraries;
-using SharedKernel.Libraries.Utility;
-using SharedKernel.Log;
 using Action = OnlineShop.Domain.Entities.Action;
 
 namespace OnlineShop.Infrastructure.Persistence;

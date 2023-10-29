@@ -4,9 +4,8 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using SharedKernel.Core;
 using SharedKernel.Log;
-using SharedKernel.Providers.Storage.Models;
 
-namespace SharedKernel.Providers.Storage.S3;
+namespace SharedKernel.Providers;
 
 public class S3StorageProvider : IS3StorageProvider
 {

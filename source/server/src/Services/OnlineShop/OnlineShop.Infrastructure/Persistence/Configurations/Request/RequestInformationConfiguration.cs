@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineShop.Domain.Constants;
 
 namespace OnlineShop.Infrastructure.Persistence.Configurations;

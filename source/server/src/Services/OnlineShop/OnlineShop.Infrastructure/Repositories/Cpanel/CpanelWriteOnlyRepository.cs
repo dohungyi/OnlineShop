@@ -1,10 +1,4 @@
-﻿using OnlineShop.Application.Infrastructure;
-using OnlineShop.Infrastructure.Persistence;
-using SharedKernel.Auth;
-using SharedKernel.Caching;
-using SharedKernel.Infrastructures.Repositories;
-
-namespace OnlineShop.Infrastructure.Repositories;
+﻿namespace OnlineShop.Infrastructure.Repositories;
 
 public class CpanelWriteOnlyRepository : BaseWriteOnlyRepository<BaseEntity, ApplicationDbContext>, ICpanelWriteOnlyRepository
 {

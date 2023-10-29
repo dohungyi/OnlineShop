@@ -1,15 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using OnlineShop.Application.Constants;
-using OnlineShop.Application.Infrastructure;
-using SharedKernel.Application.Consts;
-using SharedKernel.Auth;
-using SharedKernel.Caching;
-using SharedKernel.Core;
-using SharedKernel.Libraries;
-using SharedKernel.Libraries.Utility;
 
 namespace OnlineShop.Infrastructure.Services;
 

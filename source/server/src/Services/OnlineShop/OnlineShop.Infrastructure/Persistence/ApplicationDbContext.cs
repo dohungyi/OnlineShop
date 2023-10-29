@@ -1,7 +1,4 @@
 ﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using OnlineShop.Application.Infrastructure;
-using OnlineShop.Domain.Entities;
 using Action = OnlineShop.Domain.Entities.Action;
 
 namespace OnlineShop.Infrastructure.Persistence;

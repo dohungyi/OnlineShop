@@ -1,13 +1,4 @@
-using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using OnlineShop.Application.Dtos;
-using OnlineShop.Application.Infrastructure;
-using OnlineShop.Domain.Entities;
-using SharedKernel.Auth;
-using SharedKernel.Libraries;
-using SharedKernel.Libraries.Utility;
 
 namespace OnlineShop.Infrastructure.Repositories;
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore.Design;
 
 namespace OnlineShop.Infrastructure.Persistence;
 
