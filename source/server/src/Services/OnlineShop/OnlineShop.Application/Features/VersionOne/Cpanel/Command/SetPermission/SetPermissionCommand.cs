@@ -1,6 +1,6 @@
 ﻿using SharedKernel.Libraries;
 
-namespace OnlineShop.Application.Features.VersionOne.Cpanel.SetPermission;
+namespace OnlineShop.Application.Features.VersionOne;
 
 [AuthorizationRequest(new ActionExponent[] { ActionExponent.SupperAdmin })]
 public class SetPermissionCommand

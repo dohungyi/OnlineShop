@@ -1,4 +1,4 @@
-﻿namespace OnlineShop.Application.Features.VersionOne.Cpanel.SetPermission;
+﻿namespace OnlineShop.Application.Features.VersionOne;
 
 public class SetPermissionCommandValidator : AbstractValidator<SetPermissionCommand>
 {

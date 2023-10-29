@@ -1,4 +1,4 @@
-﻿namespace OnlineShop.Application.Features.VersionOne.Cpanel.Queries.GetUserPaging;
+﻿namespace OnlineShop.Application.Features.VersionOne;
 
 [AuthorizationRequest(new ActionExponent[] { ActionExponent.SupperAdmin })]
 public class GetUserPagingQuery : BaseQuery<ApiResult>

@@ -1,6 +1,4 @@
-﻿using SharedKernel.Libraries.Utility;
-
-namespace OnlineShop.Application.Features.VersionOne.Cpanel.CreateUser;
+﻿namespace OnlineShop.Application.Features.VersionOne;
 
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {

@@ -1,4 +1,4 @@
-namespace OnlineShop.Application.Features.VersionOne.Cpanel.Queries.GetUserPaging;
+namespace OnlineShop.Application.Features.VersionOne;
 
 public class GetUserPagingQueryHandler : BaseQueryHandler, IRequestHandler<GetUserPagingQuery, ApiResult>
 {

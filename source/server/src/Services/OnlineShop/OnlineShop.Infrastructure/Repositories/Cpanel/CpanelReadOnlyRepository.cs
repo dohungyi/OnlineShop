@@ -121,8 +121,8 @@ public class CpanelReadOnlyRepository : BaseReadOnlyRepository<BaseEntity, Appli
         var users = await _dbContext.ApplicationUsers.CountAsync(cancellationToken);
         result.Add(new RecordDashboardDto()
         {
-            Type = "orders",
-            Title = "Tổng số đơn",
+            Type = "users",
+            Title = "Tổng số người dùng",
             Value = users
         });
         
@@ -130,7 +130,7 @@ public class CpanelReadOnlyRepository : BaseReadOnlyRepository<BaseEntity, Appli
         var requests = await _dbContext.RequestInformations.CountAsync(cancellationToken);
         result.Add(new RecordDashboardDto()
         {
-            Type = "orders",
+            Type = "requests",
             Title = "Tổng số yêu cầu",
             Value = requests
         });
