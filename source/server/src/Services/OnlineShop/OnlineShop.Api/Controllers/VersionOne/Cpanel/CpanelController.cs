@@ -32,6 +32,4 @@ public class CpanelController : BaseController
         return Ok(result);
     }
     
-    
-    
 }

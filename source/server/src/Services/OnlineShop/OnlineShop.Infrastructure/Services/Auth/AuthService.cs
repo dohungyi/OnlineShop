@@ -110,6 +110,11 @@ public class AuthService : IAuthService
         return await _authRepository.CheckRefreshTokenAsync(value, userId, cancellationToken);
     }
 
+    public Task<bool> SignOutAllDeviceAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task RevokeAccessTokenAsync(string accessToken, CancellationToken cancellationToken)
     {
         await _sequenceCaching.SetAsync(
