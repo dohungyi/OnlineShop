@@ -21,9 +21,8 @@ public class AuditEntity
 
     public DateTime Timestamp { get; set; }
 
-    public long TenantId { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
-    public long CreatedBy { get; set; }
+    public string CreatedBy { get; set; }
 }
