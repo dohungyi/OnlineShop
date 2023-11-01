@@ -2,6 +2,7 @@
 using OnlineShop.Audit.Events;
 using OnlineShop.Audit.Models;
 using SharedKernel.Domain;
+using SharedKernel.Libraries;
 
 namespace OnlineShop.Audit.Processes;
 
@@ -89,4 +90,101 @@ public class BaseProcess<T> where T : IBaseEntity
     }
     
     #endregion
+
+    #region [Get descriptions]
+    protected virtual string GetInsertDescription(T entity, string[] ignoreFields)
+    {
+        foreach (var property in _properties)
+        {
+            var auditableAttribute = property.GetCustomAttribute(typeof(AuditableAttribute), true);
+            var auditable = property.IsDefined(typeof(AuditableAttribute), true);
+            var propertyName = property.Name;
+
+            if (ignoreFields.Contains(propertyName) || !auditable)
+            {
+                continue;
+            }
+
+            if ((auditableAttribute as AuditableAttribute).UseInsert)
+            {
+                return $"<p>Thêm <strong>{_config.Module}</strong> với <strong>{property.GetDescription().ToLower()}</strong> là <strong>{entity[propertyName]}</strong></p>";
+            }
+        }
+        
+        return string.Empty;
+    }
+
+    protected virtual string GetUpdateDescription(SharedKernel.Domain.UpdateAuditModel<T> model, string[] ignoreFields)
+    {
+        var descriptionId = string.Empty;
+        var description = string.Empty;
+
+        foreach (var property in _properties)
+        {
+            var auditable = property.IsDefined(typeof(AuditableAttribute), true);
+            var propertyName = property.Name;
+            var newValue = model.NewValue[propertyName];
+            var oldValue = model.OldValue[propertyName];
+
+            if (ignoreFields.Contains(propertyName) || !auditable)
+            {
+                continue;
+            }
+
+            if (!Equals(newValue, oldValue))
+            {
+                var readableNewValue = GetHumanReadableValue(newValue);
+                var readableOldValue = GetHumanReadableValue(oldValue);
+                if (string.IsNullOrEmpty(descriptionId))
+                {
+                    descriptionId = $"<p>Bản ghi có id <strong>{model.NewValue.Id}</strong> thay đổi: </p>";
+                }
+                description += $"<p> - {property.GetDescription()} từ <strong>{readableOldValue}</strong> thành <strong>{readableNewValue}</strong></p>";
+            }
+        }
+        return descriptionId + description;
+    }
+    
+    protected virtual string GetDeleteDescription(T entity, string[] ignoreFields)
+    {
+        foreach (var property in _properties)
+        {
+            var propertyName = property.Name;
+            var auditableAttribute = property.GetCustomAttribute(typeof(AuditableAttribute), true);
+            var auditable = property.IsDefined(typeof(AuditableAttribute), true);
+
+            if (ignoreFields.Contains(propertyName) || !auditable)
+            {
+                continue;
+            }
+
+            if ((auditableAttribute as AuditableAttribute).UseDelete)
+            {
+                return $"<p>Xóa <strong>{_config.Module}</strong> có id <strong>{entity.Id}</strong> với <strong>{property.GetDescription().ToLower()}</strong> là <strong>{entity[propertyName]}</strong></p>";
+            }
+        }
+        
+        return string.Empty;
+    }
+    
+    protected virtual string GetHumanReadableValue (object value)
+    {
+        if (value?.GetType() == typeof(bool))
+        {
+            return (bool)value ? "có" : "không";
+        }
+        return value?.ToString().StripHtml();
+    }
+    #endregion
+
+    protected virtual async Task SaveAsync(List<AuditEntity> entities, CancellationToken cancellationToken = default)
+    {
+        
+    }
+
+    protected virtual async Task HandleAsync(IntegrationAuditEvent<T> @event,
+        CancellationToken cancellationToken = default)
+    {
+        
+    }
 }

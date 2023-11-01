@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SharedKernel.Domain;
 
-public abstract class BaseEntity<TKey> :  IBaseEntity<TKey>
+public abstract class BaseEntity<TKey> : CoreEntity, IBaseEntity<TKey>
 {
     [System.ComponentModel.DataAnnotations.Key]
     public TKey Id { get; set; }

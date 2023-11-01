@@ -1,6 +1,6 @@
 ﻿namespace SharedKernel.Domain;
 
-public interface IBaseEntity<TKey> : IAuditable, ICloneable
+public interface IBaseEntity<TKey> : IAuditable, ICoreEntity, ICloneable
 {
     TKey Id { get; set; }
     bool IsDeleted { get; set; }
