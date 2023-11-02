@@ -56,27 +56,27 @@ public class BaseProcess<T> where T : IBaseEntity
         }
     }
 
-    private List<AuditEntity> GetCustomParameter(IntegrationAuditEvent<T> auditEvent, string bodyStr, string[] ignoreFields)
+    protected virtual List<AuditEntity> GetCustomParameter(IntegrationAuditEvent<T> auditEvent, string bodyStr, string[] ignoreFields)
     {
         throw new NotImplementedException();
     }
 
-    private List<AuditEntity> GetDeleteParameter(string bodyStr, string[] ignoreFields)
+    protected virtual List<AuditEntity> GetDeleteParameter(string bodyStr, string[] ignoreFields)
     {
         throw new NotImplementedException();
     }
 
-    private List<AuditEntity> GetUpdateParameter(string bodyStr, string[] ignoreFields)
+    protected virtual List<AuditEntity> GetUpdateParameter(string bodyStr, string[] ignoreFields)
     {
         throw new NotImplementedException();
     }
 
-    private List<AuditEntity> GetInsertParameter(string bodyStr, string[] ignoreFields)
+    protected virtual List<AuditEntity> GetInsertParameter(string bodyStr, string[] ignoreFields)
     {
         throw new NotImplementedException();
     }
 
-    protected AuditEntity CreateBaseAuditEntity(IntegrationAuditEvent<T> @event, string description)
+    protected virtual AuditEntity CreateBaseAuditEntity(IntegrationAuditEvent<T> @event, string description)
     {
         var audit = new AuditEntity();
         audit.Action = (int)@event.AuditAction;

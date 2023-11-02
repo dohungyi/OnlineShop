@@ -34,7 +34,7 @@ docker compose -f docker-compose.yml -f docker-compose.override.yml up -d --remo
 ```
 
 2. Using Jetbrains Rider Csharp 2023
-- Open eCommerce.sln - `eCommerce.sln`
+- Open eCommerce.sln - `OnlineShop.sln`
 - Run Compound to start multi projects
 
 
