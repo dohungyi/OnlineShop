@@ -11,7 +11,7 @@ public class IntegrationAuditEvent<T> where T : IBaseEntity
     public AuditAction AuditAction { get; set; }
 
     public List<UpdateAuditModel<T>> UpdateModels { get; set; }
-
+    
     public Guid EventId { get; set; }
 
     public DateTime Timestamp { get; set; } = DateHelper.Now;

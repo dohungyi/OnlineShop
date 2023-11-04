@@ -1,4 +1,6 @@
 using MassTransit;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OnlineShop.Audit.Entities;
 using OnlineShop.Audit.Events;
 using SharedKernel.Domain;
@@ -6,11 +8,12 @@ using SharedKernel.Log;
 
 namespace OnlineShop.Audit.Consumers;
 
-public class AuditConsumer : IConsumer<IntegrationAuditEvent<BaseEntity>>
+public class AuditConsumer : IConsumer<JObject>
 {
-    public async Task Consume(ConsumeContext<IntegrationAuditEvent<BaseEntity>> context)
+    public async Task Consume(ConsumeContext<JObject> context)
     {
-        var @event = context.Message;
+        var @event = JsonConvert.DeserializeObject<IntegrationAuditEvent<BaseEntity>>(context.Message.ToString());
+
         Logging.Information($"Received an audit event with event id = {@event.EventId}");
 
         if (@event is null)

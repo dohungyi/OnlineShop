@@ -183,7 +183,7 @@ public static class CoreConfigure
     
     public static IServiceCollection AddBus(this IServiceCollection services)
     {
-        services.AddScoped<IEventBus, EventBus>();
+        services.AddScoped<IEventDispatcher, EventDispatcher>();
         return services;
     }
     

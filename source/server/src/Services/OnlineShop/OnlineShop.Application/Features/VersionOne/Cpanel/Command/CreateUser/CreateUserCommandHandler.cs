@@ -9,13 +9,13 @@ public class CreateUserCommandHandler : BaseCommandHandler, IRequestHandler<Crea
     private readonly IMapper _mapper;
     
     public CreateUserCommandHandler(
-        IEventBus eventBus, 
+        IEventDispatcher eventDispatcher, 
         IAuthService authService,
         IUserReadOnlyRepository userReadOnlyRepository,
         IUserWriteOnlyRepository userWriteOnlyRepository,
         IStringLocalizer<Resources> localizer,
         IMapper mapper
-        ) : base(eventBus, authService)
+        ) : base(eventDispatcher, authService)
     {
         _userReadOnlyRepository = userReadOnlyRepository;
         _userWriteOnlyRepository = userWriteOnlyRepository;

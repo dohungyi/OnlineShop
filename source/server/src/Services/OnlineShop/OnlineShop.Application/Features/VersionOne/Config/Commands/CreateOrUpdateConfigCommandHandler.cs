@@ -8,12 +8,12 @@ public class CreateOrUpdateConfigCommandHandler : BaseCommandHandler, IRequestHa
     private readonly ICurrentUser _currentUser;
     private readonly IMapper _mapper;
 
-    public CreateOrUpdateConfigCommandHandler(IEventBus eventBus, 
+    public CreateOrUpdateConfigCommandHandler(IEventDispatcher eventDispatcher, 
         IAuthService authService,
         IConfigWriteOnlyRepository configWriteOnlyRepository, 
         ICurrentUser currentUser, 
         IMapper mapper
-        ) : base(eventBus, authService)
+        ) : base(eventDispatcher, authService)
     {
         _configWriteOnlyRepository = configWriteOnlyRepository;
         _currentUser = currentUser;

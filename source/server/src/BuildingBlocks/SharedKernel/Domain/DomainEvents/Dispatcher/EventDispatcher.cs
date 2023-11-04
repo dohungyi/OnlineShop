@@ -8,14 +8,14 @@ using SharedKernel.MessageBroker;
 
 namespace SharedKernel.Domain.DomainEvents.Dispatcher;
 
-public class EventBus : IEventBus
+public class EventDispatcher : IEventDispatcher
 {
     private readonly IMediator _mediator;
     private readonly IMessagePublisher _messagePublisher;
     private readonly IConfiguration _configuration;
     private readonly IServiceProvider _serviceProvider;
 
-    public EventBus(IServiceProvider serviceProvider)
+    public EventDispatcher(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
         _mediator = _serviceProvider.GetRequiredService<IMediator>();
@@ -56,10 +56,7 @@ public class EventBus : IEventBus
     {
         try
         {
-            var centralizedEventsDbSetting = _configuration.GetSection(CentralizedEventsDbSetting.SectionName)
-                .Get<CentralizedEventsDbSetting>();
-
-            using (var context = new EventDbContext(centralizedEventsDbSetting))
+            using (var context = new EventDbContext())
             {
                 var eventNew = new Event
                 {

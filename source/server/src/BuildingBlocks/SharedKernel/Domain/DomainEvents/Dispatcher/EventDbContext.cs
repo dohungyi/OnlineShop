@@ -1,24 +1,33 @@
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.Core;
+using SharedKernel.Persistence;
 
 namespace SharedKernel.Domain.DomainEvents;
 
-public class EventDbContext : DbContext
+public class EventDbContext : AppDbContext
 {
-    private readonly CentralizedEventsDbSetting _centralizedEventsDbSetting;
+    private readonly string _dbConfig;
 
-    public EventDbContext(CentralizedEventsDbSetting centralizedEventsDbSetting)
+    public EventDbContext(string dbConfig = "MasterDb") : base(default)
     {
-        _centralizedEventsDbSetting = centralizedEventsDbSetting;
-        if (string.IsNullOrEmpty(_centralizedEventsDbSetting.ConnectionString))
-        {
-            throw new ArgumentNullException(nameof(centralizedEventsDbSetting));
-        }
+        _dbConfig = dbConfig;
     }
     public DbSet<Event> Events { get; set; }
+    public DbSet<AuditEntity> AuditEntities { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(_centralizedEventsDbSetting.ConnectionString);
+        optionsBuilder.UseSqlServer(CoreSettings.ConnectionStrings[_dbConfig]);
+    }
+
+    public override async Task CommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
+    {
+        await this.SaveChangesAsync(cancellationToken);
+    }
+
+    protected override void ProcessDomainEvents()
+    {
+        
     }
 }
 

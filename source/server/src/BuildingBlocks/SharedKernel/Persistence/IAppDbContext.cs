@@ -6,5 +6,5 @@ namespace SharedKernel.Persistence;
 
 public interface IAppDbContext : IUnitOfWork
 {
-    Task PublishEvents(IEventBus eventBus, CancellationToken cancellationToken);
+    Task PublishEvents(IEventDispatcher eventDispatcher, CancellationToken cancellationToken);
 }

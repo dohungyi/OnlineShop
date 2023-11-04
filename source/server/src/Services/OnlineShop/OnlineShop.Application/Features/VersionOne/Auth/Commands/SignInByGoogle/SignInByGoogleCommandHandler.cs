@@ -11,13 +11,13 @@ public class SignInByGoogleCommandHandler : BaseCommandHandler, IRequestHandler<
     private readonly IAuthRepository _authRepository;
     private readonly IStringLocalizer<Resources> _localizer;
     public SignInByGoogleCommandHandler(
-        IEventBus eventBus, 
+        IEventDispatcher eventDispatcher, 
         IAuthService authService,
         IUserReadOnlyRepository userReadOnlyRepository,
         IUserWriteOnlyRepository userWriteOnlyRepository,
         IAuthRepository authRepository, 
         IStringLocalizer<Resources> localizer
-        ) : base(eventBus, authService)
+        ) : base(eventDispatcher, authService)
     {
         _userReadOnlyRepository = userReadOnlyRepository;
         _userWriteOnlyRepository = userWriteOnlyRepository;

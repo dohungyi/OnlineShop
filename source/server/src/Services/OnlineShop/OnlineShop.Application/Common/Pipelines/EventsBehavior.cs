@@ -4,12 +4,12 @@ namespace OnlineShop.Application.Pipelines;
 public class EventsBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IEventBus _eventBus;
+    private readonly IEventDispatcher _eventDispatcher;
 
-    public EventsBehavior(IApplicationDbContext context, IEventBus eventBus)
+    public EventsBehavior(IApplicationDbContext context, IEventDispatcher eventDispatcher)
     {
         _context = context;
-        _eventBus = eventBus;
+        _eventDispatcher = eventDispatcher;
     }
     
 
@@ -17,7 +17,7 @@ public class EventsBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, T
     {
         var result = await next();
         
-        await _context.PublishEvents(_eventBus, cancellationToken);
+        await _context.PublishEvents(_eventDispatcher, cancellationToken);
 
         return result;
     }

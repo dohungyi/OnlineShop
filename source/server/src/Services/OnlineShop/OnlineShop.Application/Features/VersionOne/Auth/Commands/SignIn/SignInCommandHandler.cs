@@ -10,11 +10,11 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
     private readonly IAuthRepository _authRepository;
     private readonly IStringLocalizer<Resources> _localizer;
     public SignInCommandHandler(
-        IEventBus eventBus,
+        IEventDispatcher eventDispatcher,
         IAuthService authService,
         IAuthRepository authRepository,
         IStringLocalizer<Resources> localizer
-        ) : base(eventBus, authService)
+        ) : base(eventDispatcher, authService)
     {
         _authRepository = authRepository;
         _localizer = localizer;

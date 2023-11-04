@@ -21,13 +21,13 @@ public abstract class AppDbContext : DbContext, IAppDbContext
     
     private List<DomainEvent> DomainEvents { get; set; } = new();
     
-    public async Task PublishEvents(IEventBus eventBus, CancellationToken cancellationToken)
+    public async Task PublishEvents(IEventDispatcher eventDispatcher, CancellationToken cancellationToken)
     {
         await Task.Yield();
         if (DomainEvents is not null && DomainEvents.Any())
         {
             var events = DomainEvents.Select(x => x).ToList();
-            _ = eventBus.PublishEvent(events, cancellationToken);
+            _ = eventDispatcher.PublishEvent(events, cancellationToken);
 
             DomainEvents.Clear();
         }
@@ -92,7 +92,7 @@ public abstract class AppDbContext : DbContext, IAppDbContext
 
     #region [IMPLEMENT IUNITOFWORK]
     
-    public async Task CommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
+    public virtual async Task CommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
     { 
         if (dispatchEvent)
         {
@@ -104,7 +104,7 @@ public abstract class AppDbContext : DbContext, IAppDbContext
     
     #endregion
     
-    private void ProcessDomainEvents()
+    protected virtual void ProcessDomainEvents()
     {
         var entitiesWithEvents = ChangeTracker
             .Entries<IBaseEntity>()

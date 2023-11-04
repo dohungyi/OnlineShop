@@ -4,10 +4,10 @@ public class RefreshTokenCommandHandler : BaseCommandHandler, IRequestHandler<Re
 {
     private readonly IAuthRepository _authRepository;
     public RefreshTokenCommandHandler(
-        IEventBus eventBus, 
+        IEventDispatcher eventDispatcher, 
         IAuthService authService,
         IAuthRepository authRepository) 
-        : base(eventBus, authService)
+        : base(eventDispatcher, authService)
     {
         _authRepository = authRepository;
     }

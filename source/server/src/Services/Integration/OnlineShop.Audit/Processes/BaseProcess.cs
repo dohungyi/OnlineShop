@@ -1,8 +1,11 @@
 ﻿using System.Reflection;
+using Newtonsoft.Json;
 using OnlineShop.Audit.Events;
 using OnlineShop.Audit.Models;
 using SharedKernel.Domain;
+using SharedKernel.Domain.DomainEvents;
 using SharedKernel.Libraries;
+using SharedKernel.Log;
 
 namespace OnlineShop.Audit.Processes;
 
@@ -63,17 +66,51 @@ public class BaseProcess<T> where T : IBaseEntity
 
     protected virtual List<AuditEntity> GetDeleteParameter(string bodyStr, string[] ignoreFields)
     {
-        throw new NotImplementedException();
+        var @event = JsonConvert.DeserializeObject<IntegrationDeleteAuditEvent<T>>(bodyStr);
+        var result = new List<AuditEntity>();
+
+        foreach (var entity in @event.Entities)
+        {
+            var auditEntity = CreateBaseAuditEntity(@event, GetDeleteDescription(entity, ignoreFields));
+            auditEntity.OldValue = JsonConvert.SerializeObject(entity);
+            
+            result.Add(auditEntity);
+        }
+        
+        return result;
     }
 
     protected virtual List<AuditEntity> GetUpdateParameter(string bodyStr, string[] ignoreFields)
     {
-        throw new NotImplementedException();
+        var @event = JsonConvert.DeserializeObject<IntegrationUpdateAuditEvent<T>>(bodyStr);
+        var result = new List<AuditEntity>();
+
+        foreach (var model in @event.UpdateModels)
+        {
+            var auditEntity = CreateBaseAuditEntity(@event, GetUpdateDescription(model, ignoreFields));
+            auditEntity.OldValue = JsonConvert.SerializeObject(model.OldValue);
+            auditEntity.NewValue = JsonConvert.SerializeObject(model.NewValue);
+            
+            result.Add(auditEntity);
+        }
+        
+        return result;
     }
 
     protected virtual List<AuditEntity> GetInsertParameter(string bodyStr, string[] ignoreFields)
     {
-        throw new NotImplementedException();
+        var @event = JsonConvert.DeserializeObject<IntegrationInsertAuditEvent<T>>(bodyStr);
+        var result = new List<AuditEntity>();
+
+        foreach (var entity in @event.Entities)
+        {
+            var auditEntity = CreateBaseAuditEntity(@event, GetInsertDescription(entity, ignoreFields));
+            auditEntity.NewValue = JsonConvert.SerializeObject(entity);
+            
+            result.Add(auditEntity);
+        }
+        
+        return result;
     }
 
     protected virtual AuditEntity CreateBaseAuditEntity(IntegrationAuditEvent<T> @event, string description)
@@ -179,12 +216,24 @@ public class BaseProcess<T> where T : IBaseEntity
 
     protected virtual async Task SaveAsync(List<AuditEntity> entities, CancellationToken cancellationToken = default)
     {
-        
+        using (var context = new EventDbContext())
+        {
+            await context.AuditEntities.AddRangeAsync(entities, cancellationToken);
+            await context.CommitAsync(cancellationToken : cancellationToken);
+        }
     }
 
-    protected virtual async Task HandleAsync(IntegrationAuditEvent<T> @event,
-        CancellationToken cancellationToken = default)
+    protected virtual async Task HandleAsync(string bodyStr, CancellationToken cancellationToken = default)
     {
-        
+        var auditEvent = JsonConvert.DeserializeObject<IntegrationAuditEvent<T>>(bodyStr);
+        var param = GetParameter(auditEvent, bodyStr);
+        if (param.Any())
+        {
+            await SaveAsync(param, cancellationToken);
+        }
+        else
+        {
+            Logging.Warning($"{auditEvent.TableName} could not create parameter with event id = {auditEvent.EventId}");
+        }
     }
 }

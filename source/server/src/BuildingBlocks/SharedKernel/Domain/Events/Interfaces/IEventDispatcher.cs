@@ -1,6 +1,6 @@
 namespace SharedKernel.Domain;
 
-public interface IEventBus
+public interface IEventDispatcher
 {
     Task PublishEvent<T>(T @event, CancellationToken cancellationToken = default) where T : DomainEvent;
 

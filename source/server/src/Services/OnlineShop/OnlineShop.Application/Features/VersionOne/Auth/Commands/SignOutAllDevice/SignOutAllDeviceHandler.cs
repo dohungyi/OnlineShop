@@ -3,9 +3,9 @@
 public class SignOutAllDeviceHandler :  BaseCommandHandler, IRequestHandler<SignOutAllDeviceCommand, ApiResult>
 {
     public SignOutAllDeviceHandler(
-        IEventBus eventBus, 
+        IEventDispatcher eventDispatcher, 
         IAuthService authService
-        ) : base(eventBus, authService)
+        ) : base(eventDispatcher, authService)
     {
     }
 
