@@ -36,7 +36,7 @@ public abstract class AppDbContext : DbContext, IAppDbContext
     #endregion
 
     #region [METHOD]
-    public async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
+    public virtual async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
     {
         if (entities is not null && typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
         {
@@ -60,7 +60,7 @@ public abstract class AppDbContext : DbContext, IAppDbContext
         }
     }
     
-    public async Task BulkInsertEntitiesAsync<TEntity>(IList<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
+    public virtual async Task BulkInsertEntitiesAsync<TEntity>(IList<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
     {
         if (entities is not null && typeof(IBaseEntity).IsAssignableFrom(typeof(TEntity)))
         {
@@ -78,7 +78,7 @@ public abstract class AppDbContext : DbContext, IAppDbContext
        
     }
 
-    public async Task BulkCommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
+    public virtual async Task BulkCommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
     {
         await this.BulkSaveChangesAsync(cancellationToken: cancellationToken);
         

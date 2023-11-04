@@ -8,7 +8,7 @@ public class MasstransitMessagePublisher : IMessagePublisher
 
     public MasstransitMessagePublisher(IPublishEndpoint publish)
     {
-        _publish = publish ?? throw new ArgumentNullException(nameof(publish));
+        _publish = publish;
     }
     
     /// <summary>

@@ -26,7 +26,7 @@ public static class CoreSettings
     {
         ConnectionStrings = configuration.GetRequiredSection("ConnectionStrings").Get<Dictionary<string, string>>();
     }
-
+    
     public static void SetJwtConfig(IConfiguration configuration)
     {
         DefaultJwtConfig.SetDefaultJwtConfig(configuration);

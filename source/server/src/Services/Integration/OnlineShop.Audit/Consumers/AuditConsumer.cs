@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OnlineShop.Audit.Entities;
 using OnlineShop.Audit.Events;
+using OnlineShop.Audit.Persistence;
+using OnlineShop.Audit.Processes;
 using SharedKernel.Domain;
 using SharedKernel.Log;
 
@@ -10,10 +12,16 @@ namespace OnlineShop.Audit.Consumers;
 
 public class AuditConsumer : IConsumer<JObject>
 {
+    private readonly IntegrationAuditDbContext _dbContext;
+    public AuditConsumer(IntegrationAuditDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+    
     public async Task Consume(ConsumeContext<JObject> context)
     {
-        var @event = JsonConvert.DeserializeObject<IntegrationAuditEvent<BaseEntity>>(context.Message.ToString());
-
+        var bodyStr = context.Message.ToString();
+        var @event = JsonConvert.DeserializeObject<IntegrationAuditEvent<BaseEntity>>(bodyStr);
         Logging.Information($"Received an audit event with event id = {@event.EventId}");
 
         if (@event is null)
@@ -35,7 +43,7 @@ public class AuditConsumer : IConsumer<JObject>
             }
             case "SignIn":
             {
-                // new SignInProcess().HandleAsync(bodyStr).GetAwaiter().GetResult();
+                new SignInProcess(_dbContext).HandleAsync(bodyStr).GetAwaiter().GetResult();
                 break;
             }
             case "SignOut":

@@ -12,7 +12,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 
     public AuditableEntitySaveChangesInterceptor(ICurrentUser currentUser)
     {
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+        _currentUser = currentUser;
     }
     
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)

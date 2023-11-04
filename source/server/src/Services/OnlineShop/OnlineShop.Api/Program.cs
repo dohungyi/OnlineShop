@@ -90,7 +90,7 @@ catch (Exception exception)
     string type = exception.GetType().Name;
     if (type.Equals("StopTheHostException", StringComparison.Ordinal))
     {
-        throw;
+        throw exception;
     }
 
     Log.Fatal(exception, $"Unhandled exception {exception.Message}");

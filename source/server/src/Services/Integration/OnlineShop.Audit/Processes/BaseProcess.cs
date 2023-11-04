@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
+using EFCore.BulkExtensions;
 using Newtonsoft.Json;
 using OnlineShop.Audit.Events;
 using OnlineShop.Audit.Models;
+using OnlineShop.Audit.Persistence;
 using SharedKernel.Domain;
 using SharedKernel.Domain.DomainEvents;
 using SharedKernel.Libraries;
@@ -13,11 +15,13 @@ public class BaseProcess<T> where T : IBaseEntity
 {
     protected readonly AuditConfigModel _config;
     protected readonly IEnumerable<PropertyInfo> _properties;
+    private readonly IntegrationAuditDbContext _dbContext;
 
-    public BaseProcess(AuditConfigModel config = default)
+    public BaseProcess(IntegrationAuditDbContext dbContext, AuditConfigModel config = default)
     {
         _config = config ?? new AuditConfigModel();
         _properties = typeof(T).GetProperties().Where(p => p.GetIndexParameters().Length == 0);
+        _dbContext = dbContext;
     }
 
     #region [Get parameters]
@@ -61,7 +65,7 @@ public class BaseProcess<T> where T : IBaseEntity
 
     protected virtual List<AuditEntity> GetCustomParameter(IntegrationAuditEvent<T> auditEvent, string bodyStr, string[] ignoreFields)
     {
-        throw new NotImplementedException();
+        return new();
     }
 
     protected virtual List<AuditEntity> GetDeleteParameter(string bodyStr, string[] ignoreFields)
@@ -216,14 +220,11 @@ public class BaseProcess<T> where T : IBaseEntity
 
     protected virtual async Task SaveAsync(List<AuditEntity> entities, CancellationToken cancellationToken = default)
     {
-        using (var context = new EventDbContext())
-        {
-            await context.AuditEntities.AddRangeAsync(entities, cancellationToken);
-            await context.CommitAsync(cancellationToken : cancellationToken);
-        }
+        await _dbContext.BulkInsertEntitiesAsync(entities, cancellationToken);
+        await _dbContext.BulkSaveChangesAsync(cancellationToken : cancellationToken);
     }
 
-    protected virtual async Task HandleAsync(string bodyStr, CancellationToken cancellationToken = default)
+    public virtual async Task HandleAsync(string bodyStr, CancellationToken cancellationToken = default)
     {
         var auditEvent = JsonConvert.DeserializeObject<IntegrationAuditEvent<T>>(bodyStr);
         var param = GetParameter(auditEvent, bodyStr);

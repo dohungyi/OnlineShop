@@ -8,16 +8,14 @@ public class EventDbContext : AppDbContext
 {
     private readonly string _dbConfig;
 
-    public EventDbContext(string dbConfig = "MasterDb") : base(default)
+    public EventDbContext(string dbConfig = "CentralizedEventsDb") : base(default)
     {
         _dbConfig = dbConfig;
     }
     public DbSet<Event> Events { get; set; }
-    public DbSet<AuditEntity> AuditEntities { get; set; }
-    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(CoreSettings.ConnectionStrings[_dbConfig]);
+        optionsBuilder.UseNpgsql(CoreSettings.ConnectionStrings[_dbConfig]);
     }
 
     public override async Task CommitAsync(bool dispatchEvent = true, CancellationToken cancellationToken = default)
