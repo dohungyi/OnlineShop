@@ -6,5 +6,6 @@ public class SignInAuditEvent : AuditEvent
 {
     public SignInAuditEvent(ICurrentUser token, Guid eventId = default) : base("SignIn", AuditAction.SignIn, token, eventId)
     {
+        
     }
 }

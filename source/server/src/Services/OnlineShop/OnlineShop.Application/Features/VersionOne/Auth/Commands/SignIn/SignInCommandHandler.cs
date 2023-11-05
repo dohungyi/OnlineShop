@@ -1,5 +1,6 @@
 using OnlineShop.Application.Constants;
 using OnlineShop.Application.Infrastructure;
+using OnlineShop.Domain.Events.Auth;
 using SharedKernel.Libraries;
 using SharedKernel.Runtime.Exceptions;
 
@@ -9,15 +10,19 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
 {
     private readonly IAuthRepository _authRepository;
     private readonly IStringLocalizer<Resources> _localizer;
+    private readonly ICurrentUser _currentUser;
+    
     public SignInCommandHandler(
         IEventDispatcher eventDispatcher,
         IAuthService authService,
         IAuthRepository authRepository,
+        ICurrentUser currentUser,
         IStringLocalizer<Resources> localizer
         ) : base(eventDispatcher, authService)
     {
         _authRepository = authRepository;
         _localizer = localizer;
+        _currentUser = currentUser;
     }
 
     public async Task<ApiResult> Handle(SignInCommand request, CancellationToken cancellationToken)
@@ -49,6 +54,19 @@ public class SignInCommandHandler : BaseCommandHandler, IRequestHandler<SignInCo
         await _authRepository.CreateOrUpdateRefreshTokenAsync(refreshToken, cancellationToken);
         await _authRepository.UnitOfWork.CommitAsync(false, cancellationToken);
 
+        // Publish events
+        var @event = new SignInEvent(_currentUser, Guid.NewGuid(), new
+        {
+            TokenUser = tokenUser,
+            RequestId = AuthUtility.GetCurrentRequestId(_currentUser.Context.HttpContext)
+        });
+        
+        _currentUser.Context.AccessToken = authResponse.AccessToken;
+        _currentUser.Context.UserId = tokenUser.Id.ToString();
+        
+        _ = _eventDispatcher.PublishEvent(@event, cancellationToken);
+        _ = _eventDispatcher.PublishEvent(new SignInAuditEvent(_currentUser), cancellationToken);
+        
         return new ApiSuccessResult<AuthResponse>(authResponse);
     }
 }

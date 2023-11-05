@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using OnlineShop.Api.ControllerFilters;
+using OnlineShop.Domain.Events.Auth;
 using SharedKernel.Configure;
+using SharedKernel.MessageBroker;
 using ZymLabs.NSwag.FluentValidation;
 
 namespace OnlineShop.Api;
@@ -149,12 +152,7 @@ public static class ConfigureServices
             configuration,
             (configurator, setting) =>
             {
-                // configurator.AddConsumer<CrawlerDataConsumer>();
-                //
-                // configurator.AddConsumer<PushNotificationGroupConsumer>();
-                //
-                // configurator.AddRequestClient<CrawlerDataConsumer>(new Uri(
-                //     setting.GetPublishEndpoint("crawler-data")));
+                
             },
             (context, cfg, setting) =>
             {
@@ -168,6 +166,14 @@ public static class ConfigureServices
                 //         endpointConfigurator.ConfigureConsumer<PushNotificationGroupConsumer>(context);
                 //     });
                 //
+
+                cfg.ReceiveEndpoint($"{setting.GetReceiveEndpoint("audit-event")}",
+                    endpointConfigurator =>
+                {
+                    endpointConfigurator.Bind("audit-event");
+                    endpointConfigurator.Bind<SignInAuditEvent>();
+                });
+
                 
                 cfg.ConfigureEndpoints(context);
                 
