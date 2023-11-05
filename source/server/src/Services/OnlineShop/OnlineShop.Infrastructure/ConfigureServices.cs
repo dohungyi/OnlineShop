@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Infrastructure;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repositories;
+using OnlineShop.Infrastructure.Repositories.Config;
 using OnlineShop.Infrastructure.Services;
 using SharedKernel.Core;
 using SharedKernel.Infrastructures.Repositories;
@@ -40,6 +41,10 @@ public static class COcOConfigureServices
         // Cpanel
         services.AddScoped<ICpanelWriteOnlyRepository, CpanelWriteOnlyRepository>();
         services.AddScoped<ICpanelReadOnlyRepository, CpanelReadOnlyRepository>();
+        
+        // Config
+        services.AddScoped<IConfigReadOnlyRepository, ConfigReadOnlyRepository>();
+        services.AddScoped<IConfigWriteOnlyRepository, ConfigWriteOnlyRepository>();
         
         // ...
         

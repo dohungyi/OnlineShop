@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.OpenApi.Models;
 using OnlineShop.Api;
-using OnlineShop.Api.ControllerFilters;
 using OnlineShop.Infrastructure;
 using OnlineShop.Infrastructure.Persistence;
 using Serilog;

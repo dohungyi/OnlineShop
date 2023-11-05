@@ -13,11 +13,18 @@ try
         .ConfigureServices(services =>
         {
             Console.WriteLine($"Now is {DateTime.Now}");
-
-            var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
-
-            services.AddSingleton(_ => configuration);
-
+            
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+                .Build();
+            
+            var a = configuration.GetSection("ConnectionStrings:Postgresql").Value;
+            
+            // DI
+            CoreSettings.SetConnectionStrings(configuration);
+            
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Database
@@ -29,10 +36,7 @@ try
             );
             
             services.AddScoped<IntegrationAuditDbContextSeed>();
-
-            // DI
-            CoreSettings.SetConnectionStrings(configuration);
-
+            
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = configuration.GetRequiredSection("Redis").Value;
@@ -48,10 +52,9 @@ try
             services.AddSingleton<ISequenceCaching, SequenceCaching>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<ICurrentUser, CurrentUser>();
-            
 
         })
-        .UseCoreSerilog()
+        .UseSerilog(CoreConfigure.Configure)
         .Build();
 
     // Initialise and seed database
